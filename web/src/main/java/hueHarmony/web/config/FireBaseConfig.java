@@ -21,7 +21,7 @@ public class FireBaseConfig {
     @Bean
     public FirebaseApp firebaseApp() {
         try {
-            InputStream serviceAccount = resourceLoader.getResource("classpath:vivolk-d3303-firebase-adminsdk-essjo-d62f5edb0e.json").getInputStream();
+            InputStream serviceAccount = resourceLoader.getResource("classpath:hue-harmony-firebase-adminsdk-vihku-940868f8f5.json").getInputStream();
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
