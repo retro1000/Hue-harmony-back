@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "finish")
 public class Finish {
-
+//add fields for barcode(BR1) - brand, finish, position, product type, room type...
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int finishId;
