@@ -21,8 +21,10 @@ public class Color {
     @Column(name = "color_name", columnDefinition = "VARCHAR", length = 15, nullable = false, unique = true)
     private String colorName;
 
-    @Column(name = "is_mixed_color", columnDefinition = "")
+    @OneToMany
+    private List<SubColor> subColors;
 
+    //Maybe this will go to sub colors
     @ManyToMany
     private List<Variation> variations;
 }
