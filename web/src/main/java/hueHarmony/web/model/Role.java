@@ -19,7 +19,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roleId;
 
-    @Column(name = "role_name", columnDefinition = "VARCHAR(10)")
+    @Column(name = "role_name", columnDefinition = "VARCHAR(20)")
     private String roleName;
 
     @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE, CascadeType.REMOVE})

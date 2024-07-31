@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email")
     boolean existsByEmail(String email);
 
-    @Query("SELECT NEW PROJ.VIVO.dto.UserProfileDto(" +
+    @Query("SELECT NEW hueHarmony.web.dto.UserProfileDto(" +
             "u.userId," +
             "u.profileImage)" +
             " FROM User u" +

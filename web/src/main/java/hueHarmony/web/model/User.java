@@ -1,8 +1,8 @@
 package hueHarmony.web.model;
 
-import PROJ.VIVO.anotations.validations.NameValidation;
-import PROJ.VIVO.anotations.validations.PasswordValidation;
-import PROJ.VIVO.anotations.validations.UsernameValidation;
+//import PROJ.VIVO.anotations.validations.NameValidation;
+//import PROJ.VIVO.anotations.validations.PasswordValidation;
+//import PROJ.VIVO.anotations.validations.UsernameValidation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,20 +27,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @PasswordValidation(groups = {onCreation.class})
+//    @PasswordValidation(groups = {onCreation.class})
     @Column(name = "password", columnDefinition = "TEXT", nullable = false)
     private String password;
 
-    @NotEmpty(message = "Email cannot be empty.", groups = {onCreation.class, onUpdate.class})
-    @Email(message = "Invalid email entered.", groups = {onCreation.class, onUpdate.class})
+//    @NotEmpty(message = "Email cannot be empty.", groups = {onCreation.class, onUpdate.class})
+//    @Email(message = "Invalid email entered.", groups = {onCreation.class, onUpdate.class})
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @UsernameValidation(groups = {onCreation.class, onUpdate.class})
+//    @UsernameValidation(groups = {onCreation.class, onUpdate.class})
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @NameValidation(minLength = 10, name = "Full name", groups = {onCreation.class, onUpdate.class})
+//    @NameValidation(minLength = 10, name = "Full name", groups = {onCreation.class, onUpdate.class})
     @Column(name = "full_name")
     private String fullName = null;
 
