@@ -1,38 +1,22 @@
 package hueHarmony.web.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Set;
 
-import java.util.List;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "product_variation")
 public class ProductVariation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productVariationId;
-
-    @Column(name = "unit_price", columnDefinition = "REAL DEFAULT 0 CHECK(unit_price >= 0)", nullable = false)
-    private float unitPrice;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "variation_id", nullable = false)
-    private Variation variation;
+    // Correct the relationship mapping
+    @ManyToMany(mappedBy = "productVariations")
+    private Set<Brand> brands; // Correct the type to match the mapped entity
 
-    @ManyToOne
-    @JoinColumn(name = "shipment_varition_id", nullable = false)
-    private ShipmentVariation shipmentVariation;
-
-    @OneToMany(mappedBy = "brand")
-    private List<Product> products;
+    // Getters and setters
 }

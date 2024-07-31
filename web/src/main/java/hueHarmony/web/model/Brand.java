@@ -1,26 +1,21 @@
 package hueHarmony.web.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Set;
 
-import java.util.List;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "brand")
 public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int brandId;
+    private Long id;
 
-    @Column(name = "brand_name", columnDefinition = "VARCHAR", length = 15, nullable = false, unique = true)
-    private String brandName;
+    @ManyToMany
+    @JoinTable(
+            name = "brand_product_variation",
+            joinColumns = @JoinColumn(name = "brand_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_variation_id"))
+    private Set<ProductVariation> productVariations; // Ensure this matches ProductVariation
 
-    @OneToMany(mappedBy = "brand")
-    private List<Product> products;
+    // Getters and setters
 }
