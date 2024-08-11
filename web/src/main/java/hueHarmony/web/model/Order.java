@@ -54,12 +54,12 @@ public class Order {
     @JoinColumn(name = "order_id", nullable = false)
     private List<OrderVariation> orderVariations;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<OrderPayment> orderPayments;
-
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    //    @JoinColumn(name = "order_id", nullable = false)
-    private List<PROJ.VIVO.model.OrderStatus> orderStatusTimeLine;
+//    @OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    private List<OrderPayment> orderPayments;
+//
+//    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    //    @JoinColumn(name = "order_id", nullable = false)
+//    private List<PROJ.VIVO.model.OrderStatus> orderStatusTimeLine;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "waybill_id")

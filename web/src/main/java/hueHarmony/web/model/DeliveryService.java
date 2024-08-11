@@ -1,6 +1,5 @@
 package hueHarmony.web.model;
 
-import PROJ.VIVO.model.enums.DeliveryServiceStatus;
 import hueHarmony.web.model.enums.DeliveryServiceStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

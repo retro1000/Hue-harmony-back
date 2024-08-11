@@ -2,7 +2,6 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.UserProfileDto;
 import hueHarmony.web.service.UserService;
-import hueHarmony.web.util.JwtUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

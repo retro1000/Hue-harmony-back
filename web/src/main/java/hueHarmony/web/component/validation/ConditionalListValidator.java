@@ -1,11 +1,14 @@
 package hueHarmony.web.component.validation;
 
+
 import hueHarmony.web.annotation.validations.ConditionalListValidation;
 import jakarta.validation.*;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Component
 public class ConditionalListValidator implements ConstraintValidator<ConditionalListValidation, List<?>> {
 
     private Validator validator;
