@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -63,19 +64,19 @@ public class Product {
         joinColumns = @JoinColumn(name = "product_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
     )
-    private List<Surface> surfaces;
+    private Set<Surface> surfaces;
 
     @ManyToMany
     @JoinTable(name = "product_position",
             joinColumns = @JoinColumn(name = "product_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
     )
-    private List<Position> positions;
+    private Set<Position> positions;
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
             joinColumns = @JoinColumn(name = "product_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = false)
     )
-    private List<ProductFeature> productFeatures;
+    private Set<ProductFeature> productFeatures;
 }
