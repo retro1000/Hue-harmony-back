@@ -1,17 +1,18 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterCustomerDto;
+import hueHarmony.web.dto.FilterOrderDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
 public class Customer {
 
     @GetMapping("/view/{customerId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER')")
     public ResponseEntity<Object> viewCustomer(@PathVariable("customerId") int customerId) {
         try{
 
@@ -21,8 +22,9 @@ public class Customer {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER')")
     public ResponseEntity<Object> filterCustomer(
+            @Validated(FilterOrderDto.whenOrganization.class) @ModelAttribute FilterCustomerDto request,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "select", defaultValue = "all") String select,
             @RequestParam(value = "page", defaultValue = "0") int page,

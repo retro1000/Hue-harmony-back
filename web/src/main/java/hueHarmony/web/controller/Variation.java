@@ -1,7 +1,10 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterOrderDto;
+import hueHarmony.web.dto.FilterVariationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +25,7 @@ public class Variation {
 
     @GetMapping("/filter")
     @PreAuthorize("hasAnyRole('ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> filterVariation(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "select", defaultValue = "all") String select,
-            @RequestParam(value = "brand", required = false) List<String> brands,
-            @RequestParam(value = "color", required = false) List<String> color,
-            @RequestParam(value = "size", required = false) List<String> size,
-            @RequestParam(value = "price", required = false) List<String> price,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "sort", defaultValue = "id,asc") String sort
-    ) {
+    public ResponseEntity<Object> filterVariation(@Validated(FilterOrderDto.whenOrganization.class) @ModelAttribute FilterVariationDto request) {
         try{
 
         }catch(Exception e){

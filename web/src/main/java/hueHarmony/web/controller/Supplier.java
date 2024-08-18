@@ -1,7 +1,10 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterSupplierDto;
+import hueHarmony.web.dto.FilterUserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +25,7 @@ public class Supplier {
 
     @GetMapping("/filter")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> filterSupplier(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "select", defaultValue = "all") String select,
-            @RequestParam(value = "price", required = false) List<String> price,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "sort", defaultValue = "id,asc") String sort
-    ) {
+    public ResponseEntity<Object> filterSupplier(@Validated(FilterSupplierDto.whenOrganization.class) @ModelAttribute FilterSupplierDto request) {
         try{
 
         }catch(Exception e){

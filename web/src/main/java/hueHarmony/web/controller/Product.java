@@ -1,7 +1,10 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.FilterUserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +25,7 @@ public class Product {
 
     @GetMapping("/filter")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> filter(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "select", defaultValue = "all") String select,
-            @RequestParam(value = "brand", required = false) List<String> brands,
-            @RequestParam(value = "color", required = false) List<String> color,
-            @RequestParam(value = "size", required = false) List<String> size,
-            @RequestParam(value = "price", required = false) List<String> price,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "sort", defaultValue = "id,asc") String sort
-    ) {
+    public ResponseEntity<Object> filter(@Validated(FilterProductDto.whenOrganization.class) @ModelAttribute FilterProductDto request) {
         try{
 
         }catch(Exception e){
@@ -42,21 +35,7 @@ public class Product {
 
     @GetMapping("/filter/product")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> filterProduct(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "brand", required = false) String brands,
-            @RequestParam(value = "room_type", required = false) String roomType,
-            @RequestParam(value = "finish", required = false) String finish,
-            @RequestParam(value = "product_type", required = false) String productType,
-            @RequestParam(value = "color", required = false) List<String> color,
-            @RequestParam(value = "size", required = false) List<String> size,
-            @RequestParam(value = "surface", required = false) List<String> surface,
-            @RequestParam(value = "position", required = false) List<String> position,
-            @RequestParam(value = "price", required = false) List<String> price,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "sort", defaultValue = "id,asc") String sort
-    ) {
+    public ResponseEntity<Object> filterProduct(@Validated(FilterProductDto.whenUser.class) @ModelAttribute FilterProductDto request) {
         try{
 
         }catch(Exception e){

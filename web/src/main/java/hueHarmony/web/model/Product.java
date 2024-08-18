@@ -25,8 +25,8 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
-    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
-    private String productImage;
+//    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
+//    private String productImage;
 
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
