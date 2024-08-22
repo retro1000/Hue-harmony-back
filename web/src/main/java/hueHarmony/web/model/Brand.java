@@ -22,5 +22,5 @@ public class Brand {
     private String brandName;
 
     @OneToMany(mappedBy = "brand")
-    private List<Product> products;
+    private List<ProductVariation> productVariations;
 }
