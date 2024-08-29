@@ -1,7 +1,7 @@
 package hueHarmony.web.service;
 
-import hueHarmony.web.dto.UserAuthDto;
 import hueHarmony.web.repository.UserRepository;
+import hueHarmony.web.dto.UserAuthDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

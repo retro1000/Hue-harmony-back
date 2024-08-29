@@ -2,6 +2,7 @@ package hueHarmony.web.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "product")
+@Builder
 public class Product {
 
     @Id
@@ -25,11 +27,21 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
-    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
-    private String productImage;
+    @Column(name = "product_image", nullable = true, columnDefinition = "TEXT")
+    private String productImageUrl;
 
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
+
+    @Column(name="starting_price",columnDefinition = "VARCHAR")
+    private String startingPrice = "RS:0";
+
+    @Column(name="product_discount",columnDefinition = "INT")
+    private int productDiscount;
+
+    @Column(name="product_status",columnDefinition = "TEXT")
+    private String productStatus;
+
 
     @Column(name = "drying_time", columnDefinition = "VARCHAR", length = 25)
     private String dryingTime;
@@ -43,13 +55,19 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;
+    private Brand brand;*/
 
-    @ManyToOne
+    @Column(name = "brand",columnDefinition = "VARCHAR",length = 20)
+    private String brand;
+
+    /*@ManyToOne
     @JoinColumn(name = "room_type_id", nullable = false)
-    private RoomType roomType;
+    private RoomType roomType;*/
+
+    @Column(name = "room_type",columnDefinition = "VARCHAR",length = 30)
+    private String roomType;
 
     @ManyToOne
     @JoinColumn(name = "finish_id")

@@ -1,10 +1,10 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.repository.RoleRepository;
+import hueHarmony.web.repository.UserRepository;
 import hueHarmony.web.dto.UserProfileDto;
 import hueHarmony.web.model.Role;
 import hueHarmony.web.model.User;
-import hueHarmony.web.repository.RoleRepository;
-import hueHarmony.web.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
