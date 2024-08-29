@@ -1,0 +1,15 @@
+package hueHarmony.web.repository;
+
+import hueHarmony.web.model.Supplier;
+import hueHarmony.web.model.enums.SupplierStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SupplierRepository extends JpaRepository<Supplier, Long> {
+
+    @Query("SELECT COUNT(s) > 0 FROM Supplier s WHERE s.supplierId = :supplierId AND s.supplierStatus = 'ACTIVE'")
+    boolean checkSupplierStatusBySupplierId(@Param("supplierId") Long supplierId);
+}

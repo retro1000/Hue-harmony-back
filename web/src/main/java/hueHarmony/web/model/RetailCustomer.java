@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +25,6 @@ public class RetailCustomer {
     private Loyalty loyalty;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

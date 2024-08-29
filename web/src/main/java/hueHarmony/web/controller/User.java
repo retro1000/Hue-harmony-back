@@ -1,10 +1,9 @@
 package hueHarmony.web.controller;
 
-import hueHarmony.web.dto.FilterOrderDto;
-import hueHarmony.web.dto.FilterUserDto;
-import hueHarmony.web.dto.FilterVariationDto;
+import hueHarmony.web.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +45,10 @@ public class User {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> createUser() {
+    public ResponseEntity<Object> createUser(
+            @Validated(UserDto.onCreation.class) @RequestBody UserDto userDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -56,7 +58,10 @@ public class User {
 
     @PostMapping("/assign-role")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> assignRole() {
+    public ResponseEntity<Object> assignRole(
+            @Validated(UserDto.onUpdateRole.class) @RequestBody UserDto userDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -66,7 +71,10 @@ public class User {
 
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_USER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> updateUser() {
+    public ResponseEntity<Object> updateUser(
+            @Validated(UserDto.onUpdate.class) @ModelAttribute UserDto userDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -76,7 +84,10 @@ public class User {
 
     @PostMapping("/signup")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> signup() {
+    public ResponseEntity<Object> signup(
+            @Validated(UserDto.onSignup.class) @RequestBody UserDto userDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -86,7 +97,10 @@ public class User {
 
     @PostMapping("/change-password")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_USER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> changePassword() {
+    public ResponseEntity<Object> changePassword(
+            @Validated(ChangePasswordDto.onCheck.class) @RequestBody ChangePasswordDto changePasswordDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -94,19 +108,25 @@ public class User {
         }
     }
 
-    @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> deleteUser() {
-        try{
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
+//    @DeleteMapping("/delete")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<Object> deleteUser(
+//            @Validated(UserDto.class) @RequestBody UserDto userDto,
+//            BindingResult bindingResult
+//    ) {
+//        try{
+//
+//        }catch(Exception e){
+//            return ResponseEntity.status(500).body("Internal Server Error");
+//        }
+//    }
 
     @PostMapping("/enable")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> enableDisableUser() {
+    public ResponseEntity<Object> enableDisableUser(
+            @Validated(UserDto.onUpdateStatus.class) @RequestBody UserDto userDto,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){

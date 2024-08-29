@@ -1,9 +1,12 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.CustomerDto;
 import hueHarmony.web.dto.FilterCustomerDto;
 import hueHarmony.web.dto.FilterOrderDto;
+import hueHarmony.web.dto.WholeSaleCustomerDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +41,51 @@ public class Customer {
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/wholesale")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> createCustomer() {
+    public ResponseEntity<Object> createCustomer(
+            @Validated({CustomerDto.onCreation.class}) @RequestBody CustomerDto customer,
+            BindingResult bindingResult
+    ) {
+        try{
+
+        }catch(Exception e){
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/create/wholesale/new")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    public ResponseEntity<Object> createNewWholeSaleCustomer(
+            @Validated({WholeSaleCustomerDto.onCreation.class, CustomerDto.onCreation.class}) @RequestBody WholeSaleCustomerDto customer,
+            BindingResult bindingResult
+    ) {
+        try{
+
+        }catch(Exception e){
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/create/wholesale/old")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    public ResponseEntity<Object> createOldWholeSaleCustomer(
+            @Validated({WholeSaleCustomerDto.onCreation.class, CustomerDto.onOldCreation.class}) @RequestBody WholeSaleCustomerDto customer,
+            BindingResult bindingResult
+    ) {
+        try{
+
+        }catch(Exception e){
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/update/wholesale")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    public ResponseEntity<Object> updateWholeSaleCustomer(
+            @Validated({WholeSaleCustomerDto.onUpdate.class, CustomerDto.onUpdate.class}) @RequestBody WholeSaleCustomerDto customer,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -50,7 +95,10 @@ public class Customer {
 
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> updateCustomer() {
+    public ResponseEntity<Object> updateCustomer(
+            @Validated({CustomerDto.onUpdate.class}) @RequestBody CustomerDto customer,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -60,7 +108,10 @@ public class Customer {
 
     @DeleteMapping("/delete")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> deleteCustomer() {
+    public ResponseEntity<Object> deleteWholeSaleCustomer(
+            @Validated(WholeSaleCustomerDto.onDelete.class) @RequestBody WholeSaleCustomerDto customer,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){
@@ -70,7 +121,10 @@ public class Customer {
 
     @PostMapping("/approve")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> approveCustomer() {
+    public ResponseEntity<Object> approveWholeSaleCustomer(
+            @Validated(WholeSaleCustomerDto.onStatusUpdate.class) @RequestBody WholeSaleCustomerDto customer,
+            BindingResult bindingResult
+    ) {
         try{
 
         }catch(Exception e){

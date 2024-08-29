@@ -32,4 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " WHERE u.username = :username")
     UserProfileDto getUserProfileByUsername(@Param("username") String username);
 
+    @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.password = :password AND u.userId = :userId")
+    boolean checkPasswordMatchByOldPasswordAndUserId(@Param("password") String oldPassword, @Param("userId") int userId);
+
 }

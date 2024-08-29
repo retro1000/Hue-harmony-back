@@ -46,8 +46,23 @@ public class UserService {
     }
 
     @Transactional(readOnly=true)
+    public boolean isRoleExist(int roleId){
+        return roleRepository.existsById((long) roleId);
+    }
+
+    @Transactional(readOnly=true)
+    public boolean isUserExist(int userId){
+        return userRepository.existsById((long) userId);
+    }
+
+    @Transactional(readOnly=true)
     public boolean isEmailExists(String email){
         return userRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly=true)
+    public boolean isPasswordSame(String password, int userId){
+        return userRepository.checkPasswordMatchByOldPasswordAndUserId(password, userId);
     }
 
     public UserProfileDto getUserProfile(String username){

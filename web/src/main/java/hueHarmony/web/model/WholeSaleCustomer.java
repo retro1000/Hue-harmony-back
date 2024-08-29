@@ -21,6 +21,12 @@ public class WholeSaleCustomer {
     @Column(name = "land_phone", columnDefinition = "VARCHAR", nullable = false, length = 15)
     private String landPhone;
 
+    @Column(name = "address", columnDefinition = "VARCHAR", nullable = false)
+    private String address;
+
+    @Column(name = "nic_no", columnDefinition = "VARCHAR", nullable = false, length = 12)
+    private String nicNo;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "whole_sale_customer_status", columnDefinition = "VARCHAR", nullable = false, length = 10)
     private WholeSaleCustomerStatus wholeSaleCustomerStatus;
