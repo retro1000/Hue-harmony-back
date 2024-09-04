@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +28,7 @@ public class UserDto {
 
     @NotNull(groups = {onUpdate.class, onUpdateStatus.class, onUpdateRole.class}, message = "User not found.")
     @DataExistingValidation(groups = {onUpdate.class, onUpdateStatus.class, onUpdateRole.class}, service = UserService.class, method = "isUserExist")
+    @ContentPermissionValidation(groups = {onUpdate.class}, service = UserService.class, method = "isUserHavePermission", message = "Unauthorized to access.")
     private int userId;
 
     @PasswordValidation(groups = {onCreation.class, onSignup.class})
@@ -40,7 +42,7 @@ public class UserDto {
     @UsernameValidation(groups = {onCreation.class, onUpdate.class, onSignup.class})
     private String username;
 
-    @NameValidation(minLength = 10, maxLength = 200, name = "Full name", groups = {onCreation.class, onUpdate.class, onSignup.class})
+    @NameValidation(minLength = 10, maxLength = 200, name = "Full name", groups = {onCreation.class, onUpdate.class})
     private String fullName;
 
     private MultipartFile profileImage;
@@ -51,5 +53,5 @@ public class UserDto {
     @NotNull(groups = {onCreation.class, onUpdateRole.class}, message = "No roles found.")
     @NotEmpty(groups = {onCreation.class, onUpdateRole.class}, message = "No roles found.")
     @DataExistingListValidation(groups = {onCreation.class, onUpdateRole.class}, service = UserService.class, method = "isRoleExist", haltOnError = true)
-    private List<Integer> roles;
+    private Set<Integer> roles;
 }

@@ -3,7 +3,9 @@ package hueHarmony.web.repository;
 import hueHarmony.web.dto.UserAuthDto;
 import hueHarmony.web.dto.UserProfileDto;
 import hueHarmony.web.model.User;
+import hueHarmony.web.model.enums.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,5 +36,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.password = :password AND u.userId = :userId")
     boolean checkPasswordMatchByOldPasswordAndUserId(@Param("password") String oldPassword, @Param("userId") int userId);
+
+    @Modifying
+    @Query("UPDATE User u SET u.password = :newPassword WHERE u.userId = :userId")
+    void updatePasswordByUserIdAndNewPassword(@Param("userId") int userId, @Param("newPassword") String newPassword);
+
+    @Modifying
+    @Query("UPDATE User u SET u.userStatus = :userStatus WHERE u.userId = :userId")
+    void updateUserStatusByUserIdAndUserStatus(@Param("userId") int userId, @Param("userStatus") UserStatus userStatus);
 
 }

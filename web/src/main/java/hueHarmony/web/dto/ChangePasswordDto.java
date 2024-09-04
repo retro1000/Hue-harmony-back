@@ -1,5 +1,6 @@
 package hueHarmony.web.dto;
 
+import hueHarmony.web.annotation.validations.ContentPermissionValidation;
 import hueHarmony.web.annotation.validations.DataExistingValidation;
 import hueHarmony.web.annotation.validations.PasswordMatchValidation;
 import hueHarmony.web.annotation.validations.PasswordValidation;
@@ -19,6 +20,7 @@ public class ChangePasswordDto {
 
     @NotNull(groups = {onCheck.class}, message = "User cannot be found.")
     @DataExistingValidation(groups = {onCheck.class}, service = UserService.class, method = "isUserExist")
+    @ContentPermissionValidation(groups = {onCheck.class}, service = UserService.class, method = "isUserHavePermission", message = "Unauthorized to access.")
     private int userId;
 
     @PasswordValidation(groups = {onCheck.class})

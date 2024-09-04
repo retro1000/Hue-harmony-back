@@ -1,11 +1,14 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.dto.CustomerDto;
 import hueHarmony.web.dto.WholeSaleCustomerDto;
+import hueHarmony.web.model.Customer;
 import hueHarmony.web.repository.CustomerRepository;
 import hueHarmony.web.repository.RetailCustomerRepository;
 import hueHarmony.web.repository.WholeSaleCustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +32,10 @@ public class CustomerService {
 
     public boolean isValidCustomerId(WholeSaleCustomerDto wholeSaleCustomerDto, String key){
         return wholeSaleCustomerRepository.checkCustomerIdAndWholeSaleCustomerIdAreLinked((long) wholeSaleCustomerDto.getCustomerDto().getCustomerId(), (long) wholeSaleCustomerDto.getWholeSaleCustomerId());
+    }
+
+    @Transactional
+    public void createCustomer(CustomerDto customerDto){
+        Customer customer = new Customer();
     }
 }

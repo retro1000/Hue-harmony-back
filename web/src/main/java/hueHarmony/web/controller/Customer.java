@@ -4,6 +4,8 @@ import hueHarmony.web.dto.CustomerDto;
 import hueHarmony.web.dto.FilterCustomerDto;
 import hueHarmony.web.dto.FilterOrderDto;
 import hueHarmony.web.dto.WholeSaleCustomerDto;
+import hueHarmony.web.service.CustomerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -12,12 +14,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor
 public class Customer {
+
+    private final CustomerService customerService;
 
     @GetMapping("/view/{customerId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER')")
     public ResponseEntity<Object> viewCustomer(@PathVariable("customerId") int customerId) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -35,6 +41,7 @@ public class Customer {
             @RequestParam(value = "sort", defaultValue = "id,asc") String sort
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -49,6 +56,12 @@ public class Customer {
     ) {
         try{
 
+            if(bindingResult.hasErrors()) return ResponseEntity.status(400).body(bindingResult);
+
+            customerService.createCustomer(customer);
+
+            return ResponseEntity.status(200).body("Customer created successfully.");
+
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
@@ -61,6 +74,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -74,6 +88,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -87,6 +102,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -100,6 +116,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -113,6 +130,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -126,6 +144,7 @@ public class Customer {
             BindingResult bindingResult
     ) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");

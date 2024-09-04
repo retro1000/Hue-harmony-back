@@ -35,7 +35,7 @@ public class SupplierDto {
     @Size(groups = {onCreation.class, onUpdate.class}, min = 5, max = 150, message = "Supplier address must have 5 to 150 characters.")
     private String supplierAddress;
 
-    @Size(groups = {onCreation.class, onUpdate.class}, min = 0, max = 15, message = "Supplier mobile phone number cannot have more than 15 digits.")
+    @Size(groups = {onCreation.class, onUpdate.class}, max = 15, message = "Supplier mobile phone number cannot have more than 15 digits.")
     private String supplierMobilePhone;
 
     @NotNull(groups = {onCreation.class, onUpdate.class}, message = "Supplier email cannot be empty.")

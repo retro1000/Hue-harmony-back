@@ -23,7 +23,7 @@ public class FirebaseStorageService {
     }
 
     @Getter
-    private final static String bucketName = "vivolk-d3303.appspot.com";
+    private final static String bucketName = "hueharmony-1a8c2.appspot.com";
 
     public String uploadFile(String fileName, byte[] fileBytes, String contentType) {
         // Get the bucket instance from Firebase StorageClient
