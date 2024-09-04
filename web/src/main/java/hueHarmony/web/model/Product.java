@@ -1,11 +1,13 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.enums.PositionN;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
-    @Column(name = "product_image", nullable = true, columnDefinition = "TEXT")
+    @Column(name = "product_image", columnDefinition = "TEXT")
     private String productImageUrl;
 
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
@@ -74,27 +76,35 @@ public class Product {
     private Finish finish;
 
     @ManyToOne
-    @JoinColumn(name = "product_type", nullable = false)
+    @JoinColumn(name = "product_type")
     private ProductType productType;
 
-    @ManyToMany
+   @ManyToMany
     @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
+        joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "surface_id")
     )
-    private Set<Surface> surfaces;
+   private Set<Surface> surfaces = new HashSet<>();
 
-    @ManyToMany
+   /*  @ManyToMany
     @JoinTable(name = "product_position",
             joinColumns = @JoinColumn(name = "product_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
     )
-    private Set<Position> positions;
+    private Set<Position> positions;*/
+
+    @ElementCollection(targetClass = PositionN.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "product_positions", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "position")
+    private Set<PositionN> positions;
+
+
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
             joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = false)
+            inverseJoinColumns = @JoinColumn(name = "product_feature_id")
     )
     private Set<ProductFeature> productFeatures;
 }

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("products")
+@RequestMapping("product")
 public class ProductController {
 
     private final ProductService productService;
@@ -41,10 +41,8 @@ public class ProductController {
         //return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");
     }
 
-    @PostMapping("/create/product")
-    @JsonView(ProductDto.onCreate.class)
-    public ResponseEntity<?> createProduct(@RequestBody  @Validated(ProductDto.onCreate.class) @JsonView(ProductDto.onCreate.class)  ProductDto productDto, BindingResult bindingResult) throws IOException {
-
+    @PostMapping("/create")
+    public ResponseEntity<?> createProduct(@RequestBody  @Validated(ProductDto.onCreate.class) ProductDto productDto, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
         }
@@ -53,18 +51,45 @@ public class ProductController {
         Product newProduct=Product.builder()
                 .productName(productDto.getProductName())
                 .productDescription(productDto.getProductDescription())
-                /*.productImageUrl(firebaseStorageService.uploadFile(productDto.getProductImage().getName(),productDto.getProductImage().getBytes(),productDto.getProductImage().getContentType()))*/
-                .brand(productDto.getProductBrand())
+                .productImageUrl(firebaseStorageService.uploadFile(productDto.getProductImage().getName(),productDto.getProductImage().getBytes(),productDto.getProductImage().getContentType()))
+                 .brand(productDto.getProductBrand())
                 .dryingTime(productDto.getDryingTime())
-                .roomType(productDto.getRoomType())
+                /* .roomType(productDto.getRoomType())*/
                 .productStatus(productDto.getProductStatus())
-                .productFeatures(productDto.getProductFeatures())
-                .surfaces(productDto.getSurfaces())
+                /*.productFeatures(productDto.getProductFeatures())*/
+                /*.applicableSurfaces(productDto.getSurfaces())*/
                 .positions(productDto.getPositions())
                 .build();
+
         Product savedProduct=productService.save(newProduct);
 
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        /*return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");*/
+    }
+
+    @GetMapping("view/{id}")
+    public ResponseEntity<?> getProductById(@PathVariable("id") Long id) {
+        Product product =productService.getProductById(id);
+            if (product == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }else{
+                ProductDto productDto=ProductDto.builder()
+                        .productName(product.getProductName())
+                        .startingPrice(product.getStartingPrice())
+                        .productStatus(product.getProductStatus())
+                        .build();
+                return ResponseEntity.ok(productDto);
+            }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam String category, @RequestParam String key) {
+
+        List<Product> products=productService.searchProducts(category,key);
+
+
+        return ResponseEntity.ok("Sucess");
     }
 
 

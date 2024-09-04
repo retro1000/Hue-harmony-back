@@ -23,9 +23,6 @@ public class ProductVariation {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "variation_id", nullable = false)
-    private Variation variation;
 
     @ManyToOne
     @JoinColumn(name = "shipment_variation_id", nullable = false)
@@ -34,4 +31,10 @@ public class ProductVariation {
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
+
+   @Column(name = "size")
+    private int size;
+
+    @Column(name = "color")
+    private String color;
 }

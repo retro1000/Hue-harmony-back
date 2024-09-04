@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import hueHarmony.web.dto.ProductDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.repository.ProductRepository;
+import hueHarmony.web.specification.ProductSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,18 @@ public class ProductService {
         return productRepository.findAllProductListDto();
     }
 
-    @JsonView(ProductDto.onCreate.class)
-    @Transactional
     public Product save(Product newProduct) {
-        Product product = productRepository.save(newProduct);
-        return product;
+        return productRepository.save(newProduct);
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public List<Product> searchProducts(String category, String key) {
+        Specification<Product> specification = Specification.where(ProductSpecifications.withKeyword(key))
+                .and(ProductSpecifications.withCategory(category));
+
+        return productRepository.findAll(specification);
     }
 }
