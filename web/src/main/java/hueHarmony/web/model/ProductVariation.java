@@ -33,6 +33,4 @@ public class ProductVariation {
     @JoinColumn(name = "shipment_varition_id", nullable = false)
     private ShipmentVariation shipmentVariation;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Product> products;
 }
