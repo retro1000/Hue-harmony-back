@@ -24,6 +24,7 @@ public class ContentPermissionValidator implements ConstraintValidator<ContentPe
     private Class<?> serviceClass;
     private String method;
     private String key;
+    private String message;
 
     @Override
     public void initialize(ContentPermissionValidation constraintAnnotation) {
@@ -32,6 +33,7 @@ public class ContentPermissionValidator implements ConstraintValidator<ContentPe
         this.key = constraintAnnotation.key().isEmpty() ?
                 String.valueOf(jwtUtil.extractUserId(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString())) :
                 constraintAnnotation.key();
+        this.message = constraintAnnotation.message();
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
@@ -44,7 +46,7 @@ public class ContentPermissionValidator implements ConstraintValidator<ContentPe
                 if(
                     !(boolean) validationMethodCache.getCachedMethod(serviceClass, method, args).invoke(service, value, key)
                 ){
-                    addConstraintViolation(constraintValidatorContext, value+" is not exists.");
+                    if(!message.isEmpty()) addConstraintViolation(constraintValidatorContext, value+" is not exists.");
                     return false;
                 }
             }

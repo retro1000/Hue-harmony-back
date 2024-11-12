@@ -15,9 +15,9 @@ public class BannerDto {
     public interface onUpdate{}
     public interface onDelete{}
 
-    @NotNull
-    @DataExistingValidation(service = null, method = "")
-    private int bannerId;
+//    @NotNull
+//    @DataExistingValidation(service = null, method = "")
+//    private int bannerId;
 
     @NotNull
 

@@ -17,6 +17,7 @@ public class Product {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_USER', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> viewProduct(@PathVariable("productId") int productId) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -27,6 +28,7 @@ public class Product {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filter(@Validated(FilterProductDto.whenOrganization.class) @ModelAttribute FilterProductDto request) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -37,6 +39,7 @@ public class Product {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProduct(@Validated(FilterProductDto.whenUser.class) @ModelAttribute FilterProductDto request) {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -47,6 +50,7 @@ public class Product {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createProduct() {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -57,6 +61,7 @@ public class Product {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateProduct() {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -67,6 +72,7 @@ public class Product {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteProduct() {
         try{
+            return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
