@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="159e51de-bebc-4f46-9f20-90b8f5a478df" name="Changes" comment="git ignore updated">
-      <change beforePath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/WebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/WebApplication.java" afterDir="false" />
-    </list>
+    <list default="true" id="159e51de-bebc-4f46-9f20-90b8f5a478df" name="Changes" comment="config xml file" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,7 +50,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.WebApplication.executor": "Run",
-    "git-widget-placeholder": "lu__01__product__filtering",
+    "git-widget-placeholder": "lu__Clean__Working__branch",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -107,7 +105,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731435631269</updated>
       <workItem from="1731435635382" duration="1697000" />
-      <workItem from="1731741271461" duration="5046000" />
+      <workItem from="1731741271461" duration="5376000" />
     </task>
     <task id="LOCAL-00001" summary="Disable Hibernate's schema auto-generation feature">
       <option name="closed" value="true" />
@@ -141,7 +139,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731777513091</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="You can safely remove the @ComponentScan because @SpringBootApplication already handles component scanning">
+      <option name="closed" value="true" />
+      <created>1731777697257</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777697257</updated>
+    </task>
+    <task id="LOCAL-00006" summary="config xml file">
+      <option name="closed" value="true" />
+      <created>1731777713414</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777713414</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,7 +177,10 @@
     <MESSAGE value="lombok dependency version updated" />
     <MESSAGE value="configuration xml files" />
     <MESSAGE value="git ignore updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="git ignore updated" />
+    <MESSAGE value="remove the @ComponentScan because @SpringBootApplication already handles component scanning" />
+    <MESSAGE value="config xml file" />
+    <MESSAGE value="remove the @ComponentScan because @SpringBootApplication already handles component scanning" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove the @ComponentScan because @SpringBootApplication already handles component scanning" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
