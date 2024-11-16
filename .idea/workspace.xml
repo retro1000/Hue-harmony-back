@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="159e51de-bebc-4f46-9f20-90b8f5a478df" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/web/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/pom.xml" afterDir="false" />
+    <list default="true" id="159e51de-bebc-4f46-9f20-90b8f5a478df" name="Changes" comment="git ignore updated">
       <change beforePath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/WebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/WebApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/model/DeliveryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/java/hueHarmony/web/model/DeliveryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,8 +107,41 @@
       <option name="presentableId" value="Default" />
       <updated>1731435631269</updated>
       <workItem from="1731435635382" duration="1697000" />
-      <workItem from="1731741271461" duration="4637000" />
+      <workItem from="1731741271461" duration="5046000" />
     </task>
+    <task id="LOCAL-00001" summary="Disable Hibernate's schema auto-generation feature">
+      <option name="closed" value="true" />
+      <created>1731777363005</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777363006</updated>
+    </task>
+    <task id="LOCAL-00002" summary="lombok dependency version updated">
+      <option name="closed" value="true" />
+      <created>1731777414413</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777414413</updated>
+    </task>
+    <task id="LOCAL-00003" summary="configuration xml files">
+      <option name="closed" value="true" />
+      <created>1731777494603</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777494603</updated>
+    </task>
+    <task id="LOCAL-00004" summary="git ignore updated">
+      <option name="closed" value="true" />
+      <created>1731777513091</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731777513091</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,6 +157,13 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Disable Hibernate's schema auto-generation feature" />
+    <MESSAGE value="lombok dependency version updated" />
+    <MESSAGE value="configuration xml files" />
+    <MESSAGE value="git ignore updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="git ignore updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
