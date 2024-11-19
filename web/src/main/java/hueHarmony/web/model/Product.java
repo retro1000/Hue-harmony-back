@@ -1,5 +1,6 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.enums.data_set.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,10 @@ public class Product {
 
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "product_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    private ProductStatus productStatus;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImages> productImages;
