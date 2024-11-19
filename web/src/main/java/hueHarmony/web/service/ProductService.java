@@ -34,13 +34,12 @@ public class ProductService {
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortCol(), productFilterDto.getSortOrder()),
-                List.of("productId", "productTitle", "productStatus, productImage"),
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
+                List.of("productId", "productTitle", "productStatus", "productImage","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
                     dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
                     return dto;
                 }
         );
@@ -82,19 +81,18 @@ public class ProductService {
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
-            assert priceRange != null;
             return new ProductUserDisplayDto(
                     dto.getProductId(),
                     dto.getProductTitle(),
                     dto.getProductStatus(),
                     firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
-                    priceRange,
-                    priceRange[1]!=-1,
-                    false,
+                    dto.getPrice(),
+                    dto.isSale(),
+                    dto.isNew(),
                     dto.getReviewRate(),
                     dto.getTotalReviews(),
-                    priceRange[1]
+                    dto.getDiscount()
+
             );
         });
     }
