@@ -32,27 +32,6 @@ public class Product {
         }
     }
 
-    @GetMapping("/filter")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> filter(@Validated(FilterProductDto.whenOrganization.class) @ModelAttribute FilterProductDto request) {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
-
-    @GetMapping("/filter/product")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> filterProduct(@Validated(FilterProductDto.whenUser.class) @ModelAttribute FilterProductDto request) {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -88,6 +67,7 @@ public class Product {
     }
 
     @GetMapping("/filter-products")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
@@ -102,6 +82,7 @@ public class Product {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductDisplayDto> displayDtos = productService.filterProductsForDashboardTable(productFilterDto);
