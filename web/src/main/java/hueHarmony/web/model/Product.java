@@ -26,6 +26,12 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
+    @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
+    private String productPrice;
+
+    @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private String productDiscount;
+
 //    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
 //    private String productImage;
 
