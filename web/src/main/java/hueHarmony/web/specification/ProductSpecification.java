@@ -1,9 +1,9 @@
 package hueHarmony.web.specification;
 
-import PROJ.VIVO.model.Product;
-import PROJ.VIVO.model.ProductVariation;
-import PROJ.VIVO.model.Variation;
-import PROJ.VIVO.model.enums.ProductStatus;
+import hueHarmony.web.model.Product;
+import hueHarmony.web.model.ProductVariation;
+import hueHarmony.web.model.Variation;
+import hueHarmony.web.model.enums.data_set.ProductStatus;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
 import jakarta.persistence.criteria.Join;
