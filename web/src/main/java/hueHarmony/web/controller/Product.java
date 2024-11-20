@@ -1,5 +1,6 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.FilterUserDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
@@ -33,15 +34,20 @@ public class Product {
     }
 
 
-    @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> createProduct() {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
+//    @PostMapping("/create")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<Object> createProduct() {
+//        try{
+//            return ResponseEntity.status(200).body("Supplier status update successfully.");
+//
+//        }catch(Exception e){
+//            return ResponseEntity.status(500).body("Internal Server Error");
+//        }
+//    }
 
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
+    @PostMapping("/secure/add/book")
+    public void postBook(@RequestBody AddProductDto addProductRequest) throws Exception {
+
     }
 
     @PostMapping("/update")
