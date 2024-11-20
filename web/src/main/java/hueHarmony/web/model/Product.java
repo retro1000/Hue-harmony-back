@@ -1,6 +1,12 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.enums.data_set.Brands;
+import hueHarmony.web.model.enums.data_set.Finish;
+import hueHarmony.web.model.enums.data_set.Position;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.ProductType;
+import hueHarmony.web.model.enums.data_set.RoomType;
+import hueHarmony.web.model.enums.data_set.Surface;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,10 +33,10 @@ public class Product {
     private String productDescription;
 
     @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
-    private String productPrice;
+    private float productPrice;
 
     @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private String productDiscount;
+    private float productDiscount;
 
 //    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
 //    private String productImage;
@@ -54,35 +60,36 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;
+    private Brands brand;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     @JoinColumn(name = "finish_id")
     private Finish finish;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     @JoinColumn(name = "product_type", nullable = false)
     private ProductType productType;
 
-    @ManyToMany
-    @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
-    )
+    @ElementCollection(targetClass = Surface.class)
+    @CollectionTable(name = "product_surface",
+            joinColumns = @JoinColumn(name = "product_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "surface", nullable = false)
     private Set<Surface> surfaces;
 
-    @ManyToMany
-    @JoinTable(name = "product_position",
-            joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
-    )
+    @ElementCollection(targetClass = Position.class)
+    @CollectionTable(name = "product_position",
+            joinColumns = @JoinColumn(name = "product_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "position", nullable = false)
     private Set<Position> positions;
+
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
