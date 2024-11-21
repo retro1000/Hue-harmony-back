@@ -11,6 +11,7 @@ import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,18 @@ public class ProductService {
                 .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
+        Pageable pageable;
+
+        if(productFilterDto.getSortCol()!=null && !productFilterDto.getSortCol().isEmpty() && productFilterDto.getSortOrder()!=null) {
+            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit())
+                    .withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol());
+        }else {
+            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit());
+        }
+
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
+                pageable,
                 List.of("productId", "productTitle", "productStatus", "productImage", ""),
                 ProductDisplayDto.class
         ).map(product -> {
