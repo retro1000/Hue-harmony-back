@@ -72,9 +72,12 @@ public class Product {
     @JoinColumn(name = "finish_id")
     private Finish finish;
 
+    @ElementCollection(targetClass = ProductType.class)
+    @CollectionTable(name = "product_type",
+            joinColumns = @JoinColumn(name = "product_id"))
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "product_type", nullable = false)
-    private ProductType productType;
+    @Column(name = "product_type", nullable = false)
+    private Set<ProductType> productType;
 
     @ElementCollection(targetClass = Surface.class)
     @CollectionTable(name = "product_surface",
