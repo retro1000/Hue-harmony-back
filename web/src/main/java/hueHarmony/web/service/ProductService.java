@@ -120,18 +120,25 @@ public class ProductService {
         product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
 
-        product.setSurfaces(Arrays.stream(addProductDto.getSurfaces())
-                .map(Surface::valueOf)
-                .collect(Collectors.toSet()));
+        List<Surface> validSurfaces = addProductDto.getSurfaces().stream()
+                .filter(Surface::contains)
+                .map(value -> Surface.valueOf(value.toUpperCase()))
+                .toList();
+        product.setSurfaces(validSurfaces);
 
+        List<Position> validPositions = addProductDto.getPositions().stream()
+                .filter(Position::contains)
+                .map(value -> Position.valueOf(value.toUpperCase()))
+                .toList();
+        product.setPositions(validPositions);
 
-        product.setPositions(Arrays.stream(addProductDto.getPositions())
-                .map(Position::valueOf)
-                .collect(Collectors.toSet()));
+        List<ProductType> validProductTypes = addProductDto.getProductTypes().stream()
+                .filter(ProductType::contains)
+                .map(value -> ProductType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setProductType(validProductTypes);
 
-        product.setProductType(Arrays.stream(addProductDto.getProductTypes())
-                .map(ProductType::valueOf)  // Convert each string to ProductType enum
-                .collect(Collectors.toSet()));  // Collect them in a Set
+        product.setProductFeatures(addProductDto.getProductFeatures());
 
         productRepository.save(product);
 
