@@ -38,17 +38,19 @@ public class Product {
     private float coverage;
 
     @OneToMany(mappedBy = "product")
+    @Column
     private List<ProductImages> productImages;
 
     @OneToMany(mappedBy = "product")
+    @Column
     private List<ProductVariation> productVariations;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
+    @JoinColumn(name = "brand_id", nullable = true)
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "room_type_id", nullable = false)
+    @JoinColumn(name = "room_type_id", nullable = true)
     private RoomType roomType;
 
     @ManyToOne
@@ -56,27 +58,33 @@ public class Product {
     private Finish finish;
 
     @ManyToOne
-    @JoinColumn(name = "product_type", nullable = false)
+    @JoinColumn(name = "product_type", nullable = true)
     private ProductType productType;
 
     @ManyToMany
     @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
+        joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = true)
     )
     private Set<Surface> surfaces;
 
     @ManyToMany
     @JoinTable(name = "product_position",
-            joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
+            joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = true)
     )
     private Set<Position> positions;
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
-            joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = false)
+            joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = true)
     )
+    @Column
     private Set<ProductFeature> productFeatures;
+
+    @Column
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PurchaseOrderProduct> purchaseOrderProduct;
+
 }
