@@ -51,17 +51,17 @@ public class Product {
     private float coverage;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "product_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    @Column(name = "product_status", columnDefinition = "VARCHAR")
     private ProductStatus productStatus;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductImages> productImages;
+//    @OneToMany(mappedBy = "product")
+//    private List<ProductImages> productImages;
 
     @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "brand_id", nullable = false)
+    @JoinColumn(name = "brand", nullable = false)
     private Brands brand;
 
     @Enumerated(EnumType.STRING)
@@ -72,32 +72,20 @@ public class Product {
     @JoinColumn(name = "finish_id")
     private Finish finish;
 
-    @ElementCollection(targetClass = ProductType.class)
-    @CollectionTable(name = "product_type",
-            joinColumns = @JoinColumn(name = "product_id"))
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "product_type", nullable = false)
-    private Set<ProductType> productType;
+    private List<ProductType> productType;
 
-    @ElementCollection(targetClass = Surface.class)
-    @CollectionTable(name = "product_surface",
-            joinColumns = @JoinColumn(name = "product_id"))
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "surface", nullable = false)
-    private Set<Surface> surfaces;
+    private List<Surface> surfaces;
 
-    @ElementCollection(targetClass = Position.class)
-    @CollectionTable(name = "product_position",
-            joinColumns = @JoinColumn(name = "product_id"))
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "position", nullable = false)
-    private Set<Position> positions;
+    private List<Position> positions;
 
-
-    @ManyToMany
-    @JoinTable(name = "product_product_feature",
-            joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = false)
-    )
-    private Set<ProductFeature> productFeatures;
+    @ElementCollection
+    @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "feature")
+    private List<String> productFeatures;
 }
