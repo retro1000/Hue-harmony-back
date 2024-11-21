@@ -33,7 +33,7 @@ public class AddProductDto {
 
     private Finish finish;
 
-    private ProductType productType;
+    private String[] productTypes;
 
     private String[] surfaces;
 
