@@ -34,8 +34,8 @@ public class ProductService {
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortCol(), productFilterDto.getSortOrder()),
-                List.of("productId", "productTitle", "productStatus, productImage"),
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
+                List.of("productId", "productTitle", "productStatus", "productImage", ""),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
@@ -78,12 +78,12 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productTitle", "productStatus, productImage", "reviewCount", "productRate"),
+                List.of("productId", "productTitle", "productStatus", "productImage", "reviewCount", "productRate"),
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
-            assert priceRange != null;
+//            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
+//            assert priceRange != null;
             return new ProductUserDisplayDto(
                     dto.getProductId(),
                     dto.getProductTitle(),
