@@ -119,8 +119,6 @@ public class ProductService {
         product.setBrand(addProductDto.getBrand());
         product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
-        product.setProductType(addProductDto.getProductType());
-
 
         product.setSurfaces(Arrays.stream(addProductDto.getSurfaces())
                 .map(Surface::valueOf)
@@ -131,15 +129,12 @@ public class ProductService {
                 .map(Position::valueOf)
                 .collect(Collectors.toSet()));
 
-        product.setPositions(Arrays.stream(addProductDto.getPositions())
-                .map(Position::valueOf)
-                .collect(Collectors.toSet()));
+        product.setProductType(Arrays.stream(addProductDto.getProductTypes())
+                .map(ProductType::valueOf)  // Convert each string to ProductType enum
+                .collect(Collectors.toSet()));  // Collect them in a Set
 
+        productRepository.save(product);
 
-        // Map productFeatures
-
-        // Save the product to the database using the repository
-        // productRepository.save(product);
     }
 
 }
