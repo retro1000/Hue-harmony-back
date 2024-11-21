@@ -1,12 +1,10 @@
 package hueHarmony.web.dto;
 
 
-import hueHarmony.web.model.enums.data_set.ProductType;
+import hueHarmony.web.model.enums.data_set.*;
 import lombok.Data;
 
-import hueHarmony.web.model.enums.data_set.Brands;
-import hueHarmony.web.model.enums.data_set.Finish;
-import hueHarmony.web.model.enums.data_set.RoomType;
+import java.util.List;
 
 @Data
 public class AddProductDto {
@@ -33,11 +31,11 @@ public class AddProductDto {
 
     private Finish finish;
 
-    private String[] productTypes;
+    private List<String> productTypes;
 
-    private String[] surfaces;
+    private List<String> surfaces;
 
-    private String[] positions;
+    private List<String> positions;
 
-    private String[] productFeatures;
+    private List<String> productFeatures;
 }
