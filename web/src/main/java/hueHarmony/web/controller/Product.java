@@ -34,21 +34,27 @@ public class Product {
     }
 
 
+//    @PostMapping("/create")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<Object> createProduct() {
+//        try{
+//            return ResponseEntity.status(200).body("Supplier status update successfully.");
+//
+//        }catch(Exception e){
+//            return ResponseEntity.status(500).body("Internal Server Error");
+//        }
+//    }
+
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> createProduct() {
+    public ResponseEntity<?> postBook(@RequestBody AddProductDto addProductRequest) {
         try{
+            productService.createProduct(addProductRequest);
             return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error");
         }
-    }
-
-    @PostMapping("/create1")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void postBook(@RequestBody AddProductDto addProductRequest) throws Exception {
-        productService.createProduct(addProductRequest);
     }
 
     @PostMapping("/update")
@@ -67,7 +73,6 @@ public class Product {
     public ResponseEntity<Object> deleteProduct() {
         try{
             return ResponseEntity.status(200).body("Supplier status update successfully.");
-
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
