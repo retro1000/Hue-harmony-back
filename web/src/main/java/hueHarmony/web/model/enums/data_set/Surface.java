@@ -8,5 +8,15 @@ public enum Surface {
     METAL,
     WALLS,
     WINDOWS,
-    WOOD
+    WOOD;
+
+
+    public static boolean contains(String value) {
+        for (Surface myEnum : Surface.values()) {
+            if (myEnum.name().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
