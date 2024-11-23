@@ -49,7 +49,7 @@ public class PosOrder {
     @Enumerated(EnumType.STRING)  // Store enum as a String in the database
     private OrderStatus orderStatus = OrderStatus.COMPLETED;// e.g., "Pending", "Completed"
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "cashier_id", nullable = false)
     private User cashier;
 
