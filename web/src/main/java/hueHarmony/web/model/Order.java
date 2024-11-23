@@ -91,6 +91,8 @@ public class Order {
 
     @Transient
     private static final Random random = new Random();
+
+    @Transient
     private static long generateUniqueOrderNumber() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String timestamp = dateFormat.format(new Date());
@@ -98,8 +100,8 @@ public class Order {
         return Long.parseLong(timestamp + String.format("%04d", randomNum));
     }
 
-    @PrePersist
-    public void prePersistOrderNo(){
-        if(this.orderNo==0) this.orderNo = generateUniqueOrderNumber();
-    }
+//    @PrePersist
+//    public void prePersistOrderNo(){
+//        if(this.orderNo==0) this.orderNo = generateUniqueOrderNumber();
+//    }
 }

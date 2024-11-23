@@ -36,7 +36,7 @@ public class Product {
     }
 
     @GetMapping("/filter/product")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProduct(@Validated(FilterProductDto.whenUser.class) @ModelAttribute FilterProductDto request) {
         try{
             return ResponseEntity.status(200).body("Supplier status update successfully.");
