@@ -38,4 +38,6 @@ public class AddProductDto {
     private List<String> positions;
 
     private List<String> productFeatures;
+
+    private List<String> productImage;
 }
