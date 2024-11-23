@@ -1,5 +1,8 @@
 package hueHarmony.web.service;
 
+import com.google.api.client.util.Value;
+import com.google.cloud.storage.Bucket;
+import com.google.firebase.cloud.StorageClient;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
@@ -18,10 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -103,6 +103,7 @@ public class ProductService {
         });
     }
 
+
     public void createProduct(AddProductDto addProductDto) {
         Product product = new Product();
 
@@ -139,6 +140,12 @@ public class ProductService {
         product.setProductType(validProductTypes);
 
         product.setProductFeatures(addProductDto.getProductFeatures());
+
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage());
+
+        product.setImageIds(imageIds);
+
+        System.out.println(product);
 
         productRepository.save(product);
 

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -54,22 +55,24 @@ public class Product {
     @Column(name = "product_status", columnDefinition = "VARCHAR")
     private ProductStatus productStatus;
 
+    @ElementCollection
+    @Column(name = "image_ids")
+    private List<String> imageIds = new ArrayList<>();
+
 //    @OneToMany(mappedBy = "product")
 //    private List<ProductImages> productImages;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductVariation> productVariations;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "brand", nullable = false)
     private Brands brand;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "room_type_id", nullable = false)
+    @JoinColumn(name = "room_type", nullable = false)
     private RoomType roomType;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "finish_id")
+    @JoinColumn(name = "finish")
     private Finish finish;
 
     @ElementCollection
