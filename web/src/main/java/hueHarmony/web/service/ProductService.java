@@ -151,4 +151,14 @@ public class ProductService {
 
     }
 
+
+    public void deleteProduct(Long productId) throws Exception {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            throw new Exception("Product not found");
+        }
+        productRepository.delete(product.get());
+    }
+
 }
