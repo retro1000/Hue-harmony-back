@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,23 +56,27 @@ public class Product {
     @JoinColumn(name = "finish_id")
     private Finish finish;
 
-    @ManyToOne
-    @JoinColumn(name = "product_type", nullable = false)
-    private ProductType productType;
+    private float productPrice;
 
-    @ManyToMany
-    @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
-    )
-    private Set<Surface> surfaces;
+    private float productDiscount;
 
-    @ManyToMany
-    @JoinTable(name = "product_position",
-            joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
-    )
-    private Set<Position> positions;
+//    @ManyToOne
+//    @JoinColumn(name = "product_type", nullable = false)
+//    private ProductType productType;
+//
+//    @ManyToMany
+//    @JoinTable(name = "product_surface",
+//        joinColumns = @JoinColumn(name = "product_id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
+//    )
+//    private Set<Surface> surfaces;
+//
+//    @ManyToMany
+//    @JoinTable(name = "product_position",
+//            joinColumns = @JoinColumn(name = "product_id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
+//    )
+//    private Set<Position> positions;
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
@@ -79,4 +84,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = false)
     )
     private Set<ProductFeature> productFeatures;
+
+
+
 }
