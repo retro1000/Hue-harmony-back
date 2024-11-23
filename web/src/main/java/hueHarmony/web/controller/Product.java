@@ -46,9 +46,9 @@ public class Product {
 //    }
 
     @PostMapping("/create")
-    public ResponseEntity<?> postBook(@RequestBody AddProductDto addProductRequest) {
+    public ResponseEntity<?> postBook(@RequestBody AddProductDto addProductDto) {
         try{
-            productService.createProduct(addProductRequest);
+            productService.createProduct(addProductDto);
             return ResponseEntity.status(200).body("Supplier status update successfully.");
 
         }catch(Exception e){
