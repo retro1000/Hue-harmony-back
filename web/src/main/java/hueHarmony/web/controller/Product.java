@@ -57,6 +57,18 @@ public class Product {
         }
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProduct(@RequestParam Long productId) {
+        try{
+            productService.deleteProduct(productId);
+            return ResponseEntity.status(200).body("Product Deleted successfully.");
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+
+    }
+
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateProduct() {
@@ -68,15 +80,15 @@ public class Product {
         }
     }
 
-    @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> deleteProduct() {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
+//    @DeleteMapping("/delete")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<Object> deleteProduct() {
+//        try{
+//            return ResponseEntity.status(200).body("Supplier status update successfully.");
+//        }catch(Exception e){
+//            return ResponseEntity.status(500).body("Internal Server Error");
+//        }
+//    }
 
     @GetMapping("/filter-products")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
