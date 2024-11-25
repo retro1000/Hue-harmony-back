@@ -2,6 +2,7 @@ package hueHarmony.web.dto;
 
 
 import hueHarmony.web.model.enums.data_set.*;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.List;
@@ -22,6 +23,10 @@ public class AddProductDto {
     private int dryingTime;
 
     private int coverage;
+
+    private float onlineLimit;
+
+    private float productQuantity;
 
     private String productStatus;
 
