@@ -3,6 +3,7 @@ package hueHarmony.web.controller;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.FilterUserDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -119,4 +120,19 @@ public class Product {
             return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
         }
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateProduct(
+            @RequestParam Long productId,
+            @RequestBody UpdateProductDto updateProductDto) {
+
+        try {
+            productService.updateProduct(productId, updateProductDto);
+            return ResponseEntity.ok("Product updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update product: " + e.getMessage());
+        }
+    }
+
+
 }
