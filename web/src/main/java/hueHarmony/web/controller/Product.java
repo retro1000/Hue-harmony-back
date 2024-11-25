@@ -2,7 +2,6 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
-import hueHarmony.web.dto.FilterUserDto;
 import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
@@ -12,10 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -121,9 +117,9 @@ public class Product {
         }
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateProduct(
-            @RequestParam Long productId,
+            @PathVariable("id") Long productId,
             @RequestBody UpdateProductDto updateProductDto) {
 
         try {
@@ -132,6 +128,12 @@ public class Product {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update product: " + e.getMessage());
         }
+    }
+
+    @GetMapping("product/read/{id}")
+    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
+        hueHarmony.web.model.Product product = productService.getProductById(productId);
+        return ResponseEntity.ok(product);
     }
 
 
