@@ -17,10 +17,9 @@ public class ProductSpecification {
 
     public static Specification<Product> hasName(String name) {
         return (root, query, cb) ->
-                (name==null || name.isEmpty() || name.isBlank()) ?
+                (name == null || name.isEmpty() || name.isBlank()) ?
                         cb.conjunction() :
-                        cb.and(cb.function("MATCH", String.class, root.get("productTitle"))
-                                .in(cb.literal(name)));
+                        cb.equal(root.get("productName"), name);
     }
 
     public static Specification<Product> hasProductStatus(Set<ProductStatus> statuses) {
@@ -45,15 +44,15 @@ public class ProductSpecification {
 
     public static Specification<Product> betweenVariationUnitPrice(float startPrice, float finishPrice) {
         return (root, query, cb) -> {
-            Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
-            Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
+    //        Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
+    //        Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
 
             return (startPrice==-1 && finishPrice==-1) ?
                 cb.conjunction() :
                 (startPrice==-1 ?
-                    cb.lessThanOrEqualTo(variationJoin.get("unitPrice"), finishPrice) :
+                    cb.lessThanOrEqualTo(root.get("unitPrice"), finishPrice) :
                     (finishPrice==-1 ?
-                        cb.greaterThanOrEqualTo(variationJoin.get("unitPrice"), startPrice) :
+                        cb.greaterThanOrEqualTo(root.get("productPrice"), startPrice) :
                         cb.between(root.get("unitPrice"), finishPrice, startPrice)
                     )
                 );

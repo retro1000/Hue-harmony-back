@@ -91,7 +91,7 @@ public class Product {
 //    }
 
     @GetMapping("/filter-products")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
@@ -106,7 +106,7 @@ public class Product {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductDisplayDto> displayDtos = productService.filterProductsForDashboardTable(productFilterDto);
