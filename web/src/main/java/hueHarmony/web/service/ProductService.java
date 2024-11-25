@@ -116,6 +116,8 @@ public class ProductService {
         product.setCoat(addProductDto.getCoat());
         product.setDryingTime(addProductDto.getDryingTime() + " hours");
         product.setCoverage(addProductDto.getCoverage());
+        product.setOnlineLimit(addProductDto.getOnlineLimit());
+        product.setProductQuantity(addProductDto.getProductQuantity());
 
         product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
         product.setBrand(addProductDto.getBrand());
@@ -181,7 +183,7 @@ public class ProductService {
         product.setProductFeatures(updateProductDTO.getProductFeatures());
         product.setImageIds(updateProductDTO.getImages());
 
-        // Save updated product
+
         productRepository.save(product);
     }
 
