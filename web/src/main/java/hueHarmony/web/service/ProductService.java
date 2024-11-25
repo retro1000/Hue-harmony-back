@@ -41,7 +41,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
-                List.of("productId", "productTitle", "productStatus", "productImage","productPrice"),
+                List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
@@ -59,7 +59,7 @@ public class ProductService {
         );
 
         Specification<Product> productSpecification = Specification
-                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.APPROVED)))
+                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
                 .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
 
         Sort.Direction direction;
@@ -83,7 +83,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productTitle", "productStatus, productImage", "reviewCount", "productRate"),
+                List.of("productId", "productName", "productStatus", "imageIds"),
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
