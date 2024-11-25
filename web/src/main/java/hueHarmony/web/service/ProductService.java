@@ -197,4 +197,9 @@ public class ProductService {
         productRepository.delete(product.get());
     }
 
+    public Product getProductById(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        return product.orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+    }
+
 }
