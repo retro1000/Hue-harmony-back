@@ -40,7 +40,7 @@ public class FilterProductDto {
 
     private Set<ProductStatus> status;
 
-    private String sellingPrice;
+    private String sellingPrice = "-1,-1";
 
     @NotNull(groups = {FilterProductDto.whenOrganization.class, FilterProductDto.whenUser.class})
     private SortOptions sort = SortOptions.NEWEST;

@@ -44,7 +44,7 @@ public class SupplierService {
         supplier.setSupplierLandPhone(supplierDto.getSupplierLandPhone());
         supplier.setSupplierType(supplierDto.getSupplierType());
         supplier.setSupplierStatus(
-                jwtUtil.extractRoleWithToken().contains("ROLE_ADMIN")?
+                jwtUtil.extractRoleWithToken().contains("ROLE_ADMIN") ?
                         SupplierStatus.ACTIVE :
                         supplierDto.getSupplierStatus()
         );
