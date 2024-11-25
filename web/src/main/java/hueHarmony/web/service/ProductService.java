@@ -5,6 +5,7 @@ import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.StorageClient;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Brand;
@@ -149,6 +150,39 @@ public class ProductService {
 
         productRepository.save(product);
 
+    }
+
+    public void updateProduct(Long productId, UpdateProductDto updateProductDTO) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product with ID " + productId + " not found.");
+        }
+
+        Product product = optionalProduct.get();
+
+        // Update fields
+        product.setProductName(updateProductDTO.getProductName());
+        product.setProductDescription(updateProductDTO.getProductDescription());
+        product.setProductPrice(updateProductDTO.getProductPrice());
+        product.setProductDiscount(updateProductDTO.getProductDiscount());
+        product.setCoat(updateProductDTO.getCoat());
+        product.setDryingTime(updateProductDTO.getDryingTime());
+        product.setCoverage(updateProductDTO.getCoverage());
+        product.setOnlineLimit(updateProductDTO.getOnlineLimit());
+        product.setProductQuantity(updateProductDTO.getProductQuantity());
+        product.setProductStatus(updateProductDTO.getProductStatus());
+        product.setBrand(updateProductDTO.getBrand());
+        product.setRoomType(updateProductDTO.getRoomType());
+        product.setFinish(updateProductDTO.getFinish());
+        product.setProductType(updateProductDTO.getProductTypes());
+        product.setSurfaces(updateProductDTO.getSurfaces());
+        product.setPositions(updateProductDTO.getPositions());
+        product.setProductFeatures(updateProductDTO.getProductFeatures());
+        product.setImageIds(updateProductDTO.getImages());
+
+        // Save updated product
+        productRepository.save(product);
     }
 
 
