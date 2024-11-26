@@ -1,9 +1,19 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.dto.AddProductDto;
+import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.ProductDto;
+import hueHarmony.web.dto.response.ProductDisplayDto;
+import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
+import hueHarmony.web.model.ProductImages;
+import hueHarmony.web.model.enums.data_set.Position;
+import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.ProductType;
+import hueHarmony.web.model.enums.data_set.Surface;
 import hueHarmony.web.repository.ProductRepository;
-import hueHarmony.web.specification.ProductSpecifications;
+import hueHarmony.web.specification.ProductSpecification;
+import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,13 +21,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +46,25 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-    public List<Product> searchProducts(String category, String key) {
-        Specification<Product> specification = Specification.where(ProductSpecifications.withKeyword(key))
-                .and(ProductSpecifications.withCategory(category));
+    public Page<ProductDisplayDto> searchProducts(String category, String key, int limit, int page) {
+        Specification<Product> specification = Specification.where(ProductSpecification.withKeyword(key))
+                .and(ProductSpecification.withCategory(category));
 
-        return productRepository.findAll(specification);
+        if(limit <= 0) limit = 10;
+        if(page < 0) page = 0;
+
+        return productRepository.filterAndSelectFieldsBySpecsAndPage(
+                specification,
+                PageRequest.of(page, limit),
+                List.of("productId", "productTitle", "productStatus", "productImage", ""),
+                ProductDisplayDto.class
+        ).map(product -> {
+                    ProductDisplayDto dto = (ProductDisplayDto) product;
+                    dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
+//                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
+                    return dto;
+                }
+        );
     }
 
     public Page<ProductDisplayDto> filterProductsForDashboardTable(FilterProductDto productFilterDto){
@@ -68,7 +90,7 @@ public class ProductService {
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
                     dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
+//                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
                     return dto;
                 }
         );
@@ -166,9 +188,11 @@ public class ProductService {
 
         product.setProductFeatures(addProductDto.getProductFeatures());
 
-        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage());
+        List<ProductImages> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage())
+                .stream()
+                .map(image -> ProductImages.builder().image(image).product(product).build()).toList();
 
-        product.setImageIds(imageIds);
+        product.setProductImages(imageIds);
 
         System.out.println(product);
 

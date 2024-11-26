@@ -1,4 +1,4 @@
-package hueHarmony.web.model.Enum;
+package hueHarmony.web.model.enums;
 
 public enum ItemStatus {
 

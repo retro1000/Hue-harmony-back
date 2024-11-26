@@ -1,7 +1,7 @@
 package hueHarmony.web.model;
 
-import hueHarmony.web.model.Enum.ItemStatus;
-import hueHarmony.web.model.Enum.Manufacturer;
+import hueHarmony.web.model.enums.ItemStatus;
+import hueHarmony.web.model.enums.Manufacturer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

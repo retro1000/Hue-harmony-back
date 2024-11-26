@@ -2,10 +2,12 @@ package hueHarmony.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import hueHarmony.web.dto.ProductDto;
+import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.service.FirebaseStorageService;
 import hueHarmony.web.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -84,9 +86,9 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam String category, @RequestParam String key) {
+    public ResponseEntity<?> search(@RequestParam String category, @RequestParam String key, @RequestParam("page")int page, @RequestParam("limit")int limit) {
 
-        List<Product> products=productService.searchProducts(category,key);
+        Page<ProductDisplayDto> products = productService.searchProducts(category, key, page, limit);
 
 
         return ResponseEntity.ok("Sucess");
