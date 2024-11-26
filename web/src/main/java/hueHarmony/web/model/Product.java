@@ -1,19 +1,15 @@
 package hueHarmony.web.model;
 
-import hueHarmony.web.model.enums.data_set.Brands;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.model.enums.data_set.Finish;
-import hueHarmony.web.model.enums.data_set.Position;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.enums.data_set.ProductType;
 import hueHarmony.web.model.enums.data_set.RoomType;
-import hueHarmony.web.model.enums.data_set.Surface;
-import hueHarmony.web.model.enums.PositionN;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,10 +47,6 @@ public class Product {
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
 
-    @Column(name="product_status",columnDefinition = "TEXT")
-    private String productStatus;
-
-
     @Column(name = "drying_time", columnDefinition = "VARCHAR", length = 25)
     private String dryingTime;
 
@@ -69,12 +61,14 @@ public class Product {
     @Column(name = "image_ids")
     private List<String> imageIds = new ArrayList<>();
     @OneToMany(mappedBy = "product")
-    @Column
     private List<ProductImages> productImages;
 
-//    @OneToMany(mappedBy = "product")
-//    private List<ProductImages> productImages;
+    @OneToMany(mappedBy = "product")
+    private List<ProductVariation> productVariations;
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brand;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "brand", nullable = false)
