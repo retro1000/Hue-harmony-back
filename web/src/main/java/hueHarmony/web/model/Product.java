@@ -46,19 +46,19 @@ public class Product {
     private List<ProductVariation> productVariations;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = true)
+//    @JoinColumn(name = "brand_id", nullable = true)
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "room_type_id", nullable = true)
+//    @JoinColumn(name = "room_type_id", nullable = true)
     private RoomType roomType;
 
     @ManyToOne
-    @JoinColumn(name = "finish_id")
+//    @JoinColumn(name = "finish_id")
     private Finish finish;
 
     @ManyToOne
-    @JoinColumn(name = "product_type", nullable = true)
+//    @JoinColumn(name = "product_type", nullable = true)
     private ProductType productType;
 
     @ManyToMany
