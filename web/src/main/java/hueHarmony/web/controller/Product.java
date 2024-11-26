@@ -2,6 +2,7 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -88,7 +88,7 @@ public class Product {
 //    }
 
     @GetMapping("/filter-products")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
@@ -103,7 +103,7 @@ public class Product {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductDisplayDto> displayDtos = productService.filterProductsForDashboardTable(productFilterDto);
@@ -116,4 +116,25 @@ public class Product {
             return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable("id") Long productId,
+            @RequestBody UpdateProductDto updateProductDto) {
+
+        try {
+            productService.updateProduct(productId, updateProductDto);
+            return ResponseEntity.ok("Product updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update product: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("product/read/{id}")
+    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
+        hueHarmony.web.model.Product product = productService.getProductById(productId);
+        return ResponseEntity.ok(product);
+    }
+
+
 }
