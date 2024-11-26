@@ -22,6 +22,7 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 
     @GetMapping("/filter")
@@ -33,6 +34,7 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 
     @GetMapping("/filter/product")
@@ -44,6 +46,7 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 
     @PostMapping("/create")
@@ -55,6 +58,7 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 
     @PostMapping("/update")
@@ -66,6 +70,7 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 
     @DeleteMapping("/delete")
@@ -77,5 +82,6 @@ public class Product {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+        return null;
     }
 }
