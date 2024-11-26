@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,9 +28,19 @@ public class ProductVariation {
     private Variation variation;
 
     @ManyToOne
-    @JoinColumn(name = "shipment_varition_id", nullable = false)
+    @JoinColumn(name = "shipment_variation_id", nullable = false)
     private ShipmentVariation shipmentVariation;
 //
 //    @OneToMany(mappedBy = "brand")
 //    private List<Product> products;
+
+//    @ManyToOne
+//    @JoinColumn(name = "brand_id", nullable = false)
+//    private Brand brand;
+
+   @Column(name = "size")
+    private int size;
+
+    @Column(name = "color")
+    private String color;
 }

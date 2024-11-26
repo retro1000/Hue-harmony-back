@@ -2,10 +2,12 @@ package hueHarmony.web.service;
 
 import hueHarmony.web.dto.ChangePasswordDto;
 import hueHarmony.web.dto.UserDto;
+import hueHarmony.web.model.enums.UserStatus;
+import hueHarmony.web.repository.RoleRepository;
+import hueHarmony.web.repository.UserRepository;
 import hueHarmony.web.dto.UserProfileDto;
 import hueHarmony.web.model.Role;
 import hueHarmony.web.model.User;
-import hueHarmony.web.model.enums.UserStatus;
 import hueHarmony.web.repository.RoleRepository;
 import hueHarmony.web.repository.UserRepository;
 import jakarta.persistence.EntityManager;

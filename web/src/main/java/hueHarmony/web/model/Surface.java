@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +23,8 @@ public class Surface {
     @Column(name = "surface_name", columnDefinition = "VARCHAR", length = 15, nullable = false, unique = true)
     private String surfaceName;
 
-    @ManyToMany
-    private List<Surface> surfaces;
+   /* @ManyToMany(mappedBy = "surfaces")
+    private Set<Product> products = new HashSet<>();*/
+
+
 }

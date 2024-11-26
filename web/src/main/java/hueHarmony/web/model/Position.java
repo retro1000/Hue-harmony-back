@@ -23,4 +23,5 @@ public class Position {
 
     @ManyToMany
     private List<Product> products;
+    
 }

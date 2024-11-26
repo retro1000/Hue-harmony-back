@@ -19,8 +19,8 @@ public class Variation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int variationId;
 
-    @OneToMany(mappedBy = "variation")
-    private List<ProductVariation> productVariations;
+    /*@OneToMany(mappedBy = "variation")
+    private List<ProductVariation> productVariations;*/
 
     @ManyToOne
     @JoinColumn(name = "color_id")
