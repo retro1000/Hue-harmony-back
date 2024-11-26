@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends ExtendedRepository<Product, Long>{
     List<Product> findByProductName(@Param("productName") String productName);
+    List<PosProductDto> getProducts();
 
 }

@@ -62,9 +62,9 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
-    @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;
+//    @ManyToOne
+//    @JoinColumn(name = "brand_id", nullable = false)
+//    private Brand brand;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "brand", nullable = false)
@@ -81,12 +81,12 @@ public class Product {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<ProductType> productType;
-    private float productPrice;
+//    private float productPrice;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Surface> surfaces;
-    private float productDiscount;
+//    private float productDiscount;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
