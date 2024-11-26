@@ -2,14 +2,19 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.PosOrderDto;
 import hueHarmony.web.dto.PosProductDto;
+import hueHarmony.web.dto.SummaryResponseDto;
+import hueHarmony.web.model.PosOrder;
 import hueHarmony.web.service.PosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pos")
@@ -28,6 +33,63 @@ public class Pos {
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Object> createOrder(@RequestBody PosOrder order) {
+        try {
+            PosOrder createdOrder = posService.createOrder(order);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @GetMapping("/get-sales-summary")
+    public ResponseEntity<Object> getTotalsForCashierOnDate(
+            @RequestParam Long cashierId,
+            @RequestParam String date) {
+        try {
+            LocalDate parsedDate = LocalDate.parse(date); // Ensure the date format is "yyyy-MM-dd"
+            SummaryResponseDto totals = posService.getTotalsForCashierOnDate(cashierId, parsedDate);
+            return ResponseEntity.ok(totals);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @GetMapping("/cashier/{cashierId}/completed-orders")
+    public ResponseEntity<List<PosOrder>> getCompletedOrdersByCashier(@PathVariable Long cashierId) {
+        try {
+            // Fetch completed orders for the given cashier
+            List<PosOrder> orders = posService.getCompletedOrdersByCashier(cashierId);
+
+            // If no orders found, return a 404 not found response
+            if (orders.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Return the list of orders with a 200 OK response
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            // Handle any exceptions and return a 500 internal server error
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<PosOrder> getOrderById(@PathVariable Long orderId) {
+        try {
+            // Fetch the order by ID using the service method
+            Optional<PosOrder> order = posService.getOrderById(orderId);
+
+            // If order is not found, return a 404 Not Found response
+            return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+            // Return the order details with a 200 OK response
+        } catch (Exception e) {
+            // In case of any error, return a 500 Internal Server Error
+            return ResponseEntity.status(500).body(null);
         }
     }
 

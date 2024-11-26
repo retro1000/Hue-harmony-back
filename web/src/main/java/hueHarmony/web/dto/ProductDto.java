@@ -1,15 +1,18 @@
 package hueHarmony.web.dto;
 
-import hueHarmony.web.annotation.validations.*;
-import hueHarmony.web.model.enums.data_set.*;
+import com.fasterxml.jackson.annotation.JsonView;
+import hueHarmony.web.annotation.validations.DataExistingListValidation;
+import hueHarmony.web.model.Position;
+import hueHarmony.web.model.ProductFeature;
+import hueHarmony.web.model.Surface;
+import hueHarmony.web.model.enums.PositionN;
 import hueHarmony.web.service.ProductService;
-import hueHarmony.web.service.VariationService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,67 +20,84 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductDto {
 
     public interface onCreate{}
     public interface onUpdate{}
     public interface onDelete{}
+    public interface onListView{}
+    public interface onView{}
+    public interface onStatusUpdate{}
 
-    @NotNull(groups = {onUpdate.class, onDelete.class})
-    @DataExistingValidation(groups = {onUpdate.class, onDelete.class}, service = ProductService.class, method = "")
+
+
+    @JsonView({onUpdate.class,onDelete.class,onStatusUpdate.class})
+    @DataExistingListValidation(groups = {onUpdate.class,onDelete.class,onStatusUpdate.class},service = ProductService.class,method = "isProductExist")
     private int productId;
 
-    @NotNull(groups = {onCreate.class})
-    @NameValidation(groups = {onCreate.class, onUpdate.class}, required = true, maxLength = 100)
+    @JsonView({onCreate.class,onListView.class,onView.class,onUpdate.class})
+    @NotNull(groups = {onCreate.class,onUpdate.class},message = "Product name cannot be Empty")
+    @DataExistingListValidation(groups = {onUpdate.class,onDelete.class,onStatusUpdate.class},service = ProductService.class,method = "isProductExist")
     private String productName;
 
-    @NotNull(groups = {onCreate.class})
-    private MultipartFile[] productImages;
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private MultipartFile productImage;
 
-    @NameValidation(groups = {onCreate.class, onUpdate.class}, required = true, minLength = 300, maxLength = 1000)
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productImageUrl;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String startingPrice;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productStatus;
+
+    @JsonView({onView.class,onUpdate.class})
+    private int productDiscount;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
     private String productDescription;
 
-    @NumberValidation(groups = {onCreate.class, onUpdate.class}, min = 1)
-    private int coat;
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productCategory;
 
-    @NotNull(groups = {onCreate.class})
-    @Size(groups = {onCreate.class}, min=5)
-    @Pattern(groups = {onCreate.class}, regexp = "^(\\d+\\s?(min|mins|hr|hrs))$")
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productBrand;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productPrice;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productSize;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String productType;
+
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
     private String dryingTime;
 
-    @NotNull(groups = {onCreate.class})
-    @DecimalNumberValidation(groups = {onCreate.class, onUpdate.class}, min = 0.1F)
-    private float coverage;
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private String roomType;
 
-    @NotNull(groups = {onCreate.class})
-    private Brands brand;
+    /*@JsonView({onView.class,onCreate.class,onUpdate.class})
+    private Set<ProductFeature> productFeatures;
 
-    @NotNull(groups = {onCreate.class})
-    private Finish finish;
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private Set<Surface> surfaces;*/
 
-    @NotNull(groups = {onCreate.class})
-    @NotEmpty(groups = {onCreate.class})
-    private Set<Surface> surfaces;
+    @JsonView({onView.class,onCreate.class,onUpdate.class})
+    private Set<PositionN> positions;
 
-    @NotNull(groups = {onCreate.class})
-    @NotEmpty(groups = {onCreate.class})
-    private Set<Position> positions;
+    public ProductDto(int productId, String productName, String productImageUrl, String startingPrice, String productStatus, int productDiscount) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productImageUrl = productImageUrl;
+        this.startingPrice = startingPrice;
+        this.productStatus = productStatus;
+        this.productDiscount = productDiscount;
+    }
 
-    @NotNull(groups = {onCreate.class})
-    private ProductType productType;
-
-    @NotNull(groups = {onCreate.class})
-    private RoomType roomType;
-
-    @NotNull(groups = {onCreate.class})
-    @NotEmpty(groups = {onCreate.class})
-    @DataExistingListValidation(groups = {onCreate.class}, service = VariationService.class, method = "")
-    private Set<Integer> variations;
-
-    @Valid
-    @NotNull(groups = {onCreate.class})
-    @NotEmpty(groups = {onCreate.class})
-    private Set<@Valid ProductFeaturesDto> productFeatures;
 }

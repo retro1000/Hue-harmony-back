@@ -16,9 +16,10 @@ public class ProductSpecification {
 
     public static Specification<Product> hasName(String name) {
         return (root, query, cb) ->
-                (name == null || name.isEmpty() || name.isBlank()) ?
+                (name==null || name.isEmpty() || name.isBlank()) ?
                         cb.conjunction() :
-                        cb.equal(root.get("productName"), name);
+                        cb.and(cb.function("MATCH", String.class, root.get("productTitle"))
+                                .in(cb.literal(name)));
     }
 
     public static Specification<Product> hasProductStatus(Set<ProductStatus> statuses) {
@@ -43,18 +44,38 @@ public class ProductSpecification {
 
     public static Specification<Product> betweenVariationUnitPrice(float startPrice, float finishPrice) {
         return (root, query, cb) -> {
-    //        Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
-    //        Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
+//            Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
+//            Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
 
             return (startPrice==-1 && finishPrice==-1) ?
                 cb.conjunction() :
                 (startPrice==-1 ?
                     cb.lessThanOrEqualTo(root.get("unitPrice"), finishPrice) :
                     (finishPrice==-1 ?
-                        cb.greaterThanOrEqualTo(root.get("productPrice"), startPrice) :
+                        cb.greaterThanOrEqualTo(root.get("unitPrice"), startPrice) :
                         cb.between(root.get("unitPrice"), finishPrice, startPrice)
                     )
                 );
+        };
+    }
+
+    public static Specification<Product> withCategory(String category) {
+        return (root, query, cb) ->{
+            if (category == null || category.isEmpty()) {
+                return cb.conjunction();
+            }
+            return cb.equal(root.get("category"), category);
+        };
+
+
+    }
+
+    public static Specification<Product> withKeyword(String key) {
+        return (root, query, criteriaBuilder) -> {
+            if (key == null || key.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.like(root.get("key"), key);
         };
     }
 }

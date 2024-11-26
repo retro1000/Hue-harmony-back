@@ -21,6 +21,8 @@ public class Brand {
     @Column(name = "brand_name", columnDefinition = "VARCHAR", length = 15, nullable = false, unique = true)
     private String brandName;
 
-    @OneToMany(mappedBy = "brand")
+    /* @OneToMany(mappedBy = "product_variation")
     private List<Product> products;
+
+     */
 }

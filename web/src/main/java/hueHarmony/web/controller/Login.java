@@ -1,7 +1,6 @@
 package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.UserProfileDto;
-import hueHarmony.web.service.UserDetailsServiceImpl;
 import hueHarmony.web.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import hueHarmony.web.util.JwtUtil;
@@ -31,7 +30,6 @@ public class Login {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 //    private final UserDetailsServiceImpl userDetailsService;
-
 
     @PostMapping("/validate")
     public ResponseEntity<Object> generateToken(@RequestBody JsonNode data) {

@@ -1,8 +1,8 @@
 package hueHarmony.web.component.validation;
 
-import hueHarmony.web.annotation.validations.ContentPermissionListValidation;
 import hueHarmony.web.util.JwtUtil;
 import hueHarmony.web.util.TypeUtils;
+import hueHarmony.web.annotation.validations.ContentPermissionListValidation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
