@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class ConvertUtil {
@@ -24,5 +26,11 @@ public class ConvertUtil {
         } else {
             throw new IllegalArgumentException("The provided object is not a String array");
         }
+    }
+
+    public static <T> T[] convertRangeToArray(String range, Function<String, T> parser, T[] emptyArray){
+        return Arrays.stream(range.split(","))
+                .map(parser)
+                .toArray(size -> Arrays.copyOf(emptyArray, size));
     }
 }

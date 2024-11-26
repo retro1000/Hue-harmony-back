@@ -1,5 +1,12 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.enums.data_set.Brands;
+import hueHarmony.web.model.enums.data_set.Finish;
+import hueHarmony.web.model.enums.data_set.Position;
+import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.ProductType;
+import hueHarmony.web.model.enums.data_set.RoomType;
+import hueHarmony.web.model.enums.data_set.Surface;
 import hueHarmony.web.model.enums.PositionN;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,15 +39,17 @@ public class Product {
 
     @Column(name = "product_image", columnDefinition = "TEXT")
     private String productImageUrl;
+    @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
+    private float productPrice;
+
+    @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private float productDiscount;
+
+//    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
+//    private String productImage;
 
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
-
-    @Column(name="starting_price",columnDefinition = "VARCHAR")
-    private String startingPrice = "RS:0";
-
-    @Column(name="product_discount",columnDefinition = "INT")
-    private int productDiscount;
 
     @Column(name="product_status",columnDefinition = "TEXT")
     private String productStatus;
@@ -51,42 +61,40 @@ public class Product {
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "product_status", columnDefinition = "VARCHAR")
+    private ProductStatus productStatus;
+
+    @ElementCollection
+    @Column(name = "image_ids")
+    private List<String> imageIds = new ArrayList<>();
     @OneToMany(mappedBy = "product")
     @Column
     private List<ProductImages> productImages;
 
-    @OneToMany(mappedBy = "product")
-    @Column
-    private List<ProductVariation> productVariations;
+//    @OneToMany(mappedBy = "product")
+//    private List<ProductImages> productImages;
 
-   /* @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;*/
 
-    @Column(name = "brand",columnDefinition = "VARCHAR",length = 20)
-    private String brand;
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "brand", nullable = false)
+    private Brands brand;
 
-    /*@ManyToOne
-    @JoinColumn(name = "room_type_id", nullable = false)
-    private RoomType roomType;*/
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "room_type", nullable = false)
+    private RoomType roomType;
 
-    @Column(name = "room_type",columnDefinition = "VARCHAR",length = 30)
-    private String roomType;
-
-    @ManyToOne
-    @JoinColumn(name = "finish_id")
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "finish")
     private Finish finish;
 
-    @ManyToOne
-    @JoinColumn(name = "product_type", nullable = false)
-    private ProductType productType;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<ProductType> productType;
 
-    @ManyToMany
-    @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = false)
-    )
-   private Set<Surface> surfaces = new HashSet<>();
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Surface> surfaces;
 
    /*  @ManyToMany
     @JoinTable(name = "product_position",
@@ -94,6 +102,9 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "position_id", nullable = false)
     )
     private Set<Position> positions;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Position> positions;
 
     @ManyToMany
     @JoinTable(name = "product_product_feature",
@@ -107,4 +118,8 @@ public class Product {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseOrderProduct> purchaseOrderProduct;
 
+    @ElementCollection
+    @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "feature")
+    private List<String> productFeatures;
 }

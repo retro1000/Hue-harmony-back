@@ -5,5 +5,14 @@ public enum Brands {
     ROBBIALAC,
     NIPPON_PAINT,
     ASIAN_PAINTS,
-    KANSAI_PAINT
+    KANSAI_PAINT;
+
+    public static boolean contains(String value) {
+        for (Brands myEnum : Brands.values()) {
+            if (myEnum.name().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
