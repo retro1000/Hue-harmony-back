@@ -17,7 +17,6 @@ import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -85,7 +84,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 pageable,
-                List.of("productId", "productTitle", "productStatus", "productImage", ""),
+                List.of("productId", "productTitle", "productStatus", "productImage", "productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;

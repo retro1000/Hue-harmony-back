@@ -1,6 +1,7 @@
 package hueHarmony.web.repository;
 
 import hueHarmony.web.dto.ProductDto;
+import hueHarmony.web.dto.PosProductDto;
 import hueHarmony.web.model.Product;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +22,5 @@ public interface ProductRepository extends ExtendedRepository<Product, Long>{
 
     @Query("SELECT new hueHarmony.web.dto.PosProductDto(p.productId, p.productName, p.productPrice,p.productDiscount) FROM Product p")
     List<PosProductDto> getProducts();
+
 }
