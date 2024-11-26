@@ -2,7 +2,6 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
-import hueHarmony.web.dto.FilterUserDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -13,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")

@@ -5,6 +5,10 @@ import hueHarmony.web.model.Product;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +51,24 @@ public class ProductService {
                 .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
+        Pageable pageable;
+
+        if(productFilterDto.getSortCol()!=null && !productFilterDto.getSortCol().isEmpty() && productFilterDto.getSortOrder()!=null) {
+            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit())
+                    .withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol());
+        }else {
+            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit());
+        }
+
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
-                List.of("productId", "productTitle", "productStatus", "productImage","productPrice"),
+                pageable,
+                List.of("productId", "productTitle", "productStatus", "productImage", ""),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
                     dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
+                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
                     return dto;
                 }
         );
@@ -92,10 +106,12 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productTitle", "productStatus, productImage", "reviewCount", "productRate"),
+                List.of("productId", "productTitle", "productStatus", "productImage", "reviewCount", "productRate"),
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
+//            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
+//            assert priceRange != null;
             return new ProductUserDisplayDto(
                     dto.getProductId(),
                     dto.getProductTitle(),
