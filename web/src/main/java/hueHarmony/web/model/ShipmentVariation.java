@@ -25,9 +25,11 @@ public class ShipmentVariation {
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
-
+/*
     @Column(name = "item_cost", columnDefinition = "REAL DEFAULT 0.00 CHECK(item_cost >= 0)", nullable = false)
     private float itemCost = 0;
+
+ */
 
     @Column(name = "discount", columnDefinition = "REAL DEFAULT 0.00 CHECK(item_cost >= 0)", nullable = false)
     private float discount = 0;
