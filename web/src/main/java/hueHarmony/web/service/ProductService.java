@@ -1,24 +1,29 @@
 package hueHarmony.web.service;
 
+import com.google.api.client.util.Value;
+import com.google.cloud.storage.Bucket;
+import com.google.firebase.cloud.StorageClient;
+import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
+import hueHarmony.web.model.Brand;
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.ProductFeature;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,24 +38,14 @@ public class ProductService {
                 .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
-        Pageable pageable;
-
-        if(productFilterDto.getSortCol()!=null && !productFilterDto.getSortCol().isEmpty() && productFilterDto.getSortOrder()!=null) {
-            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit())
-                    .withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol());
-        }else {
-            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit());
-        }
-
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                pageable,
-                List.of("productId", "productTitle", "productStatus", "productImage", ""),
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
+                List.of("productId", "productTitle", "productStatus", "productImage","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
                     dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
                     return dto;
                 }
         );
@@ -88,24 +83,82 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productTitle", "productStatus", "productImage", "reviewCount", "productRate"),
+                List.of("productId", "productTitle", "productStatus, productImage", "reviewCount", "productRate"),
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-//            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
-//            assert priceRange != null;
             return new ProductUserDisplayDto(
                     dto.getProductId(),
                     dto.getProductTitle(),
                     dto.getProductStatus(),
                     firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
-                    priceRange,
-                    priceRange[1]!=-1,
-                    false,
+                    dto.getPrice(),
+                    dto.isSale(),
+                    dto.isNew(),
                     dto.getReviewRate(),
                     dto.getTotalReviews(),
-                    priceRange[1]
+                    dto.getDiscount()
+
             );
         });
     }
+
+
+    public void createProduct(AddProductDto addProductDto) {
+        Product product = new Product();
+
+        // Basic fields
+        product.setProductName(addProductDto.getProductName());
+        product.setProductDescription(addProductDto.getProductDescription());
+        product.setProductPrice(addProductDto.getProductPrice());
+        product.setProductDiscount(addProductDto.getProductDiscount());
+        product.setCoat(addProductDto.getCoat());
+        product.setDryingTime(addProductDto.getDryingTime() + " hours");
+        product.setCoverage(addProductDto.getCoverage());
+
+        product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+        product.setBrand(addProductDto.getBrand());
+        product.setRoomType(addProductDto.getRoomType());
+        product.setFinish(addProductDto.getFinish());
+
+        List<Surface> validSurfaces = addProductDto.getSurfaces().stream()
+                .filter(Surface::contains)
+                .map(value -> Surface.valueOf(value.toUpperCase()))
+                .toList();
+        product.setSurfaces(validSurfaces);
+
+        List<Position> validPositions = addProductDto.getPositions().stream()
+                .filter(Position::contains)
+                .map(value -> Position.valueOf(value.toUpperCase()))
+                .toList();
+        product.setPositions(validPositions);
+
+        List<ProductType> validProductTypes = addProductDto.getProductTypes().stream()
+                .filter(ProductType::contains)
+                .map(value -> ProductType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setProductType(validProductTypes);
+
+        product.setProductFeatures(addProductDto.getProductFeatures());
+
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage());
+
+        product.setImageIds(imageIds);
+
+        System.out.println(product);
+
+        productRepository.save(product);
+
+    }
+
+
+    public void deleteProduct(Long productId) throws Exception {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            throw new Exception("Product not found");
+        }
+        productRepository.delete(product.get());
+    }
+
 }

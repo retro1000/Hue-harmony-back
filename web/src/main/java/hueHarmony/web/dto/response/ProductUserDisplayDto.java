@@ -34,18 +34,18 @@ public class ProductUserDisplayDto extends ProductDisplayDto{
             String productTitle,
             ProductStatus productStatus,
             String productImageUrl,
-            float[] priceRange,
+            float price,
             boolean isSale,
             boolean isNew,
             float reviewRate,
             int totalReviews,
             float discount
     ){
-        super(productId, productTitle, productStatus, productImageUrl, priceRange);
+        super(productId, productTitle, productStatus, productImageUrl,price,discount);
         this.isSale = isSale;
         this.isNew = isNew;
         this.reviewRate = reviewRate;
         this.totalReviews = totalReviews;
-        this.discount = discount;
+
     }
 }

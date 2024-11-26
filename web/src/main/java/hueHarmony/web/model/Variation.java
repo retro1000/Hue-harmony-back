@@ -42,21 +42,21 @@ public class Variation {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
-    @ManyToOne
-    @JoinColumn(name = "product_type_id", nullable = false)
-    private ProductType productType;
-
-    @ManyToMany
-    @JoinTable(name = "variation_position",
-            joinColumns = @JoinColumn(name = "position_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "variation_id", nullable = false)
-    )
-    private Set<Position> positions;
-
-    @ManyToMany
-    @JoinTable(name = "variation_surface",
-            joinColumns = @JoinColumn(name = "surface_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "variation_id", nullable = false)
-    )
-    private Set<Surface> surfaces;
+//    @ManyToOne
+//    @JoinColumn(name = "product_type_id", nullable = false)
+//    private ProductType productType;
+//
+//    @ManyToMany
+//    @JoinTable(name = "variation_position",
+//            joinColumns = @JoinColumn(name = "position_id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "variation_id", nullable = false)
+//    )
+//    private Set<Position> positions;
+//
+//    @ManyToMany
+//    @JoinTable(name = "variation_surface",
+//            joinColumns = @JoinColumn(name = "surface_id", nullable = false),
+//            inverseJoinColumns = @JoinColumn(name = "variation_id", nullable = false)
+//    )
+//    private Set<Surface> surfaces;
 }

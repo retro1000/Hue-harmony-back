@@ -14,7 +14,8 @@ public class ProductDisplayDto {
     private String productTitle;
     private ProductStatus productStatus;
     private String productImage;
-    private float[] priceRange;
+    private float price;
+    private float discount;
 
     public ProductDisplayDto(int productId, String productTitle, ProductStatus productStatus, String productImage){
         this.productId = productId;

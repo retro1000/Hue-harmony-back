@@ -6,5 +6,14 @@ public enum ProductType {
     PAINT,
     UNDERCOAT,
     VARNISH,
-    WATERPROOFING
+    WATERPROOFING;
+
+    public static boolean contains(String value) {
+        for (ProductType myEnum : ProductType.values()) {
+            if (myEnum.name().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

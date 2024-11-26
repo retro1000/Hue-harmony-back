@@ -9,5 +9,14 @@ public enum RoomType {
     LIVING_ROOM,
     HOME_OFFICE,
     HALLWAY,
-    DINING_ROOM,
+    DINING_ROOM;
+
+    public static boolean contains(String value) {
+        for (RoomType myEnum : RoomType.values()) {
+            if (myEnum.name().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
