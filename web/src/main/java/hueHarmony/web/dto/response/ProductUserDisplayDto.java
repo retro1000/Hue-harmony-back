@@ -15,19 +15,8 @@ public class ProductUserDisplayDto extends ProductDisplayDto{
     private float reviewRate;
     private int totalReviews;
     private float discount;
+    private ProductStatus productStatus;
 
-    public ProductUserDisplayDto(
-            int productId,
-            String productTitle,
-            ProductStatus productStatus,
-            String productImageUrl,
-            float reviewRate,
-            int totalReviews
-    ){
-        super(productId, productTitle, productStatus, productImageUrl);
-        this.reviewRate = reviewRate;
-        this.totalReviews = totalReviews;
-    }
 
     public ProductUserDisplayDto(
             int productId,

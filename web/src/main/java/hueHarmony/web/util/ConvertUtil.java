@@ -29,8 +29,12 @@ public class ConvertUtil {
     }
 
     public static <T> T[] convertRangeToArray(String range, Function<String, T> parser, T[] emptyArray){
-        return Arrays.stream(range.split(","))
-                .map(parser)
-                .toArray(size -> Arrays.copyOf(emptyArray, size));
+        if (range == null) return emptyArray;
+        else {
+            return Arrays.stream(range.split(","))
+                    .map(parser)
+                    .toArray(size -> Arrays.copyOf(emptyArray, size));
+        }
+
     }
 }

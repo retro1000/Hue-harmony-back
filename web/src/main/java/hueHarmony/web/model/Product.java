@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,21 @@ public class Product {
 
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
+
+    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private float onlineLimit;
+
+    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private float productQuantity;
+
+
+    @Column(name="productPublishedTime", nullable = false)
+    private LocalDateTime productPublishedTime;
+
+    @PrePersist
+    protected void onCreate() {
+        this.productPublishedTime = LocalDateTime.now();
+    }
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "product_status", columnDefinition = "VARCHAR")
