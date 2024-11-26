@@ -1,6 +1,6 @@
-package hueHarmony.web.dummy;
+package hueHarmony.web.test;
 
-public class af10 {
+public class af4 {
     public static void main(String[] args) {
         // Print a greeting message
         System.out.println("Hello, welcome to the Dummy Program!");

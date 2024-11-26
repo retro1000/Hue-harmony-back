@@ -1,4 +1,4 @@
-package hueHarmony.web.dummy;
+package hueHarmony.web.test;
 
 public class af26 {
 

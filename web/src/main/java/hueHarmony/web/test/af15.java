@@ -1,4 +1,4 @@
-package hueHarmony.web.dummy;
+package hueHarmony.web.test;
 
 public class af15 {
     public static void main(String[] args) {
