@@ -17,5 +17,8 @@ public class Brand {
             inverseJoinColumns = @JoinColumn(name = "product_variation_id"))
     private Set<ProductVariation> productVariations; // Ensure this matches ProductVariation
 
-    // Getters and setters
+    /* @OneToMany(mappedBy = "product_variation")
+    private List<Product> products;
+
+     */
 }

@@ -1,11 +1,7 @@
 package hueHarmony.web.model;
 
-//import PROJ.VIVO.anotations.validations.NameValidation;
-//import PROJ.VIVO.anotations.validations.PasswordValidation;
-//import PROJ.VIVO.anotations.validations.UsernameValidation;
+import hueHarmony.web.model.enums.UserStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,36 +16,28 @@ import java.util.List;
 @Table(name="users")
 public class User {
 
-    public interface onCreation{}
-    public interface onUpdate{}
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-//    @PasswordValidation(groups = {onCreation.class})
     @Column(name = "password", columnDefinition = "TEXT", nullable = false)
     private String password;
 
-//    @NotEmpty(message = "Email cannot be empty.", groups = {onCreation.class, onUpdate.class})
-//    @Email(message = "Invalid email entered.", groups = {onCreation.class, onUpdate.class})
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-//    @UsernameValidation(groups = {onCreation.class, onUpdate.class})
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-//    @NameValidation(minLength = 10, name = "Full name", groups = {onCreation.class, onUpdate.class})
     @Column(name = "full_name")
     private String fullName = null;
 
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage = null;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
-    private Customer customer;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    private UserStatus userStatus;
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
 //    @JoinColumn(name = "user_id", nullable = false)

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,18 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
+    public int extractUserId(String token) {
+        return Integer.parseInt(extractAllClaims(token).get("userId", String.class));
+    }
+
+    public int extractUserIdWithToken() {
+        return Integer.parseInt(extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("userId", String.class));
+    }
+
+    public List<String> extractRoleWithToken() {
+        return (List<String>) extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("roles", List.class);
+    }
+
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
@@ -53,9 +66,10 @@ public class JwtUtil {
         return extractExpiration(token).before(Date.from(Instant.now()));
     }
 
-    public static String generateToken(String username, boolean rememberMeOn, List<String> roles) {
+    public static String generateToken(String username, boolean rememberMeOn, List<String> roles, int userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
+        claims.put("userId", userId);
         return createToken(claims, username, rememberMeOn);
     }
 
