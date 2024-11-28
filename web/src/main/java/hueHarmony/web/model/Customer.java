@@ -25,13 +25,6 @@ public class Customer {
     @Column(name = "contact_no", columnDefinition = "VARCHAR", length = 10)
     private String contactNo;
 
-    @OneToOne
-    @JoinColumn(name = "loyalty_id")
-    private Loyalty loyalty;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "user_id")
-    private User user;
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.MERGE)
 //    private List<Order> orders;

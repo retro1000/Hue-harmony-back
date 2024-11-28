@@ -18,9 +18,14 @@ public class Shipment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int shipmentId;
 
-    @Column(name = "discount", columnDefinition = "REAL DEFAULT 0.00 CHECK(item_cost >= 0)", nullable = false)
+    @Column(name = "discount", columnDefinition = "REAL DEFAULT 0.00", nullable = false)
     private float discount = 0;
+
+    @Column(name = "item_cost", columnDefinition = "REAL CHECK(item_cost >= 0)")
+    private float itemCost;
 
     @OneToMany
     private List<ShipmentVariation> shipmentVariations;
+
+
 }

@@ -2,9 +2,9 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.UserProfileDto;
 import hueHarmony.web.service.UserService;
-import hueHarmony.web.util.JwtUtil;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Autowired;
+import hueHarmony.web.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,18 +24,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/login")
+@RequiredArgsConstructor
 public class Login {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 //    private final UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    public Login(AuthenticationManager authenticationManager, UserService userService){
-//        this.userDetailsService = userDetailsService;
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-    }
 
     @PostMapping("/validate")
     public ResponseEntity<Object> generateToken(@RequestBody JsonNode data) {
@@ -50,7 +44,7 @@ public class Login {
             List<String> userRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
             Map<String, Object> payload = new HashMap<>();
             payload.put("user", userProfileDto);
-            payload.put("token", JwtUtil.generateToken(data.get("username").asText(), (data.has("rememberMe") && data.get("rememberMe").asBoolean()), userRoles));
+            payload.put("token", JwtUtil.generateToken(data.get("username").asText(), (data.has("rememberMe") && data.get("rememberMe").asBoolean()), userRoles, userProfileDto.getUserId()));
             payload.put("role", userRoles.get(0).substring(5));
             return ResponseEntity.ok(payload);
         } catch (AuthenticationException exception) {

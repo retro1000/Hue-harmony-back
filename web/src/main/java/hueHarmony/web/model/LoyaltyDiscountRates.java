@@ -14,8 +14,8 @@ public class LoyaltyDiscountRates {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int customerId;
+    private int LoyaltyDiscountRatesId;
 
     @Column()
-    private float discountRate;
+    private float discountRatePerLoyaltyPoint;
 }

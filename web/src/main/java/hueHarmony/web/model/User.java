@@ -1,11 +1,7 @@
 package hueHarmony.web.model;
 
-//import PROJ.VIVO.anotations.validations.NameValidation;
-//import PROJ.VIVO.anotations.validations.PasswordValidation;
-//import PROJ.VIVO.anotations.validations.UsernameValidation;
+import hueHarmony.web.model.enums.UserStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,9 +35,9 @@ public class User {
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage = null;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
-    private Customer customer;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    private UserStatus userStatus;
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
 //    @JoinColumn(name = "user_id", nullable = false)

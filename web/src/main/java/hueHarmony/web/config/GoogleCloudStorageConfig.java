@@ -22,7 +22,7 @@ public class GoogleCloudStorageConfig {
 
     @Bean
     public Storage storage() throws IOException {
-        InputStream serviceAccount = resourceLoader.getResource("classpath:hue-harmony-firebase-adminsdk-vihku-940868f8f5.json").getInputStream();
+        InputStream serviceAccount = resourceLoader.getResource("classpath:hueharmony-1a8c2-firebase-adminsdk-vdbux-39f823c538.json").getInputStream();
 
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount)
                 .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
