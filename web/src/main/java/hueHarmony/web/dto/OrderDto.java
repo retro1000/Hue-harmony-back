@@ -1,6 +1,7 @@
 package hueHarmony.web.dto;
 
 import hueHarmony.web.model.enums.PaymentMethod;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class OrderDto {
 
     private int productId;
     private int quantity;
+    private String orderNote;
     private String shippingAddress;
     private String emailAddress;
     private String billingAddress;
@@ -23,6 +25,10 @@ public class OrderDto {
     private String firstName;
     private String lastName;
     private int customerId;
+
+    private String paymentMethodId;
+
+    @NotNull
     private PaymentMethod paymentMethod;
 
 }

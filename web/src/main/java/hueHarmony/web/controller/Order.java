@@ -20,8 +20,10 @@ public class Order {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> placeNewOrderOnline(@RequestBody OrderDto orderDto){
         try{
-            orderService.createOrder(orderDto);
+            orderService.createOnlineOrder(orderDto);
             return ResponseEntity.status(201).body("Order placed successfully.");
+        }catch(IllegalStateException e){
+            return ResponseEntity.status(400).body(e.getMessage());
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }

@@ -3,5 +3,8 @@ package hueHarmony.web.model.enums;
 public enum PaymentMethod {
     COD,
     CARD,
-    CASH
+    POS_CASH,
+    BANK_TRANSFER,
+    POS_CARD
+
 }

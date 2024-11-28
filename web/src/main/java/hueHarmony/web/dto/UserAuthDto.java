@@ -9,13 +9,13 @@ import java.util.List;
 @NoArgsConstructor
 public class UserAuthDto {
 
-    private int userid;
+    private int userId;
     private String password;
     private List<String> roles;
 
-    public UserAuthDto(int userid, String password, Object roles) {
+    public UserAuthDto(int userId, String password, Object roles) {
 
-        this.userid = userid;
+        this.userId = userId;
         this.password = password;
         this.roles = List.of(roles.toString().split(","));
     }
