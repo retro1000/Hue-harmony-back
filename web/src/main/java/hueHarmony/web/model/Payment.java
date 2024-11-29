@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 
@@ -28,6 +29,12 @@ public class Payment {
 
     @Column(name = "payment_amount", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(payment_amount > 0)")
     private float paymentAmount;
+
+    @Column(name = "payment_description", nullable = false, columnDefinition = "TEXT", length = 500)
+    private String paymentDescription;
+
+    @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", columnDefinition = "VARCHAR", length = 10, nullable = false)

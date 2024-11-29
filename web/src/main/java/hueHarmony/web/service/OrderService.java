@@ -3,6 +3,7 @@ package hueHarmony.web.service;
 import com.stripe.exception.StripeException;
 import hueHarmony.web.dto.OrderDto;
 import hueHarmony.web.model.*;
+import hueHarmony.web.model.enums.LinkedCardChoice;
 import hueHarmony.web.model.enums.PaymentMethod;
 import hueHarmony.web.model.enums.PaymentStatus;
 import hueHarmony.web.repository.CartItemRepository;
@@ -29,6 +30,7 @@ public class OrderService {
     private final CustomerService customerService;
     private final LinkedCardService linkedCardService;
     private final StripeService stripeService;
+    private final ProductService productService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -37,7 +39,7 @@ public class OrderService {
     public void createOnlineOrder(OrderDto orderDto) throws StripeException {
         Order order = createOrder(orderDto);
 
-        Customer customer = handleOrderCustomer(orderDto);
+        Customer customer = handleOrderCustomer(orderDto, true);
 
         order.setCustomer(customer);
 
@@ -52,7 +54,7 @@ public class OrderService {
                         .build()
         );
 
-        String paymentMethodId = null;
+        LinkedCard linkedCard = null;
         switch (orderDto.getPaymentMethod()){
             case CARD:
                 order.setOrderPayments(
@@ -65,7 +67,11 @@ public class OrderService {
                         )
                 );
 
-                paymentMethodId = linkedCardService.handleLinkedCard(orderDto.getPaymentMethodId(), customer);
+                linkedCard = linkedCardService.handleLinkedCard(orderDto.getLinkedCardDto(), customer);
+
+                if(orderDto.getLinkedCardDto().getLinkedCardChoice() == LinkedCardChoice.NEW)
+                    customer.getRetailCustomer().getLinkedCards().add(linkedCard);
+
                 break;
             case COD:
                 break;
@@ -75,17 +81,19 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        if(orderDto.getPaymentMethod() == PaymentMethod.CARD && paymentMethodId!=null && !paymentMethodId.isBlank() && !paymentMethodId.isEmpty()){
+        if(orderDto.getPaymentMethod() == PaymentMethod.CARD && linkedCard!=null && linkedCard.getToken()!=null && !linkedCard.getToken().isEmpty() && !linkedCard.getToken().isBlank()){
             stripeService.createPaymentIntent(
                     (long) order.getOrderPayments().get(0).getPaymentAmount(),
                     "lkr",
-                    paymentMethodId,
+                    linkedCard.getToken(),
                     "Card payment for order number " + order.getOrderNo() + ".",
                     new HashMap<>(){{
                         put("paymentNumber", order.getOrderPayments().get(0).getPaymentNo()+"");
                         put("orderNumber", order.getOrderNo()+"");
                     }}
             );
+        }else{
+            throw new IllegalArgumentException("Invalid payment method or payment method is blocked.");
         }
     }
 
@@ -117,6 +125,7 @@ public class OrderService {
                 .orderNote(orderDto.getOrderNote())
                 .orderPaymentMethod(orderDto.getPaymentMethod())
                 .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+                .orderDiscount(orderDto.getDiscount())
                 .build();
 
         Set<OrderProduct> orderProducts;
@@ -124,21 +133,34 @@ public class OrderService {
         if (orderDto.getProductId() == 0 && !orderDto.getCartItems().isEmpty()) {
             // Case 1: productId is 0 and there are cart items
             orderProducts = orderDto.getCartItems().stream()
-                    .map(cartItem -> OrderProduct.builder()
-                            .product(entityManager.getReference(Product.class, cartItemRepository.getProductIdByCartItemId((long) cartItem.getCartItemId())))
-                            .order(order)
-                            .quantity(cartItem.getQuantity())
-                            .build())
+                    .map(cartItem -> {
+                        long productId = cartItemRepository.getProductIdByCartItemId((long) cartItem.getCartItemId());
+                        float[] prices = productService.getProductPriceAndDiscount(productId);
+
+                        return OrderProduct.builder()
+                                .product(entityManager.getReference(Product.class, productId))
+                                .order(order)
+                                .discount(prices[0])
+                                .fullPrice(cartItem.getQuantity() * prices[1])
+                                .quantity(cartItem.getQuantity())
+                                .build();
+                    })
                     .collect(Collectors.toSet());
 
             cartItemRepository.deleteAllById(orderDto.getCartItems().stream().map(cartItem -> (long) cartItem.getCartItemId()).toList());
         } else if (orderDto.getProductId() != 0) {
             // Case 2: productId is not 0
-            orderProducts = Set.of(OrderProduct.builder()
-                    .product(entityManager.getReference(Product.class, orderDto.getProductId()))
-                    .order(order)
-                    .quantity(orderDto.getQuantity())
-                    .build());
+            float[] prices = productService.getProductPriceAndDiscount(orderDto.getProductId());
+
+            orderProducts = Set.of(
+                    OrderProduct.builder()
+                        .product(entityManager.getReference(Product.class, orderDto.getProductId()))
+                        .discount(prices[0])
+                        .fullPrice(orderDto.getQuantity() * prices[1])
+                        .order(order)
+                        .quantity(orderDto.getQuantity())
+                        .build()
+            );
         } else {
             // Case 3: Default case, neither condition is satisfied
             throw new IllegalStateException("No items found for create the order.");
@@ -152,7 +174,8 @@ public class OrderService {
     @Transactional
     protected Payment handleOrderPayment(Order order, PaymentMethod paymentMethod, int customerId){
         Payment payment = Payment.builder()
-                .paymentStatus(paymentMethod==PaymentMethod.CASH ? PaymentStatus.PAID : PaymentStatus.PENDING)
+                .paymentStatus(paymentMethod == PaymentMethod.POS_CASH ? PaymentStatus.PAID : PaymentStatus.PENDING)
+                .paymentDescription("Payment for order number "+order.getOrderNo()+".")
                 .build();
 //        order.setOrderPayments(List.of(payment));
 
@@ -176,15 +199,21 @@ public class OrderService {
                     .build();
 
             if(isRetailOrder){
-                RetailCustomer.builder()
+                RetailCustomer retailCustomer = RetailCustomer.builder()
                         .customer(customer)
                         .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
                         .build();
+
+                customer.setRetailCustomer(retailCustomer);
             }
         }else{
             customer = entityManager.getReference(Customer.class, orderDto.getCustomerId());
         }
 
         return customer;
+    }
+
+    private float calculateOrderCost(float discount){
+
     }
 }

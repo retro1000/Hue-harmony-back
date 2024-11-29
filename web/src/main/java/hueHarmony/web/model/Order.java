@@ -31,6 +31,9 @@ public class    Order {
     @Column(name = "order_note", columnDefinition = "TEXT")
     private String orderNote;
 
+    @Column(name = "order_discount", columnDefinition = "REAL DEFAULT 0 CHECK(order_discount >= 0)")
+    private float orderDiscount;
+
     @Column(name = "order_status", columnDefinition = "VARCHAR", length = 25, nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.CREATED;

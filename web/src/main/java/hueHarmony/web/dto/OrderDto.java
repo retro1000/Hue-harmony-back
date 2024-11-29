@@ -17,6 +17,7 @@ public class OrderDto {
 
     private int productId;
     private int quantity;
+    private float discount;
     private String orderNote;
     private String shippingAddress;
     private String emailAddress;
@@ -26,7 +27,7 @@ public class OrderDto {
     private String lastName;
     private int customerId;
 
-    private String paymentMethodId;
+    private LinkedCardDto linkedCardDto;
 
     @NotNull
     private PaymentMethod paymentMethod;

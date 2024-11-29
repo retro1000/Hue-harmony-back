@@ -4,6 +4,7 @@ import hueHarmony.web.model.enums.CardType;
 import hueHarmony.web.model.enums.LinkedCardStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "linked_card")
+@Builder
 public class LinkedCard {
 
     @Id
@@ -30,6 +32,7 @@ public class LinkedCard {
     @Column(name = "expire_date", columnDefinition = "VARCHAR", length = 5, nullable = false)
     private String expireDate;
 
+    //create a trigger to make default when there is no active cards saved for customer
     @Column(name = "is_default", columnDefinition = "BOOLEAN")
     private boolean isDefault;
 
@@ -42,8 +45,8 @@ public class LinkedCard {
     private LinkedCardStatus linkedCardStatus = LinkedCardStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "retail_customer_id", nullable = false)
+    private RetailCustomer retailCustomer;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)

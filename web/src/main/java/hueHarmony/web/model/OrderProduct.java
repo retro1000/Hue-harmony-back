@@ -21,9 +21,8 @@ public class OrderProduct {
     @Column(name = "quantity", nullable = false, columnDefinition = "SMALLINT DEFAULT 0 CHECK(quantity > 0)")
     private int quantity;
 
-//    @Column(name = "discount", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(discount >= 0)")
-//    private float discount;
-
+    @Column(name = "discount", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(discount >= 0)")
+    private float discount;
 
     //add trigger to update full price when order product created or updated quantity of existing order product.
     //use insert update BEFORE trigger(nullable is false)

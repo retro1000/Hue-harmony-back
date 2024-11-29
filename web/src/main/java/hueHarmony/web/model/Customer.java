@@ -34,7 +34,11 @@ public class Customer {
     @Column(name = "email", columnDefinition = "VARCHAR", length = 200, nullable = false)
     private String email;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private RetailCustomer retailCustomer;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private WholeSaleCustomer wholeSaleCustomer;
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.MERGE)
 //    private List<Order> orders;

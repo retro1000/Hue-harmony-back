@@ -1,7 +1,9 @@
 package hueHarmony.web.service;
 
+import com.google.api.client.util.Value;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.firebase.cloud.StorageClient;
 import lombok.Getter;
@@ -10,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -24,6 +30,27 @@ public class FirebaseStorageService {
 
     @Getter
     private final static String bucketName = "hueharmony-1a8c2.appspot.com";
+
+
+    public List<String> uploadImagesToFirebase(List<String> base64Images) {
+        List<String> imageIds = new ArrayList<>();
+        for (String base64Image : base64Images) {
+            try {
+                byte[] decodedBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
+                String imageId = UUID.randomUUID().toString();
+                String fileName = "images/" + imageId + ".jpg";
+
+                Bucket bucket = StorageClient.getInstance().bucket(bucketName);
+                bucket.create(fileName, decodedBytes, "image/jpeg");
+                imageIds.add(imageId);
+
+            } catch (Exception e) {
+                throw new RuntimeException("Error uploading image to Firebase", e);
+            }
+        }
+        return imageIds;
+    }
+
 
     public String uploadFile(String fileName, byte[] fileBytes, String contentType) {
         // Get the bucket instance from Firebase StorageClient

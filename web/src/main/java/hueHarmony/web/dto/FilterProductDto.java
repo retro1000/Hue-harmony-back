@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Sort;
 
 import java.util.Set;
 
@@ -37,14 +38,16 @@ public class FilterProductDto {
 
     private Set<Finish> finishes;
 
-    @DecimalNumberValidation(groups = {FilterProductDto.whenOrganization.class, FilterProductDto.whenUser.class}, max = 100000F)
-    private float startPrice;
+    private Set<ProductStatus> status;
 
-    @DecimalNumberValidation(groups = {FilterProductDto.whenOrganization.class, FilterProductDto.whenUser.class}, max = 100000F)
-    private float endPrice;
+    private String sellingPrice;
 
     @NotNull(groups = {FilterProductDto.whenOrganization.class, FilterProductDto.whenUser.class})
     private SortOptions sort = SortOptions.NEWEST;
+
+    private String sortCol;
+
+    private Sort.Direction sortOrder;
 
     @Min(groups = {FilterProductDto.whenOrganization.class}, value = 1)
     private int limit;
