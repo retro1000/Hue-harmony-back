@@ -90,21 +90,6 @@ public class Product {
         }
     }
 
-    @GetMapping("/pos/filter-products")
-//    @PreAuthorize("hasAnyRole('ROLE_CACHIER')")
-    public ResponseEntity<Object> posFilterProducts(@ModelAttribute FilterProductDto productFilterDto){
-        try{
-            Page<PosDisplayDto> displayDtos = productService.posFilterProductsForList(productFilterDto);
-//
-            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-
-            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
-        }
-    }
-
     @GetMapping("/filter")
 //    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){

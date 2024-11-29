@@ -1,12 +1,15 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.PosOrderDto;
 import hueHarmony.web.dto.PosProductDto;
 import hueHarmony.web.dto.SummaryResponseDto;
+import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.model.PosOrder;
 import hueHarmony.web.service.PosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,16 +26,19 @@ public class Pos {
 
     private final PosService posService;
 
-    @GetMapping("/get-products")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER')")
-    public ResponseEntity<Object> getProducts() {
-        try{
-            List<PosProductDto> products = posService.getProducts();
-//           return ResponseEntity.status(200).body("Supplier status update successfully.");
-            return ResponseEntity.status(200).body(products);
 
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
+    @GetMapping("/filter-products")
+//    @PreAuthorize("hasAnyRole('ROLE_CACHIER')")
+    public ResponseEntity<Object> posFilterProducts(@ModelAttribute FilterProductDto productFilterDto){
+        try{
+            Page<PosDisplayDto> displayDtos = posService.posFilterProductsForList(productFilterDto);
+//
+            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
         }
     }
 

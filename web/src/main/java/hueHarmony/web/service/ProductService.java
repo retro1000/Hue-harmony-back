@@ -34,9 +34,9 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FirebaseStorageService firebaseStorageService;
 
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAllProductListDto();
-    }
+//    public List<ProductDto> getAllProducts() {
+//        return productRepository.findAllProductListDto();
+//    }
 
     public Product save(Product newProduct) {
         return productRepository.save(newProduct);
