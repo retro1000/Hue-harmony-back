@@ -1,9 +1,10 @@
 package hueHarmony.web.model;
 
-import hueHarmony.web.model.enums.OrderPaymentType;
 import hueHarmony.web.model.enums.OrderStatus;
+import hueHarmony.web.model.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,67 +18,47 @@ import java.util.Random;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
-
+@Builder
+public class    Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
 
     @Column(name = "order_no", nullable = false, unique = true)
-    private long orderNo;
+    private long orderNo = generateUniqueOrderNumber();
 
     @Column(name = "order_note", columnDefinition = "TEXT")
     private String orderNote;
 
-    @Column(name = "waybill")
-    private long waybill;
-
-    @Column(name = "billing_address", columnDefinition = "TEXT", nullable = false)
-    private String billingAddress;
-
-    @Column(name = "shipping_address", columnDefinition = "TEXT", nullable = false)
-    private String shippingAddress;
+    @Column(name = "order_discount", columnDefinition = "REAL DEFAULT 0 CHECK(order_discount >= 0)")
+    private float orderDiscount;
 
     @Column(name = "order_status", columnDefinition = "VARCHAR", length = 25, nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.CREATED;
 
-    @Column(name = "order_payment_type", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    @Column(name = "order_payment_method", columnDefinition = "VARCHAR", length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
-    private OrderPaymentType orderPaymentType;
+    private PaymentMethod orderPaymentMethod;
 
     @OneToMany
     private List<Product> products;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private List<OrderVariation> orderVariations;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    private OnlineOrder onlineOrder;
 
-//    @OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//    private List<OrderPayment> orderPayments;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    private List<OrderProduct> orderProducts;
+
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Payment> orderPayments;
 //
 //    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 //    //    @JoinColumn(name = "order_id", nullable = false)
 //    private List<PROJ.VIVO.model.OrderStatus> orderStatusTimeLine;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "waybill_id")
-    private ActiveWaybill activeWaybill;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_service_id", nullable = false)
-    private DeliveryService deliveryService;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "district_id", nullable = false)
-    private District district;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -91,6 +72,8 @@ public class Order {
 
     @Transient
     private static final Random random = new Random();
+
+    @Transient
     private static long generateUniqueOrderNumber() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String timestamp = dateFormat.format(new Date());
@@ -98,8 +81,8 @@ public class Order {
         return Long.parseLong(timestamp + String.format("%04d", randomNum));
     }
 
-    @PrePersist
-    public void prePersistOrderNo(){
-        if(this.orderNo==0) this.orderNo = generateUniqueOrderNumber();
-    }
+//    @PrePersist
+//    public void prePersistOrderNo(){
+//        if(this.orderNo==0) this.orderNo = generateUniqueOrderNumber();
+//    }
 }

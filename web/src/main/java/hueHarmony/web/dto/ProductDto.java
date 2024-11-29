@@ -3,7 +3,6 @@ package hueHarmony.web.dto;
 import hueHarmony.web.annotation.validations.*;
 import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.service.ProductService;
-import hueHarmony.web.service.VariationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -71,10 +70,10 @@ public class ProductDto {
     @NotNull(groups = {onCreate.class})
     private RoomType roomType;
 
-    @NotNull(groups = {onCreate.class})
-    @NotEmpty(groups = {onCreate.class})
-    @DataExistingListValidation(groups = {onCreate.class}, service = VariationService.class, method = "")
-    private Set<Integer> variations;
+//    @NotNull(groups = {onCreate.class})
+//    @NotEmpty(groups = {onCreate.class})
+//    @DataExistingListValidation(groups = {onCreate.class}, service = VariationService.class, method = "")
+//    private Set<Integer> variations;
 
     @Valid
     @NotNull(groups = {onCreate.class})

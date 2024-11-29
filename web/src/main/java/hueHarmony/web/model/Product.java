@@ -40,10 +40,10 @@ public class Product {
     @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
     private float productDiscount;
 
-//    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
-//    private String productImage;
+    @Column(name = "product_image_url", nullable = false, columnDefinition = "TEXT")
+    private String productImageUrl;
 
-    @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
+    @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >= 0 )")
     private int coat;
 
     @Column(name = "drying_time", columnDefinition = "VARCHAR", length = 25)
@@ -74,9 +74,6 @@ public class Product {
     @ElementCollection
     @Column(name = "image_ids")
     private List<String> imageIds = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "product")
-//    private List<ProductImages> productImages;
 
 
     @Enumerated(EnumType.STRING)
