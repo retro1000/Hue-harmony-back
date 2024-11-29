@@ -3,9 +3,11 @@ package hueHarmony.web.specification;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.ProductVariation;
 import hueHarmony.web.model.Variation;
+import hueHarmony.web.model.enums.data_set.Brands;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.RoomType;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,7 +20,7 @@ public class ProductSpecification {
         return (root, query, cb) ->
                 (name == null || name.isEmpty() || name.isBlank()) ?
                         cb.conjunction() :
-                        cb.equal(root.get("productName"), name);
+                        cb.like(cb.lower(root.get("productName")), "%"+name.toLowerCase()+"%");
     }
 
     public static Specification<Product> hasProductStatus(Set<ProductStatus> statuses) {
@@ -26,6 +28,20 @@ public class ProductSpecification {
                 (statuses==null || statuses.isEmpty()) ?
                         cb.conjunction() :
                         root.get("productStatus").in(statuses);
+    }
+
+    public static Specification<Product> hasBrand(Set<Brands> brands) {
+        return (root, query, cb) ->
+                (brands==null || brands.isEmpty()) ?
+                        cb.conjunction() :
+                        root.get("brands").in(brands);
+    }
+
+    public static Specification<Product> hasRoomType(Set<RoomType> roomTypes) {
+        return (root, query, cb) ->
+                (roomTypes==null || roomTypes.isEmpty()) ?
+                        cb.conjunction() :
+                        root.get("roomType").in(roomTypes);
     }
 
     public static Specification<Product> betweenDates(LocalDate startDate, LocalDate finishDate) {
@@ -57,6 +73,8 @@ public class ProductSpecification {
                 );
         };
     }
+
+
 
     public static Specification<Product> withCategory(String category) {
         return (root, query, cb) ->{

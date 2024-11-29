@@ -49,7 +49,7 @@ public class GRNService {
             receivedProduct.setProduct(entityManager.getReference(Product.class, productDto.getProductId()));
             receivedProduct.setQuantityReceived(productDto.getQuantityReceived());
             return receivedProduct;
-        }).collect(Collectors.toList());
+        }).toList();
 
         grn.getReceivedProducts().clear();
         grn.getReceivedProducts().addAll(updatedProducts);

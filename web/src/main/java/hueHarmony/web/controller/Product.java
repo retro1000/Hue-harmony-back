@@ -1,8 +1,8 @@
 package hueHarmony.web.controller;
 
-import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
+import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -117,11 +118,11 @@ public class Product {
         }
     }
 
-    @GetMapping("product/read/{id}")
-    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
-        hueHarmony.web.model.Product product = productService.getProductById(productId);
-        return ResponseEntity.ok(product);
-    }
+//    @GetMapping("product/read/{id}")
+//    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
+//        hueHarmony.web.model.Product product = productService.getProductById(productId);
+//        return ResponseEntity.ok(product);
+//    }
 
 
 }

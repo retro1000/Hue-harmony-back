@@ -24,9 +24,9 @@ public class AddProductDto {
 
     private int coverage;
 
-    private float onlineLimit;
+    private int onlineLimit;
 
-    private float productQuantity;
+    private int productQuantity;
 
     private String productStatus;
 

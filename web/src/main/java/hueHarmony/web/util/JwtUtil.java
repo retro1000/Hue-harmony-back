@@ -1,4 +1,5 @@
 package hueHarmony.web.util;
+import hueHarmony.web.dto.UserAuthDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -46,11 +47,21 @@ public class JwtUtil {
     }
 
     public int extractUserIdWithToken() {
-        return Integer.parseInt(extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("userId", String.class));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof UserAuthDto){
+            return ((UserAuthDto) principal).getUserId();
+        }
+        return 0;
+//        return Integer.parseInt(extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("userId", String.class));
     }
 
     public List<String> extractRoleWithToken() {
-        return (List<String>) extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("roles", List.class);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof UserAuthDto){
+            return ((UserAuthDto) principal).getRoles();
+        }
+        return Collections.emptyList();
+//        return (List<String>) extractAllClaims(SecurityContextHolder.getContext().getAuthentication().getCredentials().toString()).get("roles", List.class);
     }
 
     private Claims extractAllClaims(String token) {

@@ -2,14 +2,8 @@ package hueHarmony.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import hueHarmony.web.annotation.validations.DataExistingListValidation;
-import hueHarmony.web.model.Position;
-import hueHarmony.web.model.ProductFeature;
-import hueHarmony.web.model.Surface;
-import hueHarmony.web.model.enums.PositionN;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.service.ProductService;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,10 +44,10 @@ public class ProductDto {
     private String productImageUrl;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private String startingPrice;
+    private float startingPrice;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private String productStatus;
+    private ProductStatus productStatus;
 
     @JsonView({onView.class,onUpdate.class})
     private int productDiscount;
@@ -65,7 +59,7 @@ public class ProductDto {
     private String productCategory;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private String productBrand;
+    private Brands productBrand;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
     private String productPrice;
@@ -74,13 +68,13 @@ public class ProductDto {
     private String productSize;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private String productType;
+    private ProductType productType;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
     private String dryingTime;
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private String roomType;
+    private RoomType roomType;
 
     /*@JsonView({onView.class,onCreate.class,onUpdate.class})
     private Set<ProductFeature> productFeatures;
@@ -89,9 +83,9 @@ public class ProductDto {
     private Set<Surface> surfaces;*/
 
     @JsonView({onView.class,onCreate.class,onUpdate.class})
-    private Set<PositionN> positions;
+    private Set<Position> positions;
 
-    public ProductDto(int productId, String productName, String productImageUrl, String startingPrice, String productStatus, int productDiscount) {
+    public ProductDto(int productId, String productName, String productImageUrl, float startingPrice, ProductStatus productStatus, int productDiscount) {
         this.productId = productId;
         this.productName = productName;
         this.productImageUrl = productImageUrl;

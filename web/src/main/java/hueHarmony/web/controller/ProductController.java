@@ -1,6 +1,7 @@
 package hueHarmony.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.ProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.model.Product;
@@ -31,17 +32,17 @@ public class ProductController {
         this.firebaseStorageService=firebaseStorageService;
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getAllProducts() {
-        List<ProductDto> products = productService.getAllProducts();
-
-        if (products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");
-        }
-
-        return ResponseEntity.ok(products);
-        //return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");
-    }
+//    @GetMapping()
+//    public ResponseEntity<?> getAllProducts(@ModelAttribute FilterProductDto filterProductDto) {
+//        Page<ProductDto> products = productService.getAllProducts();
+//
+//        if (products.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");
+//        }
+//
+//        return ResponseEntity.ok(products);
+//        //return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No products available");
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody  @Validated(ProductDto.onCreate.class) ProductDto productDto, BindingResult bindingResult) throws IOException {
@@ -50,11 +51,11 @@ public class ProductController {
         }
 
 
-        Product newProduct=Product.builder()
+        Product newProduct = Product.builder()
                 .productName(productDto.getProductName())
                 .productDescription(productDto.getProductDescription())
                 .productImageUrl(firebaseStorageService.uploadFile(productDto.getProductImage().getName(),productDto.getProductImage().getBytes(),productDto.getProductImage().getContentType()))
-                 .brand(productDto.getProductBrand())
+                .brand(productDto.getProductBrand())
                 .dryingTime(productDto.getDryingTime())
                 /* .roomType(productDto.getRoomType())*/
                 .productStatus(productDto.getProductStatus())
@@ -76,9 +77,9 @@ public class ProductController {
             if (product == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }else{
-                ProductDto productDto=ProductDto.builder()
+                ProductDto productDto = ProductDto.builder()
                         .productName(product.getProductName())
-                        .startingPrice(product.getStartingPrice())
+                        .startingPrice(product.getProductPrice())
                         .productStatus(product.getProductStatus())
                         .build();
                 return ResponseEntity.ok(productDto);

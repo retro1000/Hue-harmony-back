@@ -10,6 +10,7 @@ import hueHarmony.web.model.enums.data_set.Surface;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class UpdateProductDto {
@@ -20,15 +21,15 @@ public class UpdateProductDto {
     private int coat;
     private String dryingTime;
     private float coverage;
-    private float onlineLimit;
-    private float productQuantity;
+    private int onlineLimit;
+    private int productQuantity;
     private ProductStatus productStatus;
     private Brands brand;
     private RoomType roomType;
     private Finish finish;
     private List<ProductType> productTypes;
     private List<Surface> surfaces;
-    private List<Position> positions;
+    private Set<Position> positions;
     private List<String> productFeatures;
     private List<String> images; // Base64 strings of images
 }
