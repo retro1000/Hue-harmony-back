@@ -2,7 +2,7 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
-import hueHarmony.web.dto.FilterUserDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -14,8 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -25,28 +23,6 @@ public class Product {
     @GetMapping("/view/{productId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_USER', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> viewProduct(@PathVariable("productId") int productId) {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
-
-    @GetMapping("/filter")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> filter(@Validated(FilterProductDto.whenOrganization.class) @ModelAttribute FilterProductDto request) {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
-
-    @GetMapping("/filter/product")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> filterProduct(@Validated(FilterProductDto.whenUser.class) @ModelAttribute FilterProductDto request) {
         try{
             return ResponseEntity.status(200).body("Supplier status update successfully.");
 
@@ -68,6 +44,18 @@ public class Product {
         }
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProduct(@RequestParam Long productId) {
+        try{
+            productService.deleteProduct(productId);
+            return ResponseEntity.status(200).body("Product Deleted successfully.");
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+
+    }
+
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateProduct() {
@@ -79,18 +67,8 @@ public class Product {
         }
     }
 
-    @DeleteMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> deleteProduct() {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
-
     @GetMapping("/filter-products")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
@@ -105,7 +83,7 @@ public class Product {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductDisplayDto> displayDtos = productService.filterProductsForDashboardTable(productFilterDto);
@@ -118,4 +96,25 @@ public class Product {
             return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable("id") Long productId,
+            @RequestBody UpdateProductDto updateProductDto) {
+
+        try {
+            productService.updateProduct(productId, updateProductDto);
+            return ResponseEntity.ok("Product updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update product: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("product/read/{id}")
+    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
+        hueHarmony.web.model.Product product = productService.getProductById(productId);
+        return ResponseEntity.ok(product);
+    }
+
+
 }

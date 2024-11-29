@@ -24,8 +24,12 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Column(name = "payment_no", nullable = false, unique = true)
-    private long paymentNo = generateUniquePaymentNumber();
+    private String paymentNo = generateUniquePaymentNumber();
 
     @Column(name = "payment_amount", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(payment_amount > 0)")
     private float paymentAmount;
@@ -44,10 +48,10 @@ public class Payment {
     private static final Random random = new Random();
 
     @Transient
-    private static long generateUniquePaymentNumber() {
+    private static String generateUniquePaymentNumber() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String timestamp = dateFormat.format(new Date());
         int randomNum = random.nextInt(10000);
-        return Long.parseLong(timestamp + String.format("%04d", randomNum));
+        return timestamp + String.format("%04d", randomNum);
     }
 }

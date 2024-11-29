@@ -1,7 +1,11 @@
 package hueHarmony.web.service;
 
+import com.google.api.client.util.Value;
+import com.google.cloud.storage.Bucket;
+import com.google.firebase.cloud.StorageClient;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
@@ -15,10 +19,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +40,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
-                List.of("productId", "productTitle", "productStatus", "productImage","productPrice"),
+                List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
@@ -54,7 +58,7 @@ public class ProductService {
         );
 
         Specification<Product> productSpecification = Specification
-                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.APPROVED)))
+                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
                 .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
 
         Sort.Direction direction;
@@ -78,7 +82,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productTitle", "productStatus, productImage", "reviewCount", "productRate"),
+                List.of("productId", "productName", "productStatus", "imageIds"),
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
@@ -110,6 +114,8 @@ public class ProductService {
         product.setCoat(addProductDto.getCoat());
         product.setDryingTime(addProductDto.getDryingTime() + " hours");
         product.setCoverage(addProductDto.getCoverage());
+        product.setOnlineLimit(addProductDto.getOnlineLimit());
+        product.setProductQuantity(addProductDto.getProductQuantity());
 
         product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
         product.setBrand(addProductDto.getBrand());
@@ -140,22 +146,61 @@ public class ProductService {
 
         product.setImageIds(imageIds);
 
+        System.out.println(product);
+
         productRepository.save(product);
 
     }
 
-    @Transactional
-    public float[] getProductPriceAndDiscount(long productId){
-        List<Object[]> result = productRepository.findProductPriceAndDiscountByProductId(productId);
+    public void updateProduct(Long productId, UpdateProductDto updateProductDTO) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
 
-        if(result.isEmpty()){
-            return new float[]{0.0f, 0.0f};
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product with ID " + productId + " not found.");
         }
 
-        return new float[]{
-                (float) result.get(0)[0],
-                ((float) result.get(0)[0]) * (100 - (float) result.get(0)[0])
-        };
+        Product product = optionalProduct.get();
+
+        // Update fields
+        product.setProductName(updateProductDTO.getProductName());
+        product.setProductDescription(updateProductDTO.getProductDescription());
+        product.setProductPrice(updateProductDTO.getProductPrice());
+        product.setProductDiscount(updateProductDTO.getProductDiscount());
+        product.setCoat(updateProductDTO.getCoat());
+        product.setDryingTime(updateProductDTO.getDryingTime());
+        product.setCoverage(updateProductDTO.getCoverage());
+        product.setOnlineLimit(updateProductDTO.getOnlineLimit());
+        product.setProductQuantity(updateProductDTO.getProductQuantity());
+        product.setProductStatus(updateProductDTO.getProductStatus());
+        product.setBrand(updateProductDTO.getBrand());
+        product.setRoomType(updateProductDTO.getRoomType());
+        product.setFinish(updateProductDTO.getFinish());
+        product.setProductType(updateProductDTO.getProductTypes());
+        product.setSurfaces(updateProductDTO.getSurfaces());
+        product.setPositions(updateProductDTO.getPositions());
+        product.setProductFeatures(updateProductDTO.getProductFeatures());
+        product.setImageIds(updateProductDTO.getImages());
+
+
+        productRepository.save(product);
     }
 
+
+    public void deleteProduct(Long productId) throws Exception {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            throw new Exception("Product not found");
+        }
+        productRepository.delete(product.get());
+    }
+
+    public Product getProductById(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        return product.orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+    }
+
+    public float[] getProductPriceAndDiscount(long productId) {
+        return null;
+    }
 }
