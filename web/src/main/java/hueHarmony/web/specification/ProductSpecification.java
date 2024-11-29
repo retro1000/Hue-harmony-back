@@ -1,13 +1,7 @@
 package hueHarmony.web.specification;
 
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.ProductVariation;
-import hueHarmony.web.model.Variation;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.Product;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -45,15 +39,15 @@ public class ProductSpecification {
 
     public static Specification<Product> betweenVariationUnitPrice(float startPrice, float finishPrice) {
         return (root, query, cb) -> {
-            Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
-            Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
+//            Join<Product, ProductVariation> productVariationJoin = root.join("productVariations", JoinType.RIGHT);
+//            Join<ProductVariation, Variation> variationJoin = productVariationJoin.join("variation", JoinType.RIGHT);
 
             return (startPrice==-1 && finishPrice==-1) ?
                 cb.conjunction() :
                 (startPrice==-1 ?
-                    cb.lessThanOrEqualTo(variationJoin.get("unitPrice"), finishPrice) :
+                    cb.lessThanOrEqualTo(root.get("unitPrice"), finishPrice) :
                     (finishPrice==-1 ?
-                        cb.greaterThanOrEqualTo(variationJoin.get("unitPrice"), startPrice) :
+                        cb.greaterThanOrEqualTo(root.get("unitPrice"), startPrice) :
                         cb.between(root.get("unitPrice"), finishPrice, startPrice)
                     )
                 );

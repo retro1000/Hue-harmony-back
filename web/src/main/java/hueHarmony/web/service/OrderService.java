@@ -48,6 +48,7 @@ public class OrderService {
                         .billingAddress(orderDto.getBillingAddress())
                         .shippingAddress(orderDto.getShippingAddress())
                         .order(order)
+                        .deliveryCost()
                         .deliveryService()
                         .district()
                         .city()
@@ -176,6 +177,12 @@ public class OrderService {
         Payment payment = Payment.builder()
                 .paymentStatus(paymentMethod == PaymentMethod.POS_CASH ? PaymentStatus.PAID : PaymentStatus.PENDING)
                 .paymentDescription("Payment for order number "+order.getOrderNo()+".")
+                .paymentAmount(
+                        order.getOrderProducts().stream()
+                                .map(OrderProduct::getFullPrice)
+                                .reduce(0.0f, Float::sum) +
+                        0
+                )
                 .build();
 //        order.setOrderPayments(List.of(payment));
 

@@ -32,6 +32,9 @@ public class OnlineOrder {
     @Column(name = "shipping_address", columnDefinition = "TEXT", nullable = false)
     private String shippingAddress;
 
+    @Column(name = "delivery_cost", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(delivery_cost >= 0)")
+    private float deliveryCost;
+
     @OneToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
@@ -51,4 +54,4 @@ public class OnlineOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
-}
+ }
