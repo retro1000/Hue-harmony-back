@@ -20,15 +20,15 @@ public interface LinkedCardRepository extends JpaRepository<LinkedCard, Long> {
             "lc.linkedCardType," +
             "lc.linkedCardStatus" +
             ") FROM LinkedCard lc" +
-            " WHERE lc.customer.customerId = :id")
+            " WHERE lc.retailCustomer.customer.customerId = :id")
     List<LinkedCardDto> findLinkedCardsByCustomerId(@Param("id")long id);
 
     @Query(value = "UPDATE LinkedCard l SET l.token = :token, l.linkedCardStatus = :status, l.gatewayCustomerId = :custId WHERE l.linkedCardId = :id")
     void updateTokenByLinkedCardId(@Param("token")String token, @Param("custId")String custId, @Param("id")long id, @Param("status") LinkedCardStatus status);
 
-    @Query("SELECT lc.linkedCardId FROM LinkedCard lc WHERE lc.customer.customerId = :customerId AND lc.isDefault AND lc.linkedCardStatus = :linkedCardStatus")
+    @Query("SELECT lc.linkedCardId FROM LinkedCard lc WHERE lc.retailCustomer.customer.customerId = :customerId AND lc.isDefault AND lc.linkedCardStatus = :linkedCardStatus")
     String findDefaultLinkedCardByCustomerId(@Param("customerId")int customerId, @Param("linkedCardStatus")LinkedCardStatus linkedCardStatus);
 
-    @Query("SELECT lc.linkedCardId FROM LinkedCard lc WHERE lc.customer.customerId = :customerId AND lc.gatewayCustomerId = :paymentMethodId AND lc.linkedCardStatus = :linkedCardStatus")
+    @Query("SELECT lc.linkedCardId FROM LinkedCard lc WHERE lc.retailCustomer.customer.customerId = :customerId AND lc.gatewayCustomerId = :paymentMethodId AND lc.linkedCardStatus = :linkedCardStatus")
     String findLinkedCardByCustomerIdAndPaymentMethodId(@Param("customerId")int customerId, @Param("paymentMethodId")String paymentMethodId, @Param("linkedCardStatus")LinkedCardStatus linkedCardStatus);
 }

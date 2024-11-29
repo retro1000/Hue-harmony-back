@@ -26,7 +26,7 @@ public class    Order {
     private int orderId;
 
     @Column(name = "order_no", nullable = false, unique = true)
-    private long orderNo = generateUniqueOrderNumber();
+    private String orderNo = generateUniqueOrderNumber();
 
     @Column(name = "order_note", columnDefinition = "TEXT")
     private String orderNote;
@@ -74,11 +74,11 @@ public class    Order {
     private static final Random random = new Random();
 
     @Transient
-    private static long generateUniqueOrderNumber() {
+    private static String generateUniqueOrderNumber() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String timestamp = dateFormat.format(new Date());
         int randomNum = random.nextInt(10000);
-        return Long.parseLong(timestamp + String.format("%04d", randomNum));
+        return timestamp + String.format("%04d", randomNum);
     }
 
 //    @PrePersist
