@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PosService {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final PosOrderRepository posOrderRepository;
 
     public Page<PosDisplayDto> posFilterProductsForList(FilterProductDto productFilterDto) {
