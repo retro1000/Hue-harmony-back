@@ -138,7 +138,7 @@ public class ProductService {
 
         List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage());
 
-        product.set(imageIds);
+        product.setImageIds(imageIds);
 
         productRepository.save(product);
 

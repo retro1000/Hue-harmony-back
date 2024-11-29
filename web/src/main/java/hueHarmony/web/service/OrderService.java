@@ -62,8 +62,7 @@ public class OrderService {
                         List.of(
                             handleOrderPayment(
                                 order,
-                                orderDto.getPaymentMethod(),
-                                orderDto.getCustomerId()
+                                orderDto.getPaymentMethod()
                             )
                         )
                 );
@@ -173,7 +172,7 @@ public class OrderService {
     }
 
     @Transactional
-    protected Payment handleOrderPayment(Order order, PaymentMethod paymentMethod, int customerId){
+    protected Payment handleOrderPayment(Order order, PaymentMethod paymentMethod){
         Payment payment = Payment.builder()
                 .paymentStatus(paymentMethod == PaymentMethod.POS_CASH ? PaymentStatus.PAID : PaymentStatus.PENDING)
                 .paymentDescription("Payment for order number "+order.getOrderNo()+".")
@@ -218,9 +217,5 @@ public class OrderService {
         }
 
         return customer;
-    }
-
-    private float calculateOrderCost(float discount){
-
     }
 }

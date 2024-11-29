@@ -54,13 +54,13 @@ public class Product {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "product_status", columnDefinition = "VARCHAR")
     private ProductStatus productStatus;
-//
-//    @ElementCollection
-//    @Column(name = "image_ids")
-//    private List<String> imageIds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductImages> productImages;
+    @ElementCollection
+    @Column(name = "image_ids")
+    private List<String> imageIds = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "product")
+//    private List<ProductImages> productImages;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "brand", nullable = false)

@@ -4,7 +4,6 @@ import hueHarmony.web.annotation.validations.ContentPermissionValidation;
 import hueHarmony.web.annotation.validations.DataExistingValidation;
 import hueHarmony.web.annotation.validations.DecimalNumberValidation;
 import hueHarmony.web.service.SupplierService;
-import hueHarmony.web.service.VariationService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +35,4 @@ public class SupplierVariationDto {
     @ContentPermissionValidation(groups = {onCreation.class}, service = SupplierService.class, method = "checkSupplierStatus", key = "ACTIVE")
     private int supplier;
 
-    @NotNull(groups = {onCreation.class}, message = "Variation cannot be found.")
-    @DataExistingValidation(groups = {onCreation.class}, service = VariationService.class, method = "isVariationExist")
-    private int variation;
 }

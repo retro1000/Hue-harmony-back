@@ -5,7 +5,6 @@ import hueHarmony.web.model.Supplier;
 import hueHarmony.web.model.User;
 import hueHarmony.web.model.enums.SupplierStatus;
 import hueHarmony.web.repository.SupplierRepository;
-import hueHarmony.web.repository.SupplierVariationRepository;
 import hueHarmony.web.util.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class SupplierService {
 
     private final SupplierRepository supplierRepository;
-    private final SupplierVariationRepository supplierVariationRepository;
     private final JwtUtil jwtUtil;
 
     @PersistenceContext
@@ -25,10 +23,6 @@ public class SupplierService {
 
     public boolean isSupplierExist(int supplierId){
         return supplierRepository.existsById((long) supplierId);
-    }
-
-    public boolean isSupplierVariationExist(int supplierVariationId){
-        return supplierVariationRepository.existsById((long) supplierVariationId);
     }
 
     public boolean checkSupplierStatus(int supplierId, String status){

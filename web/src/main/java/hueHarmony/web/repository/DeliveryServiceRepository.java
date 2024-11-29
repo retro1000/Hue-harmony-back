@@ -1,6 +1,7 @@
 package hueHarmony.web.repository;
 
 import hueHarmony.web.model.DeliveryService;
+import hueHarmony.web.model.enums.DeliveryServiceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,12 +14,12 @@ public interface DeliveryServiceRepository extends JpaRepository<DeliveryService
     @Query(value = "SELECT ds.deliveryServiceId FROM DeliveryService ds WHERE ds.deliveryServiceName = :name")
     int findDeliveryServiceIdByName(@Param("name") String name);
 
-    @Modifying
-    @Query(value = "UPDATE delivery_service ds " +
-            "SET delivery_service_cancel_orders = ds.delivery_service_cancel_orders+1, " +
-            "delivery_service_quality = (ds.delivery_service_cancel_orders+1/ds.delivery_service_orders)*100 " +
-            "FROM orders o WHERE o.delivery_service_id = ds.delivery_service_id AND o.order_id = :orderId", nativeQuery = true)
-    void updateDeliveryServiceQualityByOrderId(@Param("orderId") int id);
+//    @Modifying
+//    @Query(value = "UPDATE delivery_service ds " +
+//            "SET delivery_service_cancel_orders = ds.delivery_service_cancel_orders+1, " +
+//            "delivery_service_quality = (ds.delivery_service_cancel_orders+1 / ds.delivery_service_orders)*100 " +
+//            "FROM orders o WHERE o.delivery_service_id = ds.delivery_service_id AND o.order_id = :orderId", nativeQuery = true)
+//    void updateDeliveryServiceQualityByOrderId(@Param("orderId") int id);
 
     @Modifying
     @Query("UPDATE DeliveryServiceDistrict dsd SET dsd.deliverCharge = :rate WHERE dsd.deliveryService.deliveryServiceId = :deliveryServiceId AND dsd.district.districtId = :districtId")
@@ -26,7 +27,7 @@ public interface DeliveryServiceRepository extends JpaRepository<DeliveryService
 
     @Modifying
     @Query("UPDATE DeliveryService ds SET ds.deliveryServiceStatus = :status WHERE ds.deliveryServiceId = :deliveryServiceId")
-    void updateDeliveryServiceStatusByDeliveryServiceIdAndStatus(@Param("deliveryServiceId") int deliveryServiceId, @Param("status")DeliveryServiceStatus status);
+    void updateDeliveryServiceStatusByDeliveryServiceIdAndStatus(@Param("deliveryServiceId") int deliveryServiceId, @Param("status") DeliveryServiceStatus status);
 
     @Modifying
     @Query("UPDATE DeliveryService ds SET ds.deliveryServiceName = :name, ds.deliveryServiceHotline = :hotline WHERE ds.deliveryServiceId = :deliveryServiceId")
