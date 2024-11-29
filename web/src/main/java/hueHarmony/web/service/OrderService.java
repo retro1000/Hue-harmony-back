@@ -220,7 +220,7 @@ public class OrderService {
         return customer;
     }
 
-    private float calculateOrderCost(float discount){
-
-    }
+//    private float calculateOrderCost(float discount){
+//
+//    }
 }

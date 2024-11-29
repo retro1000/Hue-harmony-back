@@ -33,7 +33,7 @@ public class Order {
     @PreAuthorize("hasRole('ROLE_CACHIER')")
     public ResponseEntity<Object> placeNewOrderShop(){
         try{
-
+            return null;
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
@@ -43,6 +43,7 @@ public class Order {
     @PreAuthorize("hasRole('ROLE_BACKOFFICE')")
     public ResponseEntity<Object> createOrder(){
         try{
+            return null;
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -53,6 +54,7 @@ public class Order {
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SALESMANAGER', 'ROLE_BACKOFFICE')")
     public ResponseEntity<Object> viewOrder(@PathVariable("orderId") int orderId){
         try{
+            return null;
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -63,6 +65,7 @@ public class Order {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SALESMANAGER', 'ROLE_BACKOFFICE')")
     public ResponseEntity<Object> filterOrders(@Validated(FilterOrderDto.whenOrganization.class) @ModelAttribute FilterOrderDto request) {
         try{
+            return null;
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
@@ -73,6 +76,7 @@ public class Order {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterMyOrders(@Validated(FilterOrderDto.whenUser.class) @ModelAttribute FilterOrderDto request) {
         try{
+            return null;
 
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");

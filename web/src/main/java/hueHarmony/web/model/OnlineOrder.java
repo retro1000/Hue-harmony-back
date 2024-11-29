@@ -39,19 +39,19 @@ public class OnlineOrder {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "waybill_id")
-    private ActiveWaybill activeWaybill;
+//    @ManyToOne(cascade = CascadeType.DETACH)
+//    @JoinColumn(name = "waybill_id")
+//    private ActiveWaybill activeWaybill;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_service_id")
-    private DeliveryService deliveryService;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "delivery_service_id")
+//    private DeliveryService deliveryService;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "district_id")
-    private District district;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "district_id")
+//    private District district;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private City city;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "city_id")
+//    private City city;
  }

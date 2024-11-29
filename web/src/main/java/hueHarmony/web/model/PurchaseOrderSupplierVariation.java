@@ -30,7 +30,7 @@ public class PurchaseOrderSupplierVariation {
     @JoinColumn(name = "purchase_order_id")
     private PurchaseOrder purchaseOrder;
 
-    @ManyToOne
-    @JoinColumn(name = "supplier_variation_id")
-    private SupplierVariation supplierVariation;
+//    @ManyToOne
+//    @JoinColumn(name = "supplier_variation_id")
+//    private SupplierVariation supplierVariation;
 }
