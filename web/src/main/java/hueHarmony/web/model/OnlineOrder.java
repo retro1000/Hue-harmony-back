@@ -44,14 +44,14 @@ public class OnlineOrder {
     private ActiveWaybill activeWaybill;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_service_id", nullable = false)
+    @JoinColumn(name = "delivery_service_id")
     private DeliveryService deliveryService;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "district_id", nullable = false)
+    @JoinColumn(name = "district_id")
     private District district;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(name = "city_id")
     private City city;
  }

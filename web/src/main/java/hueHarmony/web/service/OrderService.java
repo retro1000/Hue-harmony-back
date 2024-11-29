@@ -48,10 +48,10 @@ public class OrderService {
                         .billingAddress(orderDto.getBillingAddress())
                         .shippingAddress(orderDto.getShippingAddress())
                         .order(order)
-                        .deliveryCost()
-                        .deliveryService()
-                        .district()
-                        .city()
+                        .deliveryCost(400.00f)
+//                        .deliveryService()
+//                        .district()
+//                        .city()
                         .build()
         );
 
@@ -181,7 +181,7 @@ public class OrderService {
                         order.getOrderProducts().stream()
                                 .map(OrderProduct::getFullPrice)
                                 .reduce(0.0f, Float::sum) +
-                        0
+                        order.getOnlineOrder().getDeliveryCost()
                 )
                 .build();
 //        order.setOrderPayments(List.of(payment));
