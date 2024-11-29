@@ -90,7 +90,7 @@ public class Product {
         }
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filters")
 //    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{

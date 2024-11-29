@@ -40,7 +40,7 @@ public class PosService {
         LocalDateTime endOfDay = parsedDate.atTime(23, 59, 59);
 
         // Fetch orders for the cashier on the given date
-        List<PosOrder> orders = posOrderRepository.findByCashierIdAndOrderDateBetween(cashierId, startOfDay, endOfDay);
+        List<PosOrder> orders = posOrderRepository.findByCashierAndOrderDateBetween(cashierId, startOfDay, endOfDay);
 
         // Initialize totals
         BigDecimal total = BigDecimal.ZERO;
@@ -66,7 +66,7 @@ public class PosService {
 
     public List<PosOrder> getCompletedOrdersByCashier(Long cashierId) {
         // Fetch completed orders for the cashier
-        return posOrderRepository.findByCashierIdAndOrderStatus(cashierId, OrderStatus.COMPLETED);
+        return posOrderRepository.findByCashierAndOrderStatus(cashierId, OrderStatus.COMPLETED);
     }
 
     public Optional<PosOrder> getOrderById(Long orderId) {
