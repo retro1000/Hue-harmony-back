@@ -24,6 +24,10 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Column(name = "payment_no", nullable = false, unique = true)
     private long paymentNo = generateUniquePaymentNumber();
 

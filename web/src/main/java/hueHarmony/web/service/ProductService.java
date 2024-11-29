@@ -8,9 +8,7 @@ import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
-import hueHarmony.web.model.Brand;
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.ProductFeature;
 import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
@@ -202,4 +200,7 @@ public class ProductService {
         return product.orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
     }
 
+    public float[] getProductPriceAndDiscount(long productId) {
+        return null;
+    }
 }
