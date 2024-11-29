@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class SupplierService {
 
     private final SupplierRepository supplierRepository;
+//    private final SupplierVariationRepository supplierVariationRepository;
     private final JwtUtil jwtUtil;
 
     @PersistenceContext
@@ -24,6 +25,10 @@ public class SupplierService {
     public boolean isSupplierExist(int supplierId){
         return supplierRepository.existsById((long) supplierId);
     }
+
+//    public boolean isSupplierVariationExist(int supplierVariationId){
+//        return supplierVariationRepository.existsById((long) supplierVariationId);
+//    }
 
     public boolean checkSupplierStatus(int supplierId, String status){
         return supplierRepository.checkSupplierStatusBySupplierId((long) supplierId);

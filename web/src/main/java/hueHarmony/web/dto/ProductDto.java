@@ -70,6 +70,11 @@ public class ProductDto {
     @NotNull(groups = {onCreate.class})
     private RoomType roomType;
 
+//    @NotNull(groups = {onCreate.class})
+//    @NotEmpty(groups = {onCreate.class})
+//    @DataExistingListValidation(groups = {onCreate.class}, service = VariationService.class, method = "")
+//    private Set<Integer> variations;
+
     @Valid
     @NotNull(groups = {onCreate.class})
     @NotEmpty(groups = {onCreate.class})

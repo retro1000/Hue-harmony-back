@@ -40,12 +40,6 @@ public class Payment {
     @Column(name = "payment_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
-
-
-
-
-
-
     @Transient
     private static final Random random = new Random();
 

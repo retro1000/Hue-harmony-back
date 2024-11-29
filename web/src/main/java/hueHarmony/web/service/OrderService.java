@@ -218,4 +218,8 @@ public class OrderService {
 
         return customer;
     }
+
+//    private float calculateOrderCost(float discount){
+//
+//    }
 }

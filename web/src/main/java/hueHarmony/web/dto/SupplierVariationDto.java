@@ -35,4 +35,7 @@ public class SupplierVariationDto {
     @ContentPermissionValidation(groups = {onCreation.class}, service = SupplierService.class, method = "checkSupplierStatus", key = "ACTIVE")
     private int supplier;
 
+//    @NotNull(groups = {onCreation.class}, message = "Variation cannot be found.")
+//    @DataExistingValidation(groups = {onCreation.class}, service = VariationService.class, method = "isVariationExist")
+//    private int variation;
 }
