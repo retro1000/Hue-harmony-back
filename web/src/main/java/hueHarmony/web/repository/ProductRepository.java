@@ -20,7 +20,7 @@ public interface ProductRepository extends ExtendedRepository<Product, Long>{
     @Query("SELECT new hueHarmony.web.dto.ProductDto(p.productId, p.productName, p.productImageUrl, p.startingPrice, p.productStatus, p.productDiscount) FROM Product p")
     List<ProductDto> findAllProductListDto();
 
-    @Query("SELECT new hueHarmony.web.dto.PosProductDto(p.productId, p.productName, p.productPrice,p.productDiscount) FROM Product p")
-    List<PosProductDto> getProducts();
+//    @Query("SELECT new hueHarmony.web.dto.PosProductDto(p.productId, p.productName, p.productPrice,p.productDiscount) FROM Product p")
+//    List<PosProductDto> getProducts();
 
 }

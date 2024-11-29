@@ -50,11 +50,11 @@ public class ProductController {
         }
 
 
-        Product newProduct=Product.builder()
+        Product newProduct = Product.builder()
                 .productName(productDto.getProductName())
                 .productDescription(productDto.getProductDescription())
                 .productImageUrl(firebaseStorageService.uploadFile(productDto.getProductImage().getName(),productDto.getProductImage().getBytes(),productDto.getProductImage().getContentType()))
-                 .brand(productDto.getProductBrand())
+                .brand(productDto.getProductBrand())
                 .dryingTime(productDto.getDryingTime())
                 /* .roomType(productDto.getRoomType())*/
                 .productStatus(productDto.getProductStatus())
@@ -76,9 +76,9 @@ public class ProductController {
             if (product == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }else{
-                ProductDto productDto=ProductDto.builder()
+                ProductDto productDto = ProductDto.builder()
                         .productName(product.getProductName())
-                        .startingPrice(product.getStartingPrice())
+                        .startingPrice(product.getProductPrice())
                         .productStatus(product.getProductStatus())
                         .build();
                 return ResponseEntity.ok(productDto);

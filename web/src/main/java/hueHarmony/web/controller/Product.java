@@ -1,8 +1,8 @@
 package hueHarmony.web.controller;
 
-import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
+import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -89,6 +90,21 @@ public class Product {
         }
     }
 
+    @GetMapping("/pos/filter-products")
+//    @PreAuthorize("hasAnyRole('ROLE_CACHIER')")
+    public ResponseEntity<Object> posFilterProducts(@ModelAttribute FilterProductDto productFilterDto){
+        try{
+            Page<PosDisplayDto> displayDtos = productService.posFilterProductsForList(productFilterDto);
+//
+            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
+        }
+    }
+
     @GetMapping("/filter")
 //    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
@@ -117,11 +133,11 @@ public class Product {
         }
     }
 
-    @GetMapping("product/read/{id}")
-    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
-        hueHarmony.web.model.Product product = productService.getProductById(productId);
-        return ResponseEntity.ok(product);
-    }
+//    @GetMapping("product/read/{id}")
+//    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
+//        hueHarmony.web.model.Product product = productService.getProductById(productId);
+//        return ResponseEntity.ok(product);
+//    }
 
 
 }

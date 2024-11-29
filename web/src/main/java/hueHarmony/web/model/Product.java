@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -47,31 +49,21 @@ public class Product {
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
 
-    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private float onlineLimit;
+    @Column(name = "online_limit", columnDefinition = "SMALLINT DEFAULT 0 CHECK(online_limit >= 0)")
+    private int onlineLimit;
 
-    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private float productQuantity;
-
+    @Column(name = "product_quantity", columnDefinition = "SMALLINT DEFAULT 0 CHECK(product_quantity >= 0)")
+    private int productQuantity;
 
     @Column(name="productPublishedTime", nullable = false)
-    private LocalDateTime productPublishedTime;
-
-    @PrePersist
-    protected void onCreate() {
-        this.productPublishedTime = LocalDateTime.now();
-    }
+    private LocalDateTime productPublishedTime = getCurrentData();
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "product_status", columnDefinition = "VARCHAR")
     private ProductStatus productStatus;
 
     @OneToMany(mappedBy = "product")
-    private Set<ProductVariation> productVariations;
-
-//    @OneToMany(mappedBy = "product")
-//    private List<ProductImages> productImages;
-
+    private List<ProductImages> productImages;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "brand", nullable = false)
@@ -95,7 +87,7 @@ public class Product {
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<Position> positions;
+    private Set<Position> positions;
 
     @ElementCollection
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
@@ -124,5 +116,14 @@ public class Product {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseOrderProduct> purchaseOrderProduct;
 */
+
+
+
+
+
+    @Transient
+    private LocalDateTime getCurrentData(){
+        return LocalDateTime.now();
+    }
 
 }

@@ -1,8 +1,7 @@
 package hueHarmony.web.service;
 
-import hueHarmony.web.dto.AddProductDto;
-import hueHarmony.web.dto.FilterProductDto;
-import hueHarmony.web.dto.UpdateProductDto;
+import hueHarmony.web.dto.*;
+import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
@@ -26,6 +25,7 @@ import java.util.List;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +40,6 @@ public class ProductService {
 
     public Product save(Product newProduct) {
         return productRepository.save(newProduct);
-    }
-
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
     }
 
     public Page<ProductDisplayDto> searchProducts(String category, String key, int limit, int page) {
@@ -84,7 +80,7 @@ public class ProductService {
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
+                pageable,
                 List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
@@ -150,6 +146,53 @@ public class ProductService {
         });
     }
 
+    public Page<PosDisplayDto> posFilterProductsForList(FilterProductDto productFilterDto){
+
+        Specification<Product> productSpecification = Specification
+                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
+                .and(ProductSpecification.hasName(productFilterDto.getSearch()))
+                .and(ProductSpecification.hasBrand(productFilterDto.getBrands()))
+                .and(ProductSpecification.hasRoomType(productFilterDto.getRoomTypes()));
+
+//        Sort.Direction direction;
+//        String column;
+//
+//        switch (productFilterDto.getSort()){
+//            case LOWEST -> {
+//                direction = Sort.Direction.ASC;
+//                column = "unitPrice";
+//            }
+//            case HIGHEST -> {
+//                direction = Sort.Direction.DESC;
+//                column = "unitPrice";
+//            }
+//            default -> {
+//                direction = Sort.Direction.DESC;
+//                column = "productPublishedTime";
+//            }
+//        }
+
+        return productRepository.filterAndSelectFieldsBySpecsAndPage(
+                productSpecification,
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()),
+                List.of("productId", "productName", "productStatus", "productImageUrl", "productDiscount", "productQuantity"),
+                PosDisplayDto.class
+        ).map(product -> {
+            PosDisplayDto dto = (PosDisplayDto) product;
+
+            return new PosDisplayDto (
+                    dto.getProductId(),
+                    dto.getProductTitle(),
+                    dto.getProductStatus(),
+                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
+                    dto.getPrice(),
+                    dto.getDiscount(),
+                    dto.getStockCount(),
+                    dto.getStockCount()!=0
+            );
+        });
+    }
+
 
     public void createProduct(AddProductDto addProductDto) {
         Product product = new Product();
@@ -176,10 +219,10 @@ public class ProductService {
                 .toList();
         product.setSurfaces(validSurfaces);
 
-        List<Position> validPositions = addProductDto.getPositions().stream()
+        Set<Position> validPositions = addProductDto.getPositions().stream()
                 .filter(Position::contains)
                 .map(value -> Position.valueOf(value.toUpperCase()))
-                .toList();
+                .collect(Collectors.toSet());
         product.setPositions(validPositions);
 
         List<ProductType> validProductTypes = addProductDto.getProductTypes().stream()
@@ -229,7 +272,7 @@ public class ProductService {
         product.setSurfaces(updateProductDTO.getSurfaces());
         product.setPositions(updateProductDTO.getPositions());
         product.setProductFeatures(updateProductDTO.getProductFeatures());
-        product.setImageIds(updateProductDTO.getImages());
+//        product.setImageIds(updateProductDTO.getImages());
 
 
         productRepository.save(product);
