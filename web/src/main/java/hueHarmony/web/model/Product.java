@@ -55,8 +55,13 @@ public class Product {
     @Column(name = "product_quantity", columnDefinition = "SMALLINT DEFAULT 0 CHECK(product_quantity >= 0)")
     private int productQuantity;
 
-    @Column(name="productPublishedTime", nullable = false)
-    private LocalDateTime productPublishedTime = getCurrentData();
+    @Column(name="productPublishedTime", nullable = true)
+    private LocalDateTime productPublishedTime;
+
+    @PrePersist
+    protected void onCreate() {
+        this.productPublishedTime = LocalDateTime.now();
+    }
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "product_status", columnDefinition = "VARCHAR")
