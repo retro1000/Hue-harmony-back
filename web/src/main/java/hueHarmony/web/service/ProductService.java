@@ -1,8 +1,5 @@
 package hueHarmony.web.service;
 
-import com.google.api.client.util.Value;
-import com.google.cloud.storage.Bucket;
-import com.google.firebase.cloud.StorageClient;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -201,6 +197,15 @@ public class ProductService {
     }
 
     public float[] getProductPriceAndDiscount(long productId) {
-        return null;
+        List<Object[]> result = productRepository.findProductPriceAndDiscountByProductId(productId);
+
+        if (result.isEmpty()) {
+            return new float[]{0.0f, 0.0f};
+        }
+
+        return new float[]{
+                (float) result.get(0)[0],
+                ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
+        };
     }
 }

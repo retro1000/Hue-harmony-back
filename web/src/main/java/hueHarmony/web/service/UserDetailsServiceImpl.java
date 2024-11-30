@@ -23,10 +23,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAuthDto user = userRepository.findUserByUserName(username);
 
-        return new User(
-                username,
-                user.getPassword(),
-                user.getRoles().stream().map(role->new SimpleGrantedAuthority("ROLE_"+role.toUpperCase())).collect(Collectors.toList())
-        );
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        user.setUsername(username);
+
+//        return new User(
+//                username,
+//                user.getPassword(),
+//                user.getRoles().stream().map(role->new SimpleGrantedAuthority("ROLE_"+role.toUpperCase())).collect(Collectors.toList())
+//        );
+
+        return user;
     }
 }

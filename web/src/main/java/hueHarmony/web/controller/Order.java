@@ -17,7 +17,7 @@ public class Order {
     private final OrderService orderService;
 
     @PostMapping("/place-order/online")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> placeNewOrderOnline(@RequestBody OrderDto orderDto){
         try{
             orderService.createOnlineOrder(orderDto);

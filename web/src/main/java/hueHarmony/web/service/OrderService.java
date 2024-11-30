@@ -124,11 +124,12 @@ public class OrderService {
         Order order = Order.builder()
                 .orderNote(orderDto.getOrderNote())
                 .orderPaymentMethod(orderDto.getPaymentMethod())
-                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+//                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+                .createdUser(entityManager.getReference(User.class, 2))
                 .orderDiscount(orderDto.getDiscount())
                 .build();
 
-        Set<OrderProduct> orderProducts;
+        List<OrderProduct> orderProducts;
 
         if (orderDto.getProductId() == 0 && !orderDto.getCartItems().isEmpty()) {
             // Case 1: productId is 0 and there are cart items
@@ -145,14 +146,14 @@ public class OrderService {
                                 .quantity(cartItem.getQuantity())
                                 .build();
                     })
-                    .collect(Collectors.toSet());
+                    .toList();
 
             cartItemRepository.deleteAllById(orderDto.getCartItems().stream().map(cartItem -> (long) cartItem.getCartItemId()).toList());
         } else if (orderDto.getProductId() != 0) {
             // Case 2: productId is not 0
             float[] prices = productService.getProductPriceAndDiscount(orderDto.getProductId());
 
-            orderProducts = Set.of(
+            orderProducts = List.of(
                     OrderProduct.builder()
                         .product(entityManager.getReference(Product.class, orderDto.getProductId()))
                         .discount(prices[0])
@@ -166,7 +167,8 @@ public class OrderService {
             throw new IllegalStateException("No items found for create the order.");
         }
 
-        order.getOrderProducts().addAll(orderProducts);
+//        order.getOrderProducts().addAll(orderProducts);
+        order.setOrderProducts(orderProducts);
 
         return order;
     }
@@ -206,7 +208,8 @@ public class OrderService {
             if(isRetailOrder){
                 RetailCustomer retailCustomer = RetailCustomer.builder()
                         .customer(customer)
-                        .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+//                        .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+                        .user(entityManager.getReference(User.class, 2))
                         .build();
 
                 customer.setRetailCustomer(retailCustomer);

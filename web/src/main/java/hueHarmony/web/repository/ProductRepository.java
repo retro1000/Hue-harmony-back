@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends ExtendedRepository<Product, Long> {
 
-    @Query("SELECT p.productPrice, p.productDiscount FROM Product p WHERE p.productId = :productId")
+    @Query("SELECT p.productDiscount, p.productPrice FROM Product p WHERE p.productId = :productId")
     List<Object[]> findProductPriceAndDiscountByProductId(@Param("productId")long productId);
 }
