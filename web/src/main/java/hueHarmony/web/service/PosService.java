@@ -1,15 +1,12 @@
 package hueHarmony.web.service;
 
-import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.PosProductDto;
 import hueHarmony.web.dto.SummaryResponseDto;
-import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.model.PosOrder;
 import hueHarmony.web.model.enums.OrderStatus;
 import hueHarmony.web.repository.PosOrderRepository;
 import hueHarmony.web.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,8 +22,8 @@ public class PosService {
     private final ProductRepository productRepository;
     private final PosOrderRepository posOrderRepository;
 
-    public Page<PosDisplayDto> posFilterProductsForList(FilterProductDto productFilterDto) {
-        return productService.posFilterProductsForList(productFilterDto);
+    public List<PosProductDto> getProducts() {
+        return productRepository.getProducts();
     }
 
     public PosOrder createOrder(PosOrder order) {

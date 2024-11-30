@@ -26,21 +26,34 @@ public class Pos {
 
     private final PosService posService;
 
-
-    @GetMapping("/filter-products")
-//    @PreAuthorize("hasAnyRole('ROLE_CACHIER')")
-    public ResponseEntity<Object> posFilterProducts(@ModelAttribute FilterProductDto productFilterDto){
+    @GetMapping("/get-products")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER')")
+    public ResponseEntity<Object> getProducts() {
         try{
-            Page<PosDisplayDto> displayDtos = posService.posFilterProductsForList(productFilterDto);
-//
-            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            List<PosProductDto> products = posService.getProducts();
+//           return ResponseEntity.status(200).body("Supplier status update successfully.");
+            return ResponseEntity.status(200).body(products);
 
-            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
+        }catch(Exception e){
+            return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
+
+
+//    @GetMapping("/filter-products")
+////    @PreAuthorize("hasAnyRole('ROLE_CACHIER')")
+//    public ResponseEntity<Object> posFilterProducts(@ModelAttribute FilterProductDto productFilterDto){
+//        try{
+//            Page<PosDisplayDto> displayDtos = posService.posFilterProductsForList(productFilterDto);
+////
+//            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+//
+//            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
+//        }
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<Object> createOrder(@RequestBody PosOrder order) {
