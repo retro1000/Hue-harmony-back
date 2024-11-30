@@ -23,8 +23,10 @@ public class Order {
             orderService.createOnlineOrder(orderDto);
             return ResponseEntity.status(201).body("Order placed successfully.");
         }catch(IllegalStateException e){
+            e.printStackTrace();
             return ResponseEntity.status(400).body(e.getMessage());
         }catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }

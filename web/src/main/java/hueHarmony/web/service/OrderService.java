@@ -92,7 +92,7 @@ public class OrderService {
                         put("orderNumber", order.getOrderNo());
                     }}
             );
-        }else{
+        }else if(orderDto.getPaymentMethod() != PaymentMethod.COD){
             throw new IllegalArgumentException("Invalid payment method or payment method is blocked.");
         }
     }

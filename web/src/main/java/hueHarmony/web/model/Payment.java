@@ -29,6 +29,7 @@ public class Payment {
     private Order order;
 
     @Column(name = "payment_no", nullable = false, unique = true)
+    @Builder.Default
     private String paymentNo = generateUniquePaymentNumber();
 
     @Column(name = "payment_amount", nullable = false, columnDefinition = "REAL DEFAULT 0 CHECK(payment_amount > 0)")
@@ -38,10 +39,12 @@ public class Payment {
     private String paymentDescription;
 
     @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMP")
+    @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
+    @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @Transient

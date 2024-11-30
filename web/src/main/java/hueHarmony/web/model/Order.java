@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,7 @@ public class    Order {
     private int orderId;
 
     @Column(name = "order_no", nullable = false, unique = true)
+    @Builder.Default
     private String orderNo = generateUniqueOrderNumber();
 
     @Column(name = "order_note", columnDefinition = "TEXT")
@@ -34,8 +36,13 @@ public class    Order {
     @Column(name = "order_discount", columnDefinition = "REAL DEFAULT 0 CHECK(order_discount >= 0)")
     private float orderDiscount;
 
+    @Column(name = "product_published_time", nullable = false, columnDefinition = "TIMESTAMP")
+    @Builder.Default
+    private LocalDateTime productPublishedTime = LocalDateTime.now();
+
     @Column(name = "order_status", columnDefinition = "VARCHAR", length = 25, nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private OrderStatus orderStatus = OrderStatus.CREATED;
 
     @Column(name = "order_payment_method", columnDefinition = "VARCHAR", length = 10, nullable = false)
