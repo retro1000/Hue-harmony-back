@@ -5,13 +5,17 @@ import hueHarmony.web.dto.PosOrderDto;
 import hueHarmony.web.dto.PosOrderItemDto;
 import hueHarmony.web.dto.PosProductDto;
 import hueHarmony.web.dto.SummaryResponseDto;
+import hueHarmony.web.model.Loyalty;
 import hueHarmony.web.model.PosOrder;
 import hueHarmony.web.model.PosOrderItem;
 import hueHarmony.web.model.enums.OrderStatus;
+import hueHarmony.web.repository.LoyaltyRepository;
 import hueHarmony.web.repository.PosOrderRepository;
 import hueHarmony.web.repository.ProductRepository;
+import hueHarmony.web.util.FunctionsUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +34,17 @@ public class PosService {
     private EntityManager entityManager;
     private final ProductRepository productRepository;
     private final PosOrderRepository posOrderRepository;
+    private final LoyaltyRepository loyaltyRepository;
 
     public List<PosProductDto> getProducts() {
         return productRepository.getProducts();
     }
 
+    @Transactional
     public PosOrder createOrder(PosOrderDto orderDto) {
         // Map DTO fields to Entity using Builder
         PosOrder order = PosOrder.builder()
-               // .orderDate(orderDto.getOrderDate())
+               .orderDate(orderDto.getOrderDate())
                 //.customerName(orderDto.getCustomerName())
                 .phoneNumber(orderDto.getPhoneNumber())
                 .total(orderDto.getTotal())
@@ -61,6 +67,16 @@ public class PosService {
                     .toList();
             order.setItems(items);
         }
+        int points = FunctionsUtil.calculateLoyaltyPoints(orderDto.getSubTotal());
+        int updatedRows = loyaltyRepository.updateLoyaltyPoints(orderDto.getPhoneNumber(), points);
+
+        if (updatedRows == 0) {
+            Loyalty newLoyalty = new Loyalty();
+            newLoyalty.setContactNo(orderDto.getPhoneNumber());
+            newLoyalty.setLoyaltyPoints(points);
+            loyaltyRepository.save(newLoyalty);
+        }
+
 
         // Save the order to the database (assuming you have a repository)
         return posOrderRepository.save(order);

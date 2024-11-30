@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,13 +26,13 @@ public class PosOrder {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     @Column(nullable = false)
     private String customerName;
 
     @Column(nullable = false)
-    private Long phoneNumber;
+    private BigDecimal phoneNumber;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PosOrderItem> items;
@@ -40,7 +41,7 @@ public class PosOrder {
     private BigDecimal total;
 
     @Column(nullable = false)
-    private BigDecimal subTotal;
+    private Double subTotal;
 
     @Column(nullable = false)
     private BigDecimal discount;

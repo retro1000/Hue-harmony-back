@@ -1,6 +1,7 @@
 package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.LoyaltyDto;
+import hueHarmony.web.dto.LoyaltyResponseDto;
 import hueHarmony.web.service.LoyaltyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +9,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/loyalty")
 @RequiredArgsConstructor
 public class Loyalty {
 
-    private LoyaltyService loyaltyService;
+    private final LoyaltyService loyaltyService;
 
     @GetMapping("/{contactNo}")
-    public ResponseEntity<LoyaltyDto> getLoyaltyDetails(@PathVariable String contactNo) {
+    public ResponseEntity<LoyaltyResponseDto> getLoyaltyDetails(@PathVariable BigDecimal contactNo) {
         try {
-            LoyaltyDto loyaltyDto = loyaltyService.getLoyaltyDetails(contactNo);
+            LoyaltyResponseDto loyaltyDto = loyaltyService.getLoyaltyDiscount(contactNo);
             return ResponseEntity.ok(loyaltyDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
@@ -30,11 +33,11 @@ public class Loyalty {
 //        return ResponseEntity.ok(savedDto);
 //    }
 
-    @DeleteMapping("/{contactNo}")
-    public ResponseEntity<String> deleteLoyalty(@PathVariable String contactNo) {
-        loyaltyService.deleteLoyalty(contactNo);
-        return ResponseEntity.ok("Loyalty record deleted successfully.");
-    }
+//    @DeleteMapping("/{contactNo}")
+//    public ResponseEntity<String> deleteLoyalty(@PathVariable String contactNo) {
+//        loyaltyService.deleteLoyalty(contactNo);
+//        return ResponseEntity.ok("Loyalty record deleted successfully.");
+//    }
 
 
 
