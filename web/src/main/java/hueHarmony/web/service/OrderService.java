@@ -88,8 +88,8 @@ public class OrderService {
                     linkedCard.getToken(),
                     "Card payment for order number " + order.getOrderNo() + ".",
                     new HashMap<>(){{
-                        put("paymentNumber", order.getOrderPayments().get(0).getPaymentNo()+"");
-                        put("orderNumber", order.getOrderNo()+"");
+                        put("paymentNumber", order.getOrderPayments().get(0).getPaymentNo());
+                        put("orderNumber", order.getOrderNo());
                     }}
             );
         }else{
@@ -173,7 +173,9 @@ public class OrderService {
 
     @Transactional
     protected Payment handleOrderPayment(Order order, PaymentMethod paymentMethod){
-        Payment payment = Payment.builder()
+        //        order.setOrderPayments(List.of(payment));
+
+        return Payment.builder()
                 .paymentStatus(paymentMethod == PaymentMethod.POS_CASH ? PaymentStatus.PAID : PaymentStatus.PENDING)
                 .paymentDescription("Payment for order number "+order.getOrderNo()+".")
                 .paymentAmount(
@@ -183,9 +185,6 @@ public class OrderService {
                         order.getOnlineOrder().getDeliveryCost()
                 )
                 .build();
-//        order.setOrderPayments(List.of(payment));
-
-        return payment;
     }
 
     @Transactional
@@ -218,8 +217,4 @@ public class OrderService {
 
         return customer;
     }
-
-//    private float calculateOrderCost(float discount){
-//
-//    }
 }
