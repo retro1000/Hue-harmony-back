@@ -59,7 +59,7 @@ public class Pos {
     public ResponseEntity<Object> createOrder(@RequestBody PosOrderDto order) {
         try {
             PosOrder createdOrder = posService.createOrder(order);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Order Created");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
