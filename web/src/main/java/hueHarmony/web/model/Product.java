@@ -59,7 +59,7 @@ public class Product {
     private float productQuantity;
 
 
-    @Column(name="productPublishedTime", nullable = false)
+    @Column(name="productPublishedTime", nullable = true)
     private LocalDateTime productPublishedTime;
 
     @PrePersist
