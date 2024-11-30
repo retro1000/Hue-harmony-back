@@ -2,6 +2,7 @@ package hueHarmony.web.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(schema = "Pos_Order_Item")
+@Table(name = "pos_order_item")
+@Builder
 public class PosOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ public class PosOrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private PosOrder order;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 

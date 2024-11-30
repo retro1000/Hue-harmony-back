@@ -55,12 +55,13 @@ public class Pos {
 //        }
 //    }
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> createOrder(@RequestBody PosOrder order) {
+    @PostMapping("/create-order")
+    public ResponseEntity<Object> createOrder(@RequestBody PosOrderDto order) {
         try {
             PosOrder createdOrder = posService.createOrder(order);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }

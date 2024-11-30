@@ -16,10 +16,8 @@ import java.util.List;
 public class PosOrderDto {
 
     private Long id;
-    private LocalDateTime orderDate;
-    private String customerName;
     private Long phoneNumber;
-    private List<PosOrderItem> items; // Use a corresponding DTO for PosOrderItem
+    private List<PosOrderItemDto> items; // Use a corresponding DTO for PosOrderItem
     private BigDecimal total;
     private BigDecimal subTotal;
     private BigDecimal discount;

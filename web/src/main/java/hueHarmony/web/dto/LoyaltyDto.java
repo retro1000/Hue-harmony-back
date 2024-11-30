@@ -1,6 +1,5 @@
-package hueHarmony.web.model;
+package hueHarmony.web.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,16 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="loyalty")
-public class Loyalty {
+public class LoyaltyDto {
 
-    @Id
     private String contactNo;
-
-    @Column()
-    private float loyaltyPoints;
-
     private String loyaltyStatus;
+    private float loyaltyPoints;
 
 }
