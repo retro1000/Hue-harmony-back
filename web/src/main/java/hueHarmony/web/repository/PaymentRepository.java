@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Modifying
-    @Query("UPDATE Payment p SET p.paymentStatus = :paymentStatus WHERE p.paymentNo = :paymentNnumber")
+    @Query("UPDATE Payment p SET p.paymentStatus = :paymentStatus WHERE p.paymentNo = :paymentNumber")
     void changePaymentStatusByPaymentNumberAndPaymentStatus(@Param("paymentNumber") String paymentNumber, @Param("paymentStatus") PaymentStatus paymentStatus);
 }
