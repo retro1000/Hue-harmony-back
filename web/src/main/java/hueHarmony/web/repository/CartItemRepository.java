@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
@@ -23,15 +25,19 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 //            "WHERE ci.user.userId = :userId")
 //    List<CartItemDto> findAllCartItemsByUserId(@Param("userId") long userId);
 
-    boolean existsByCartItemId(int id);
+//    boolean existsByCartItemId(int id);
+//
+//    @Modifying
+//    @Query("UPDATE CartItem ci SET ci.quantity = :qty WHERE ci.cartItemId = :cartItemId")
+//    void updateCartItemQuantityByCartItemId(@Param("cartItemId") Long cartItemId, @Param("qty") int qty);
+//
+//    @Query("SELECT CASE WHEN ci.user.userId = :userId THEN TRUE ELSE FALSE END FROM CartItem ci WHERE ci.cartItemId = :cartItemId")
+//    boolean checkPermissionForCartOfUserByUserId(@Param("cartItemId") Long cartItemId, @Param("userId") int userId);
+//
+//    @Query("SELECT ci.product.productId FROM CartItem ci WHERE ci.cartItemId = :cartItemId")
+//    int getProductIdByCartItemId(@Param("cartItemId") Long cartItem);
 
-    @Modifying
-    @Query("UPDATE CartItem ci SET ci.quantity = :qty WHERE ci.cartItemId = :cartItemId")
-    void updateCartItemQuantityByCartItemId(@Param("cartItemId") Long cartItemId, @Param("qty") int qty);
+    List<CartItem> findByUserId(int userId);
 
-    @Query("SELECT CASE WHEN ci.user.userId = :userId THEN TRUE ELSE FALSE END FROM CartItem ci WHERE ci.cartItemId = :cartItemId")
-    boolean checkPermissionForCartOfUserByUserId(@Param("cartItemId") Long cartItemId, @Param("userId") int userId);
-
-    @Query("SELECT ci.product.productId FROM CartItem ci WHERE ci.cartItemId = :cartItemId")
-    int getProductIdByCartItemId(@Param("cartItemId") Long cartItem);
+    long getProductIdByCartItemId(long cartItemId);
 }

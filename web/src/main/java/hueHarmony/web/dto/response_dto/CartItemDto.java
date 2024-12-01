@@ -15,4 +15,6 @@ public class CartItemDto {
     private float fullPrice;
     private float price;
     private String productName;
+    private int productId;
+    private int userId;
 }
