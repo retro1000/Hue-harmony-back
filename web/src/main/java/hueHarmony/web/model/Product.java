@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -40,14 +39,11 @@ public class Product {
     @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
     private float productDiscount;
 
-//    @Column(name = "product_image", nullable = false, columnDefinition = "TEXT")
-//    private String productImage;
-
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
 
     @Column(name = "drying_time", columnDefinition = "VARCHAR", length = 25)
-    private String dryingTime;
+    private int dryingTime;
 
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
@@ -75,36 +71,33 @@ public class Product {
     @Column(name = "image_ids")
     private List<String> imageIds = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "product")
-//    private List<ProductImages> productImages;
-
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "brand", nullable = false)
+    @Column(name = "brand", nullable = false)
     private Brands brand;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "room_type", nullable = false)
+    @Column(name = "room_type", nullable = false)
     private RoomType roomType;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "finish")
+    @Column(name = "finish")
     private Finish finish;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<ProductType> productType;
+    private List<ProductType> productType = new ArrayList<>();
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<Surface> surfaces;
+    private List<Surface> surfaces = new ArrayList<>();
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<Position> positions;
+    private List<Position> positions = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "feature")
-    private List<String> productFeatures;
+    private List<String> productFeatures = new ArrayList<>();
 }

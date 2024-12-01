@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -66,16 +68,6 @@ public class Product {
 
     }
 
-    @PostMapping("/update")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> updateProduct() {
-        try{
-            return ResponseEntity.status(200).body("Supplier status update successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
-    }
 
 //    @DeleteMapping("/delete")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -117,23 +109,30 @@ public class Product {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateProduct(
-            @PathVariable("id") Long productId,
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(
+            @RequestParam Long productId,
             @RequestBody UpdateProductDto updateProductDto) {
 
         try {
             productService.updateProduct(productId, updateProductDto);
             return ResponseEntity.ok("Product updated successfully!");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Failed to update product: " + e.getMessage());
         }
     }
 
-    @GetMapping("product/read/{id}")
+    @GetMapping("/read/{id}")
     public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
         hueHarmony.web.model.Product product = productService.getProductById(productId);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/read")
+    public ResponseEntity<List<hueHarmony.web.model.Product>> getAllProducts() {
+        List<hueHarmony.web.model.Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
 
