@@ -125,7 +125,7 @@ public class User {
     }
 
     @PostMapping("/signup")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> signup(
             @Validated(UserDto.onSignup.class) @RequestBody UserDto userDto,
             BindingResult bindingResult
