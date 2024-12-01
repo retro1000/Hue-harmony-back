@@ -1,10 +1,7 @@
 package hueHarmony.web.service;
 
 import com.google.api.client.util.Value;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.*;
 import com.google.firebase.cloud.StorageClient;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class FirebaseStorageService {
@@ -50,6 +45,39 @@ public class FirebaseStorageService {
         }
         return imageIds;
     }
+
+    public List<String> getImageUrlsFromFirebase(List<String> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return imageIds.stream()
+                .map(imageId -> {
+                    try {
+                        // Construct the file path for the image
+                        String fileName = "images/" + imageId + ".jpg";
+
+                        // Get the bucket reference
+                        Bucket bucket = StorageClient.getInstance().bucket(bucketName);
+
+                        // Retrieve the blob (file) from the bucket
+                        Blob blob = bucket.get(fileName);
+
+                        if (blob == null) {
+                            throw new RuntimeException("Image not found for ID: " + imageId);
+                        }
+
+                        // Generate a signed URL for the image
+                        URL signedUrl = blob.signUrl(7, TimeUnit.DAYS); // URL valid for 7 days
+                        return signedUrl.toString();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error retrieving URL for image ID: " + imageId, e);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
 
     public String uploadFile(String fileName, byte[] fileBytes, String contentType) {
