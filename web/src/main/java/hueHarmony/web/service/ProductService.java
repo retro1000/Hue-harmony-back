@@ -1,5 +1,6 @@
 package hueHarmony.web.service;
 
+
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -108,7 +108,7 @@ public class ProductService {
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
-        product.setDryingTime(addProductDto.getDryingTime() + " hours");
+        product.setDryingTime(addProductDto.getDryingTime());
         product.setCoverage(addProductDto.getCoverage());
         product.setOnlineLimit(addProductDto.getOnlineLimit());
         product.setProductQuantity(addProductDto.getProductQuantity());
@@ -148,7 +148,7 @@ public class ProductService {
 
     }
 
-    public void updateProduct(Long productId, UpdateProductDto updateProductDTO) {
+    public void updateProduct(Long productId, UpdateProductDto updateProductDto) throws Exception {
         Optional<Product> optionalProduct = productRepository.findById(productId);
 
         if (optionalProduct.isEmpty()) {
@@ -158,25 +158,47 @@ public class ProductService {
         Product product = optionalProduct.get();
 
         // Update fields
-        product.setProductName(updateProductDTO.getProductName());
-        product.setProductDescription(updateProductDTO.getProductDescription());
-        product.setProductPrice(updateProductDTO.getProductPrice());
-        product.setProductDiscount(updateProductDTO.getProductDiscount());
-        product.setCoat(updateProductDTO.getCoat());
-        product.setDryingTime(updateProductDTO.getDryingTime());
-        product.setCoverage(updateProductDTO.getCoverage());
-        product.setOnlineLimit(updateProductDTO.getOnlineLimit());
-        product.setProductQuantity(updateProductDTO.getProductQuantity());
-        product.setProductStatus(updateProductDTO.getProductStatus());
-        product.setBrand(updateProductDTO.getBrand());
-        product.setRoomType(updateProductDTO.getRoomType());
-        product.setFinish(updateProductDTO.getFinish());
-        product.setProductType(updateProductDTO.getProductTypes());
-        product.setSurfaces(updateProductDTO.getSurfaces());
-        product.setPositions(updateProductDTO.getPositions());
-        product.setProductFeatures(updateProductDTO.getProductFeatures());
-        product.setImageIds(updateProductDTO.getImages());
+        product.setProductId(updateProductDto.getProductId());
+        product.setProductName(updateProductDto.getProductName());
+        product.setProductDescription(updateProductDto.getProductDescription());
+        product.setProductPrice(updateProductDto.getProductPrice());
+        product.setProductDiscount(updateProductDto.getProductDiscount());
+        product.setCoat(updateProductDto.getCoat());
+    //    product.setDryingTime(updateProductDto.getDryingTime());
+        product.setCoverage(updateProductDto.getCoverage());
+        product.setOnlineLimit(updateProductDto.getOnlineLimit());
+        product.setProductQuantity(updateProductDto.getProductQuantity());
 
+        product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
+        product.setBrand(updateProductDto.getBrand());
+        product.setRoomType(updateProductDto.getRoomType());
+        product.setFinish(updateProductDto.getFinish());
+
+        List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
+                .filter(Surface::contains)
+                .map(value -> Surface.valueOf(value.toUpperCase()))
+                .toList();
+        product.setSurfaces(validSurfaces);
+
+        List<Position> validPositions = updateProductDto.getPositions().stream()
+                .filter(Position::contains)
+                .map(value -> Position.valueOf(value.toUpperCase()))
+                .toList();
+        product.setPositions(validPositions);
+
+        List<ProductType> validProductTypes = updateProductDto.getProductTypes().stream()
+                .filter(ProductType::contains)
+                .map(value -> ProductType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setProductType(validProductTypes);
+
+        product.setProductFeatures(updateProductDto.getProductFeatures());
+
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImages());
+
+        product.setImageIds(imageIds);
+
+        System.out.println(product);
 
         productRepository.save(product);
     }
@@ -192,20 +214,25 @@ public class ProductService {
     }
 
     public Product getProductById(Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
-        return product.orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
-    }
+        Optional<Product> productOptional = productRepository.findById(productId);
 
-    public float[] getProductPriceAndDiscount(long productId) {
-        List<Object[]> result = productRepository.findProductPriceAndDiscountByProductId(productId);
-
-        if (result.isEmpty()) {
-            return new float[]{0.0f, 0.0f};
+        if (productOptional.isEmpty()) {
+            throw new RuntimeException("Product not found");
         }
 
-        return new float[]{
-                (float) result.get(0)[0],
-                ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
-        };
+        Product product = productOptional.get();
+
+
+        List<String> imageIds = product.getImageIds();
+
+        List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(imageIds);
+        product.setImageIds(imageUrls);
+
+        return product;
     }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
 }

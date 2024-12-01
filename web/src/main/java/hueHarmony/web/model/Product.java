@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -40,66 +39,65 @@ public class Product {
     @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
     private float productDiscount;
 
-    @Column(name = "product_image_url", nullable = false, columnDefinition = "TEXT")
-    private String productImageUrl;
-
-    @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >= 0 )")
+    @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
     private int coat;
 
     @Column(name = "drying_time", columnDefinition = "VARCHAR", length = 25)
-    private String dryingTime;
+    private int dryingTime;
 
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
 
-    @OneToMany(mappedBy = "product")
-    @Column
-    private List<ProductImages> productImages;
+    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private float onlineLimit;
 
-    @OneToMany(mappedBy = "product")
-    @Column
-    private List<ProductVariation> productVariations;
+    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    private float productQuantity;
 
-    @ManyToOne
-//    @JoinColumn(name = "brand_id", nullable = true)
-    private Brand brand;
 
-    @ManyToOne
-//    @JoinColumn(name = "room_type_id", nullable = true)
+    @Column(name="productPublishedTime", nullable = true)
+    private LocalDateTime productPublishedTime;
+
+    @PrePersist
+    protected void onCreate() {
+        this.productPublishedTime = LocalDateTime.now();
+    }
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "product_status", columnDefinition = "VARCHAR")
+    private ProductStatus productStatus;
+
+    @ElementCollection
+    @Column(name = "image_ids")
+    private List<String> imageIds = new ArrayList<>();
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "brand", nullable = false)
+    private Brands brand;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "room_type", nullable = false)
     private RoomType roomType;
 
-    @ManyToOne
-//    @JoinColumn(name = "finish_id")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "finish")
     private Finish finish;
 
-    @ManyToOne
-//    @JoinColumn(name = "product_type", nullable = true)
-    private ProductType productType;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<ProductType> productType = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "product_surface",
-        joinColumns = @JoinColumn(name = "product_id", nullable = true),
-            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = true)
-    )
-    private Set<Surface> surfaces;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Surface> surfaces = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "product_position",
-            joinColumns = @JoinColumn(name = "product_id", nullable = true),
-            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = true)
-    )
-    private Set<Position> positions;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Position> positions = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "product_product_feature",
-            joinColumns = @JoinColumn(name = "product_id", nullable = true),
-            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = true)
-    )
-    @Column
-    private Set<ProductFeature> productFeatures;
-
-    @Column
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PurchaseOrderProduct> purchaseOrderProduct;
-
+    @ElementCollection
+    @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "feature")
+    private List<String> productFeatures = new ArrayList<>();
 }
