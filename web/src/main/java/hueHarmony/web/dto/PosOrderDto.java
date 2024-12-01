@@ -17,7 +17,7 @@ import java.util.List;
 public class PosOrderDto {
 
     private Long id;
-    private BigDecimal phoneNumber;
+    private Integer phoneNumber;
     private Date orderDate;
     private List<PosOrderItemDto> items; // Use a corresponding DTO for PosOrderItem
     private BigDecimal total;

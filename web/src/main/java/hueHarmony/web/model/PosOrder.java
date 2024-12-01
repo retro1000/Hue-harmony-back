@@ -32,7 +32,7 @@ public class PosOrder {
     private String customerName;
 
     @Column(nullable = false)
-    private BigDecimal phoneNumber;
+    private Integer phoneNumber;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PosOrderItem> items;

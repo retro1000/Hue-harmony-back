@@ -17,7 +17,7 @@ public class Loyalty {
 
     @Id
     @Column(name = "contact_no")
-    private BigDecimal contactNo;
+    private Integer contactNo;
 
     @Column(name="loyalty_points")
     private Integer loyaltyPoints=0;

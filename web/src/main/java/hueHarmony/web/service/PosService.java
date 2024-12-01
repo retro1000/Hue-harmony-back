@@ -40,7 +40,7 @@ public class PosService {
         return productRepository.getProducts();
     }
 
-    @Transactional
+@Transactional
     public PosOrder createOrder(PosOrderDto orderDto) {
         // Map DTO fields to Entity using Builder
         PosOrder order = PosOrder.builder()
