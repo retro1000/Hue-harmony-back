@@ -1,9 +1,6 @@
 package hueHarmony.web.controller;
 
-import hueHarmony.web.dto.FilterProductDto;
-import hueHarmony.web.dto.PosOrderDto;
-import hueHarmony.web.dto.PosProductDto;
-import hueHarmony.web.dto.SummaryResponseDto;
+import hueHarmony.web.dto.*;
 import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.model.PosOrder;
 import hueHarmony.web.service.PosService;
@@ -66,24 +63,22 @@ public class Pos {
         }
     }
 
-    @GetMapping("/get-sales-summary")
-    public ResponseEntity<Object> getTotalsForCashierOnDate(
-            @RequestParam Long cashierId,
-            @RequestParam String date) {
+    @GetMapping("/get-sales-summary/{cashierId}")
+    public ResponseEntity<Object> getTotalsForCashierOnDate(@PathVariable Long cashierId) {
         try {
-            LocalDate parsedDate = LocalDate.parse(date); // Ensure the date format is "yyyy-MM-dd"
-            SummaryResponseDto totals = posService.getTotalsForCashierOnDate(cashierId, parsedDate);
+            //LocalDate parsedDate = LocalDate.parse(date); // Ensure the date format is "yyyy-MM-dd"
+            SalesSummaryDto totals = posService.getTotalsForCashierOnDate(cashierId);
             return ResponseEntity.ok(totals);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
 
-    @GetMapping("/cashier/{cashierId}/completed-orders")
-    public ResponseEntity<List<PosOrder>> getCompletedOrdersByCashier(@PathVariable Long cashierId) {
+    @GetMapping("/get-orders/{cashierId}")
+    public ResponseEntity<List<PosOrderListDto>> getCompletedOrdersByCashier(@PathVariable Long cashierId) {
         try {
             // Fetch completed orders for the given cashier
-            List<PosOrder> orders = posService.getCompletedOrdersByCashier(cashierId);
+            List<PosOrderListDto> orders = posService.getCompletedOrdersByCashier(cashierId);
 
             // If no orders found, return a 404 not found response
             if (orders.isEmpty()) {
@@ -112,6 +107,21 @@ public class Pos {
             return ResponseEntity.status(500).body(null);
         }
     }
+//    @GetMapping("/get-orders/{cashierId}")
+//    public ResponseEntity<PosOrder> getOrderList(@PathVariable Long cashierId) {
+//        try {
+//            // Fetch the order by ID using the service method
+//            Optional<PosOrder> order = posService.getOrderById(orderId);
+//
+//            // If order is not found, return a 404 Not Found response
+//            return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//
+//            // Return the order details with a 200 OK response
+//        } catch (Exception e) {
+//            // In case of any error, return a 500 Internal Server Error
+//            return ResponseEntity.status(500).body(null);
+//        }
+//    }
 
 
 }

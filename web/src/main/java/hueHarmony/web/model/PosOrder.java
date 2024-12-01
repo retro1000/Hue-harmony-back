@@ -38,13 +38,13 @@ public class PosOrder {
     private List<PosOrderItem> items;
 
     @Column(nullable = false)
-    private BigDecimal total;
+    private float total;
 
     @Column(nullable = false)
-    private Double subTotal;
+    private float subTotal;
 
     @Column(nullable = false)
-    private BigDecimal discount;
+    private float discount;
 
     @Column(nullable = false)
     private String paymentMethod; // e.g., "Cash", "Card"

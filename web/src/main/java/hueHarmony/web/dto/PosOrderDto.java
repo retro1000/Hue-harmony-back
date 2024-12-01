@@ -20,9 +20,9 @@ public class PosOrderDto {
     private Integer phoneNumber;
     private Date orderDate;
     private List<PosOrderItemDto> items; // Use a corresponding DTO for PosOrderItem
-    private BigDecimal total;
-    private Double subTotal;
-    private BigDecimal discount;
+    private float total;
+    private float subTotal;
+    private float discount;
     private String paymentMethod;
     private OrderStatus orderStatus;
     private Long cashierId; // Assuming only the ID of the cashier is needed
