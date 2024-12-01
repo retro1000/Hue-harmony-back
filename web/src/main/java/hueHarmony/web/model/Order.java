@@ -20,7 +20,7 @@ import java.util.Random;
 @Entity
 @Table(name = "orders")
 @Builder
-public class    Order {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

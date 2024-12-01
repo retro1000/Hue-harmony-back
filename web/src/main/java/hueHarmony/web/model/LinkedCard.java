@@ -42,7 +42,8 @@ public class LinkedCard {
 
     @Column(name = "linked_card_status", columnDefinition = "VARCHAR", length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
-    private LinkedCardStatus linkedCardStatus = LinkedCardStatus.PENDING;
+    @Builder.Default
+    private LinkedCardStatus linkedCardStatus = LinkedCardStatus.AVAILABLE;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "retail_customer_id", nullable = false)

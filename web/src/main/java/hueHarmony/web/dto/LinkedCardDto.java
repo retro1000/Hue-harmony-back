@@ -15,7 +15,7 @@ public class LinkedCardDto {
     private String token;
     private String offset;
     private CardType cardType;
-    private LinkedCardStatus status;
+    private LinkedCardStatus status = LinkedCardStatus.AVAILABLE;
     private String gatewayCustomerId;
     private String expireDate;
     private String clientSecret;
