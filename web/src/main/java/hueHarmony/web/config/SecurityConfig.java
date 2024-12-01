@@ -45,7 +45,7 @@ public class SecurityConfig{
 //                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook","/customer/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook","/customer/**","/wholeSale/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

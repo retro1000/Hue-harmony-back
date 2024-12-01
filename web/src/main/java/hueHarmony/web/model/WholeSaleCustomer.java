@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -53,4 +55,7 @@ public class WholeSaleCustomer {
 
     @Column(name = "contact_person_number", columnDefinition = "VARCHAR", nullable = true)
     private Integer contactPersonNumber;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WholeSaleOrder> orders;
 }
