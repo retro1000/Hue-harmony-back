@@ -23,9 +23,9 @@ public class WholeSaleCustomerDto {
     public interface onDelete{}
     public interface onStatusUpdate{}
 
-    @NotNull(groups = {onDelete.class, onUpdate.class, onStatusUpdate.class}, message = "No wholesale customer found.")
-    @DataExistingValidation(groups = {onDelete.class, onUpdate.class, onStatusUpdate.class}, service = CustomerService.class, method = "isWholeSaleCustomerExist")
-    private int wholeSaleCustomerId;
+//    @NotNull(groups = {onDelete.class, onUpdate.class, onStatusUpdate.class}, message = "No wholesale customer found.")
+//    @DataExistingValidation(groups = {onDelete.class, onUpdate.class, onStatusUpdate.class}, service = CustomerService.class, method = "isWholeSaleCustomerExist")
+//    private int wholeSaleCustomerId;
 
     @NotNull(groups = {onCreation.class, onUpdate.class}, message = "NIC number cannot be empty.")
     @NameValidation(groups = {onCreation.class, onUpdate.class}, name = "NIC number", required = true, minLength = 10, maxLength = 12)
@@ -41,10 +41,21 @@ public class WholeSaleCustomerDto {
     @Pattern(groups = {onCreation.class, onUpdate.class}, regexp = "^(0[1-9][0-9]{8}|\\+94[1-9][0-9]{8})$", message = "Invalid land phone number provided.")
     private String landPhone;
 
-    @NotNull(groups = {onStatusUpdate.class}, message = "Wholesale customer status cannot be empty.")
-    private WholeSaleCustomerStatus wholeSaleCustomerStatus;
+//    @NotNull(groups = {onStatusUpdate.class}, message = "Wholesale customer status cannot be empty.")
+//    private WholeSaleCustomerStatus wholeSaleCustomerStatus;
 
     @Valid
     @NotNull(groups = {onCreation.class, onUpdate.class}, message = "Customer details cannot be empty.")
     private CustomerDto customerDto;
+
+
+    private String deliveryAddress;
+
+    private String businessAddress;
+
+    private String contactPerson;
+
+    private String businessName;
+
+    private Integer contactPersonNumber;
 }

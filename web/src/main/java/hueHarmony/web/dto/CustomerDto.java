@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,9 +20,9 @@ public class CustomerDto {
     public interface onCreation{}
     public interface onOldCreation{}
 
-    @NotNull(groups = {onOldCreation.class, onUpdate.class}, message = "No customer found.")
-    @DataExistingValidation(groups = {onOldCreation.class, onUpdate.class}, service = CustomerService.class, method = "isCustomerExist")
-    private int customerId;
+//    @NotNull(groups = {onOldCreation.class, onUpdate.class}, message = "No customer found.")
+//    @DataExistingValidation(groups = {onOldCreation.class, onUpdate.class}, service = CustomerService.class, method = "isCustomerExist")
+//    private int customerId;
 
     @NotNull(groups = {onCreation.class, onUpdate.class}, message = "First name cannot be empty.")
     @NameValidation(groups = {onCreation.class, onUpdate.class}, name = "First name", required = true)
@@ -33,5 +35,7 @@ public class CustomerDto {
     @NotNull(groups = {onCreation.class, onUpdate.class}, message = "Contact number cannot be empty.")
     @NameValidation(groups = {onCreation.class, onUpdate.class}, name = "Contact number", required = true, minLength = 10, maxLength = 12, message = "Contact number must be in between 10 and 12 digits.")
     @Pattern(groups = {onCreation.class, onUpdate.class}, regexp = "^(07[0-9]{8}|0[1-9][0-9]{8}|\\+947[0-9]{8}|\\+94[1-9][0-9]{8})$", message = "Invalid contact number provided.")
-    private String contactNo;
+    private Set<String> contactNos;
+
+    private String email;
 }

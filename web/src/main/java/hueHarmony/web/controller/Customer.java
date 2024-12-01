@@ -6,6 +6,7 @@ import hueHarmony.web.dto.FilterOrderDto;
 import hueHarmony.web.dto.WholeSaleCustomerDto;
 import hueHarmony.web.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -48,27 +49,27 @@ public class Customer {
         }
     }
 
-    @PostMapping("/create/wholesale")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<Object> createCustomer(
-            @Validated({CustomerDto.onCreation.class}) @RequestBody CustomerDto customer,
-            BindingResult bindingResult
-    ) {
-        try{
+    @PostMapping("/create/wholesale-customer")
+// @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+    public ResponseEntity<Object> createCustomer(@RequestBody WholeSaleCustomerDto customerDto) {
+        try {
+            // Calling the service to create the customer
+            customerService.createCustomer(customerDto);
 
-            if(bindingResult.hasErrors()) return ResponseEntity.status(400).body(bindingResult);
+            // Returning the response with status 201 (CREATED) and a success message
+            return ResponseEntity.status(HttpStatus.CREATED).body("Customer created successfully.");
 
-            customerService.createCustomer(customer);
+        } catch (Exception e) {
+            // Log the exception details for debugging (optional)
+            // logger.error("Error occurred while creating customer", e);
 
-            return ResponseEntity.status(200).body("Customer created successfully.");
-
-        }catch(Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
+            // Returning the response with status 500 (INTERNAL_SERVER_ERROR) and a generic error message
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error: " + e.getMessage());
         }
     }
-
     @PostMapping("/create/wholesale/new")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
     public ResponseEntity<Object> createNewWholeSaleCustomer(
             @Validated({WholeSaleCustomerDto.onCreation.class, CustomerDto.onCreation.class}) @RequestBody WholeSaleCustomerDto customer,
             BindingResult bindingResult
