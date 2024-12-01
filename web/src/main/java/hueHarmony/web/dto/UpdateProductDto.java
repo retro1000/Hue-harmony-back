@@ -13,23 +13,41 @@ import java.util.List;
 
 @Data
 public class UpdateProductDto {
+    private int productId;
     private String productName;
+
     private String productDescription;
+
     private float productPrice;
+
     private float productDiscount;
+
     private int coat;
-    private String dryingTime;
-    private float coverage;
+
+    private int dryingTime;
+
+    private int coverage;
+
     private float onlineLimit;
+
     private float productQuantity;
-    private ProductStatus productStatus;
+
+    private String productStatus;
+
     private Brands brand;
+
     private RoomType roomType;
+
     private Finish finish;
-    private List<ProductType> productTypes;
-    private List<Surface> surfaces;
-    private List<Position> positions;
+
+    private List<String> productTypes;
+
+    private List<String> surfaces;
+
+    private List<String> positions;
+
     private List<String> productFeatures;
-    private List<String> images; // Base64 strings of images
+
+    private List<String> productImages;
 }
 
