@@ -52,56 +52,54 @@ public class Product {
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
 
-    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private float onlineLimit;
+    @OneToMany(mappedBy = "product")
+    @Column
+    private List<ProductImages> productImages;
 
-    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private float productQuantity;
+    @OneToMany(mappedBy = "product")
+    @Column
+    private List<ProductVariation> productVariations;
 
+    @ManyToOne
+//    @JoinColumn(name = "brand_id", nullable = true)
+    private Brand brand;
 
-    @Column(name="productPublishedTime", nullable = false)
-    private LocalDateTime productPublishedTime;
-
-    @PrePersist
-    protected void onCreate() {
-        this.productPublishedTime = LocalDateTime.now();
-    }
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "product_status", columnDefinition = "VARCHAR")
-    private ProductStatus productStatus;
-
-    @ElementCollection
-    @Column(name = "image_ids")
-    private List<String> imageIds = new ArrayList<>();
-
-
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "brand", nullable = false)
-    private Brands brand;
-
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "room_type", nullable = false)
+    @ManyToOne
+//    @JoinColumn(name = "room_type_id", nullable = true)
     private RoomType roomType;
 
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "finish")
+    @ManyToOne
+//    @JoinColumn(name = "finish_id")
     private Finish finish;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<ProductType> productType;
+    @ManyToOne
+//    @JoinColumn(name = "product_type", nullable = true)
+    private ProductType productType;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Surface> surfaces;
+    @ManyToMany
+    @JoinTable(name = "product_surface",
+        joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "surface_id", nullable = true)
+    )
+    private Set<Surface> surfaces;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Position> positions;
+    @ManyToMany
+    @JoinTable(name = "product_position",
+            joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "position_id", nullable = true)
+    )
+    private Set<Position> positions;
 
-    @ElementCollection
-    @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "feature")
-    private List<String> productFeatures;
+    @ManyToMany
+    @JoinTable(name = "product_product_feature",
+            joinColumns = @JoinColumn(name = "product_id", nullable = true),
+            inverseJoinColumns = @JoinColumn(name = "product_feature_id", nullable = true)
+    )
+    @Column
+    private Set<ProductFeature> productFeatures;
+
+    @Column
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PurchaseOrderProduct> purchaseOrderProduct;
+
 }
