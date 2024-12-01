@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +29,7 @@ public class OrderService {
     private final LinkedCardService linkedCardService;
     private final StripeService stripeService;
     private final ProductService productService;
+    private final RetailCustomerService retailCustomerService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -83,7 +82,7 @@ public class OrderService {
 
         if(orderDto.getPaymentMethod() == PaymentMethod.CARD && linkedCard!=null && linkedCard.getToken()!=null && !linkedCard.getToken().isEmpty() && !linkedCard.getToken().isBlank()){
             stripeService.createPaymentIntent(
-                    (long) order.getOrderPayments().get(0).getPaymentAmount(),
+                    (long) Math.round(order.getOrderPayments().get(0).getPaymentAmount() * 100),
                     "lkr",
                     linkedCard.getToken(),
                     "Card payment for order number " + order.getOrderNo() + ".",
@@ -124,8 +123,8 @@ public class OrderService {
         Order order = Order.builder()
                 .orderNote(orderDto.getOrderNote())
                 .orderPaymentMethod(orderDto.getPaymentMethod())
-//                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-                .createdUser(entityManager.getReference(User.class, 2))
+                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+//                .createdUser(entityManager.getReference(User.class, 3))
                 .orderDiscount(orderDto.getDiscount())
                 .build();
 
@@ -192,7 +191,7 @@ public class OrderService {
     @Transactional
     protected Customer handleOrderCustomer(OrderDto orderDto, boolean isRetailOrder){
         Customer customer;
-        if(orderDto.getCustomerId()==0 &&
+        if(orderDto.getRetailCustomerId()==0 &&
                 !orderDto.getEmailAddress().isEmpty() &&
                 !orderDto.getFirstName().isEmpty() &&
                 !orderDto.getLastName().isEmpty() &&
@@ -208,14 +207,14 @@ public class OrderService {
             if(isRetailOrder){
                 RetailCustomer retailCustomer = RetailCustomer.builder()
                         .customer(customer)
-//                        .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-                        .user(entityManager.getReference(User.class, 2))
+                        .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+//                        .user(entityManager.getReference(User.class, 3))
                         .build();
 
                 customer.setRetailCustomer(retailCustomer);
             }
         }else{
-            customer = entityManager.getReference(Customer.class, orderDto.getCustomerId());
+            customer = entityManager.getReference(Customer.class, retailCustomerService.getCustomerIdByRetailCustomerId(orderDto.getRetailCustomerId()));
         }
 
         return customer;

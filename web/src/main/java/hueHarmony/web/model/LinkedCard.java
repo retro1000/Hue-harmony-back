@@ -44,7 +44,7 @@ public class LinkedCard {
     @Enumerated(EnumType.STRING)
     private LinkedCardStatus linkedCardStatus = LinkedCardStatus.PENDING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "retail_customer_id", nullable = false)
     private RetailCustomer retailCustomer;
 //

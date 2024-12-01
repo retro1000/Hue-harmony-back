@@ -25,7 +25,7 @@ public class OrderDto {
     private Set<String> contactNos;
     private String firstName;
     private String lastName;
-    private int customerId;
+    private int retailCustomerId;
 
     private LinkedCardDto linkedCardDto;
 

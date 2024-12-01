@@ -18,6 +18,12 @@ public class StripeService {
                 .setConfirm(true)  // Automatically confirm the payment
                 .setDescription(description)
                 .putAllMetadata(metadata)
+                .setAutomaticPaymentMethods(
+                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                .setEnabled(true)  // Enable automatic payment methods but don’t explicitly force 3D Secure
+                                .setAllowRedirects(PaymentIntentCreateParams.AutomaticPaymentMethods.AllowRedirects.NEVER)
+                                .build()
+                )
                 .build();
 
         return PaymentIntent.create(params);
