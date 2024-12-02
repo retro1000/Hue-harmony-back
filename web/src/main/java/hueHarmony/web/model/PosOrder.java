@@ -3,17 +3,21 @@ package hueHarmony.web.model;
 import hueHarmony.web.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Table(name = "pos_order")
 public class PosOrder {
 
 
@@ -22,25 +26,25 @@ public class PosOrder {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     @Column(nullable = false)
     private String customerName;
 
     @Column(nullable = false)
-    private Long phoneNumber;
+    private Integer phoneNumber;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PosOrderItem> items;
 
     @Column(nullable = false)
-    private BigDecimal total;
+    private float total;
 
     @Column(nullable = false)
-    private BigDecimal subTotal;
+    private float subTotal;
 
     @Column(nullable = false)
-    private BigDecimal discount;
+    private float discount;
 
     @Column(nullable = false)
     private String paymentMethod; // e.g., "Cash", "Card"

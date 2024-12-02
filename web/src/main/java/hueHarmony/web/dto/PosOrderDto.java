@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,13 +17,12 @@ import java.util.List;
 public class PosOrderDto {
 
     private Long id;
-    private LocalDateTime orderDate;
-    private String customerName;
-    private Long phoneNumber;
-    private List<PosOrderItem> items; // Use a corresponding DTO for PosOrderItem
-    private BigDecimal total;
-    private BigDecimal subTotal;
-    private BigDecimal discount;
+    private Integer phoneNumber;
+    private Date orderDate;
+    private List<PosOrderItemDto> items; // Use a corresponding DTO for PosOrderItem
+    private float total;
+    private float subTotal;
+    private float discount;
     private String paymentMethod;
     private OrderStatus orderStatus;
     private Long cashierId; // Assuming only the ID of the cashier is needed

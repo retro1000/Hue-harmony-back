@@ -17,6 +17,15 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends ExtendedRepository<Product, Long> {
 
+    List<Product> findByProductName(@Param("productName") String productName);
+    @Query("SELECT new hueHarmony.web.dto.PosProductDto(p.productId, p.productName, p.productPrice,p.productDiscount) FROM Product p")
+    List<PosProductDto> getProducts();
+
+//    @Query("SELECT new hueHarmony.web.dto.ProductDto(p.productId, p.productName, p.productImageUrl, p.startingPrice, p.productStatus, p.productDiscount) FROM Product p")
+//    List<ProductDto> findAllProductListDto();
+
+//    @Query("SELECT new hueHarmony.web.dto.PosProductDto(p.productId, p.productName, p.productPrice,p.productDiscount) FROM Product p")
+//    List<PosProductDto> getProducts();
     @Query("SELECT p.productDiscount, p.productPrice FROM Product p WHERE p.productId = :productId")
     List<Object[]> findProductPriceAndDiscountByProductId(@Param("productId")long productId);
 

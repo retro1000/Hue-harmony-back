@@ -9,13 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PosProductDto {
-    private int productId;
+    private Long productId;
     private String productName;
     private MultipartFile[] productImages;
     private Float productDiscount;
     private Float productPrice;
 
-    public PosProductDto(int productId, String productName, Float productPrice, Float productDiscount) {
+    public PosProductDto(Long productId, String productName, Float productPrice, Float productDiscount) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;

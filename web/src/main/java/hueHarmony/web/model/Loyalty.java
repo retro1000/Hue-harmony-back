@@ -1,24 +1,28 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.enums.LoyaltyStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="loyalty")
+@Table(name="loyalty_points")
 public class Loyalty {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int loyaltyId;
+    @Column(name = "contact_no")
+    private Integer contactNo;
 
-    @Column()
-    private float loyaltyPoints;
+    @Column(name="loyalty_points")
+    private Integer loyaltyPoints=0;
 
-    @Column(name = "contact_no", columnDefinition = "VARCHAR", length = 10)
-    private String contactNo;
+    @Enumerated(EnumType.STRING)
+    private LoyaltyStatus loyaltyStatus=LoyaltyStatus.ACTIVE;
+
 }
