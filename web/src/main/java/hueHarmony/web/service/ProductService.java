@@ -235,4 +235,17 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public float[] getProductPriceAndDiscount(long productId) {
+        List<Object[]> result = productRepository.findProductPriceAndDiscountByProductId(productId);
+
+        if (result.isEmpty()) {
+            return new float[]{0.0f, 0.0f};
+        }
+
+        return new float[]{
+                (float) result.get(0)[0],
+                ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
+        };
+    }
+
 }

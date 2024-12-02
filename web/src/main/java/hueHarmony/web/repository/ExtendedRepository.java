@@ -13,4 +13,6 @@ import java.util.List;
 public interface ExtendedRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     Page<?> filterAndSelectFieldsBySpecsAndPage(Specification<T> specification, Pageable pageable, List<String> fields, Class<?> projectionDto);
+
+
 }

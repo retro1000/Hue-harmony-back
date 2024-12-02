@@ -36,8 +36,8 @@ public class CartService {
     }
 
     // Add an item to the cart
-    public CartItemDto addCartItem(CartItemDto cartItemDto) {
-        User user = userRepository.findById((long) cartItemDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+    public CartItemDto addCartItem(Long userId, CartItemDto cartItemDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Product product = productRepository.findById((long) cartItemDto.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
 
         CartItem cartItem = new CartItem();

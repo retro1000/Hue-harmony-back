@@ -100,4 +100,6 @@ public class Product {
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "feature")
     private List<String> productFeatures = new ArrayList<>();
+
+
 }
