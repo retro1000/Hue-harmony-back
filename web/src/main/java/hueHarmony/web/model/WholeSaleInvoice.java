@@ -20,46 +20,46 @@ import java.util.List;
 public class WholeSaleInvoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generating invoiceId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invoice_id", nullable = false, unique = true)
-    private Long invoiceId;  // Unique identifier for the invoice
+    private Long invoiceId;
 
-    // Reference to the associated WholeSaleOrder
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "order_id", nullable = false)
-    private WholeSaleOrder wholeSaleOrder;  // Associated order for the invoice
+    private WholeSaleOrder wholeSaleOrder;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "invoice_date", nullable = false)
-    private Date invoiceDate;  // Date when the invoice was generated
+    private Date invoiceDate;
 
     @Column(name = "total_amount", nullable = false)
-    private Double totalAmount;  // Total amount for the invoice, reflecting the order total
+    private Double totalAmount;
 
     @Column(name = "discount_amount")
-    private Double discountAmount;  // Discount applied to the invoice, if any
+    private Double discountAmount;
 
     @Column(name = "net_amount", nullable = false)
-    private Double netAmount;  // Net payable amount after applying discounts
+    private Double netAmount;
 
     @Column(name = "billing_address", length = 500)
-    private String billingAddress;  // Billing address on the invoice
+    private String billingAddress;
 
     @Column(name = "payment_method", length = 50)
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;  // Payment method used for the order
+    private PaymentMethod paymentMethod;
 
     @Column(name = "payment_status", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private PaymentStatus paymentStatus= PaymentStatus.PENDING;  // Payment status at the time of invoice generation
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @Column(name = "notes", length = 1000)
     private String notes;
 
-    @OneToMany(mappedBy = "wholeSaleInvoice", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<DebitNote> debitNotes;
+    @OneToMany(mappedBy = "wholeSaleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DebitNote> debitNotes ;
 
-    @OneToMany(mappedBy = "wholeSaleInvoice", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wholeSaleInvoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CreditNote> creditNotes;
 }
+

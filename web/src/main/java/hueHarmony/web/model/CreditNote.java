@@ -21,11 +21,11 @@ public class CreditNote {
     @Column(name = "credit_note_id")
     private Long creditNoteId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "wholesale_invoice_id")
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @JoinColumn(name = "wholesale_invoice_id", nullable = false)
     private WholeSaleInvoice wholeSaleInvoice;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
     @Column(name = "reason", length = 255)

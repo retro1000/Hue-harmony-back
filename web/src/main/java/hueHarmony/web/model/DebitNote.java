@@ -1,5 +1,6 @@
 package hueHarmony.web.model;
 
+import hueHarmony.web.model.WholeSaleInvoice;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,11 +22,11 @@ public class DebitNote {
     @Column(name = "debit_note_id")
     private Long debitNoteId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "wholesale_invoice_id")
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @JoinColumn(name = "wholesale_invoice_id", nullable = false)
     private WholeSaleInvoice wholeSaleInvoice;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
     @Column(name = "reason", length = 255)
