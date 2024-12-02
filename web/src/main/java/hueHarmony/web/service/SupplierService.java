@@ -1,7 +1,9 @@
 package hueHarmony.web.service;
 
 import hueHarmony.web.dto.SupplierDto;
+import hueHarmony.web.model.Product;
 import hueHarmony.web.model.Supplier;
+import hueHarmony.web.model.SupplierProduct;
 import hueHarmony.web.model.User;
 import hueHarmony.web.model.enums.SupplierStatus;
 import hueHarmony.web.repository.SupplierRepository;
@@ -10,6 +12,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +52,20 @@ public class SupplierService {
                         SupplierStatus.ACTIVE :
                         supplierDto.getSupplierStatus()
         );
-        supplier.setCreatedUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()));
+//        supplier.setCreatedUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()));
+        supplier.setCreatedUser(entityManager.getReference(User.class,1 ));
+
+
+        List<SupplierProduct> supplierProducts = supplierDto.getSupplierProduct().stream().map(supplierProductDto -> {
+            SupplierProduct supplierProduct = new SupplierProduct();
+            supplierProduct.setSupplier(supplier);
+            supplierProduct.setProduct(entityManager.getReference(Product.class, supplierProductDto.getProductId()));
+            supplierProduct.setPrice(supplierProductDto.getPrice());
+            return supplierProduct;
+        }).toList();
+
+        supplier.setProducts(supplierProducts);
+
         if(jwtUtil.extractRoleWithToken().contains("ROLE_ADMIN")){
             supplier.setApprovedUser(supplier.getCreatedUser());
         }

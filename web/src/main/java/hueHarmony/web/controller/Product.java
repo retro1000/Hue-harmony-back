@@ -34,7 +34,7 @@ public class Product {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createProduct(AddProductDto addProductDto) {
         try{
             productService.createProduct(addProductDto);

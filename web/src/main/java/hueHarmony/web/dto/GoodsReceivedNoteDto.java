@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class GoodsReceivedNoteDto {
 
-    private long grnId; // ID of the GRN
-    private long purchaseOrderId; // Associated purchase order ID
-    private List<GoodsReceivedProductDto> receivedProducts; // List of received products
-    private Date receivedDate; // Date the goods were received
-    private String remarks; // Remarks or comments
-    private boolean isComplete; // Indicates if the GRN is complete
+    private long grnId;
+    private long purchaseOrderId;
+    private List<GoodsReceivedProductDto> receivedProducts;
+    private Date receivedDate;
+    private String remarks;
+    private boolean isComplete;
 }

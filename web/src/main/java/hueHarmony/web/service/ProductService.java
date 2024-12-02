@@ -114,6 +114,8 @@ public class ProductService {
         product.setProductQuantity(addProductDto.getProductQuantity());
 
         product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+//        product.setProductStatus(addProductDto.getProductStatus());
+
         product.setBrand(addProductDto.getBrand());
         product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());

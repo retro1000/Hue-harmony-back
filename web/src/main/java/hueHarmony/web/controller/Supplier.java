@@ -60,7 +60,7 @@ public class Supplier {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE')")
     public ResponseEntity<Object> createSupplier(
             @Validated(SupplierDto.onCreation.class) @RequestBody SupplierDto supplierDto,
             BindingResult bindingResult

@@ -65,7 +65,7 @@ public class Product {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "product_status", columnDefinition = "VARCHAR")
-    private ProductStatus productStatus;
+    private ProductStatus productStatus = ProductStatus.AVAILABLE;
 
     @ElementCollection
     @Column(name = "image_ids")
@@ -100,6 +100,7 @@ public class Product {
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "feature")
     private List<String> productFeatures = new ArrayList<>();
+
 
 
 }

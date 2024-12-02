@@ -26,6 +26,6 @@ public class SupplierProduct {
     private Supplier supplier;
 
     @Column(name = "price")
-    private int price;
+    private float price;
 
 }
