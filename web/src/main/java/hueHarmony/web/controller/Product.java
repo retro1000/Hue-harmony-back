@@ -38,7 +38,7 @@ public class Product {
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> createProduct(AddProductDto addProductDto) {
+    public ResponseEntity<Object> createProduct(@RequestBody AddProductDto addProductDto) {
         try{
             productService.createProduct(addProductDto);
             return ResponseEntity.status(200).body("Supplier status update successfully.");

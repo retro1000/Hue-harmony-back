@@ -30,7 +30,7 @@ public class AddProductDto {
 
     private int productQuantity;
 
-    private String productStatus;
+    private ProductStatus productStatus;
 
     private Brands brand;
 

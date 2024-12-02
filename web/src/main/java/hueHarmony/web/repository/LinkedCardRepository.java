@@ -13,15 +13,15 @@ import java.util.List;
 @Repository
 public interface LinkedCardRepository extends JpaRepository<LinkedCard, Long> {
 
-    @Query(value = "SELECT NEW hueHarmony.web.dto.LinkedCardDto(" +
-            "lc.token," +
-            "lc.gatewayCustomerId," +
-            "lc.cardOffset," +
-            "lc.linkedCardType," +
-            "lc.linkedCardStatus" +
-            ") FROM LinkedCard lc" +
-            " WHERE lc.retailCustomer.customer.customerId = :id")
-    List<LinkedCardDto> findLinkedCardsByCustomerId(@Param("id")long id);
+//    @Query(value = "SELECT NEW hueHarmony.web.dto.LinkedCardDto(" +
+//            "lc.token," +
+//            "lc.gatewayCustomerId," +
+//            "lc.cardOffset," +
+//            "lc.linkedCardType," +
+//            "lc.linkedCardStatus" +
+//            ") FROM LinkedCard lc" +
+//            " WHERE lc.retailCustomer.customer.customerId = :id")
+//    List<LinkedCardDto> findLinkedCardsByCustomerId(@Param("id")long id);
 
     @Query(value = "UPDATE LinkedCard l SET l.token = :token, l.linkedCardStatus = :status, l.gatewayCustomerId = :custId WHERE l.linkedCardId = :id")
     void updateTokenByLinkedCardId(@Param("token")String token, @Param("custId")String custId, @Param("id")long id, @Param("status") LinkedCardStatus status);

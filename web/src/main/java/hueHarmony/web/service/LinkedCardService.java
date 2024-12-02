@@ -21,7 +21,7 @@ public class LinkedCardService {
         return switch (linkedCardDto.getLinkedCardChoice()) {
             case NEW -> LinkedCard.builder()
                     .token(linkedCardDto.getToken())
-                    .gatewayCustomerId(linkedCardDto.getGatewayCustomerId())
+ //                   .gatewayCustomerId(linkedCardDto.getGatewayCustomerId())
                     .cardOffset(linkedCardDto.getOffset())
                     .expireDate(linkedCardDto.getExpireDate())
                     .isDefault(false)

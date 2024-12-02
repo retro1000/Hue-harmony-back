@@ -1,8 +1,6 @@
 package hueHarmony.web.specification;
 
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.ProductVariation;
-import hueHarmony.web.model.Variation;
 import hueHarmony.web.model.enums.data_set.Brands;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
 import hueHarmony.web.model.Product;

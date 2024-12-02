@@ -110,7 +110,7 @@ public class Product {
     @Column
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseOrderProduct> purchaseOrderProduct;
-*/
+
 
 
 
