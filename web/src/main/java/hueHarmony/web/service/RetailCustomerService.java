@@ -15,4 +15,9 @@ public class RetailCustomerService {
     public Long getCustomerIdByRetailCustomerId(long customerId) {
         return retailCustomerRepository.getCustomerIdByRetailCustomerId(customerId).orElseThrow(() -> new IllegalStateException("Retail customer not found."));
     }
+
+    @Transactional(readOnly = true)
+    public Long getCustomerIdByUserId(int userId) {
+        return retailCustomerRepository.getCustomerIdByUserId(userId).orElseThrow(() -> new IllegalStateException("Retail customer not found."));
+    }
 }

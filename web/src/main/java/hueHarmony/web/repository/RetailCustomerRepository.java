@@ -13,4 +13,7 @@ public interface RetailCustomerRepository extends JpaRepository<RetailCustomer, 
 
     @Query("SELECT rc.customer.customerId FROM RetailCustomer rc WHERE rc.retailCustomerId = :retailCustomerId")
     Optional<Long> getCustomerIdByRetailCustomerId(@Param("retailCustomerId") long retailCustomerId);
+
+    @Query("SELECT rc.customer.customerId FROM RetailCustomer rc WHERE rc.user.userId = :userId")
+    Optional<Long> getCustomerIdByUserId(@Param("userId") int userId);
 }

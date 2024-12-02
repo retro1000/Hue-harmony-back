@@ -15,17 +15,14 @@ public class LinkedCardDto {
     private String token;
     private String offset;
     private CardType cardType;
-    private LinkedCardStatus status;
-    private String gatewayCustomerId;
+    private LinkedCardStatus status = LinkedCardStatus.AVAILABLE;
     private String expireDate;
-    private String clientSecret;
     private LinkedCardChoice linkedCardChoice;
 
-    public LinkedCardDto(String token, String custId, String offset, CardType cardType, LinkedCardStatus linkedCardStatus){
+    public LinkedCardDto(String token, String offset, CardType cardType, LinkedCardStatus linkedCardStatus){
         this.token = token;
         this.offset = offset;
         this.cardType = cardType;
         this.status = linkedCardStatus;
-        this.gatewayCustomerId = custId;
     }
 }
