@@ -72,4 +72,7 @@ public class WholeSaleOrder {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private ShipmentVariationStatus shipmentVariationStatus = ShipmentVariationStatus.PENDING;
+
+    @OneToOne(mappedBy = "wholeSaleOrder", fetch = FetchType.LAZY)
+    private WholeSaleInvoice invoice;
 }

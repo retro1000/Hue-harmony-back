@@ -19,5 +19,6 @@ public enum OrderStatus {
 //    CUSTOMER_CANCELED,
     DELIVERY_RESCHEDULED,
     SHIPPED,
-    ITEM_LOST
+    ITEM_LOST,
+    APPROVED
 }
