@@ -4,6 +4,7 @@ package hueHarmony.web.service;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
+import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
@@ -12,13 +13,13 @@ import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +45,37 @@ public class ProductService {
                     return dto;
                 }
         );
+    }
+
+//    public Page<PopularProductsDto> filterProductsForPopularProducts() {
+//        Page<PopularProductsDto> products = productRepository.findPopularProducts(PageRequest.of(0, 4));
+//        return products.map(product -> {
+//            List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(product.getImageIds());
+//            product.setImageIds(imageUrls);
+//            return product;
+//        });
+//    }
+
+    public Page<PopularProductsDto> filterProductsForPopularProducts(Pageable pageable) {
+        List<Object[]> rawResults = productRepository.findPopularProductsRaw(pageable);
+
+        List<PopularProductsDto> dtos = rawResults.stream()
+                .map(result -> {
+                    int productId = (int) result[0];
+                    String productName = (String) result[1];
+                    String imageIds = (String) result[2];  // Assuming the imageIds are returned as a CSV string
+                    float productPrice = (float) result[3];
+                    float productDiscount = (float) result[4];
+
+                    List<String> imageIdsList = Arrays.asList(imageIds.split(","));  // Split CSV to list of strings
+
+                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList); 
+                    
+                    return new PopularProductsDto(productId, productName, productImages, productPrice, productDiscount);
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, dtos.size());
     }
 
     public Page<ProductUserDisplayDto> filterProductsForList(FilterProductDto productFilterDto){
@@ -105,6 +137,7 @@ public class ProductService {
         // Basic fields
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
+        product.setProductSize(addProductDto.getProductSize());
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
@@ -117,8 +150,13 @@ public class ProductService {
 //        product.setProductStatus(addProductDto.getProductStatus());
 
         product.setBrand(addProductDto.getBrand());
-        product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = addProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = addProductDto.getSurfaces().stream()
                 .filter(Surface::contains)
@@ -173,8 +211,14 @@ public class ProductService {
 
         product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
         product.setBrand(updateProductDto.getBrand());
-        product.setRoomType(updateProductDto.getRoomType());
+
         product.setFinish(updateProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = updateProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
                 .filter(Surface::contains)
