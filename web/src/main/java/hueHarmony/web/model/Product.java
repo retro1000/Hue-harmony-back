@@ -33,6 +33,9 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
+    @Column(name = "product_size", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
+    private float productSize;
+
     @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
     private float productPrice;
 
@@ -76,9 +79,9 @@ public class Product {
     @Column(name = "brand", nullable = false)
     private Brands brand;
 
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "room_type", nullable = false)
-    private RoomType roomType;
+    private List<RoomType> roomType = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "finish")
