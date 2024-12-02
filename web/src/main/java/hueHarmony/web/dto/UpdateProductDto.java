@@ -14,7 +14,10 @@ import java.util.List;
 @Data
 public class UpdateProductDto {
     private int productId;
+
     private String productName;
+
+    private int productSize;
 
     private String productDescription;
 
@@ -28,26 +31,26 @@ public class UpdateProductDto {
 
     private int coverage;
 
-    private float onlineLimit;
+    private int onlineLimit;
 
-    private float productQuantity;
+    private int productQuantity;
 
-    private String productStatus;
+    private ProductStatus productStatus;
 
     private Brands brand;
 
     private Finish finish;
 
-    private List<String> roomType;
+    private List<RoomType> roomType;
 
-    private List<String> productTypes;
+    private List<ProductType> productTypes;
 
-    private List<String> surfaces;
+    private List<Surface> surfaces;
 
-    private List<String> positions;
+    private List<Position> positions;
 
     private List<String> productFeatures;
 
-    private List<String> productImages;
+    private List<String> productImage;
 }
 

@@ -198,55 +198,47 @@ public class ProductService {
         Product product = optionalProduct.get();
 
         // Update fields
-        product.setProductId(updateProductDto.getProductId());
+        product.setProductId(Math.toIntExact(productId));
+        // Basic fields
         product.setProductName(updateProductDto.getProductName());
         product.setProductDescription(updateProductDto.getProductDescription());
+        product.setProductSize(updateProductDto.getProductSize());
         product.setProductPrice(updateProductDto.getProductPrice());
         product.setProductDiscount(updateProductDto.getProductDiscount());
         product.setCoat(updateProductDto.getCoat());
-    //    product.setDryingTime(updateProductDto.getDryingTime());
+        product.setDryingTime(updateProductDto.getDryingTime());
         product.setCoverage(updateProductDto.getCoverage());
         product.setOnlineLimit(updateProductDto.getOnlineLimit());
         product.setProductQuantity(updateProductDto.getProductQuantity());
 
-        product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
-        product.setBrand(updateProductDto.getBrand());
+//        product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+        product.setProductStatus(updateProductDto.getProductStatus());
 
+        product.setBrand(updateProductDto.getBrand());
         product.setFinish(updateProductDto.getFinish());
 
-        List<RoomType> validRoomTypes = updateProductDto.getRoomType().stream()
-                .filter(RoomType::contains)
-                .map(value -> RoomType.valueOf(value.toUpperCase()))
-                .toList();
-        product.setRoomType(validRoomTypes);
+        ArrayList<RoomType> newRoomTypes = new ArrayList<>(updateProductDto.getRoomType());
+        product.setRoomType(newRoomTypes);
 
-        List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
-                .filter(Surface::contains)
-                .map(value -> Surface.valueOf(value.toUpperCase()))
-                .toList();
-        product.setSurfaces(validSurfaces);
+        ArrayList<Surface> newSurfaces = new ArrayList<>(updateProductDto.getSurfaces());
+        product.setSurfaces(newSurfaces);
 
-        List<Position> validPositions = updateProductDto.getPositions().stream()
-                .filter(Position::contains)
-                .map(value -> Position.valueOf(value.toUpperCase()))
-                .toList();
-        product.setPositions(validPositions);
+        ArrayList<Position> newPositions = new ArrayList<>(updateProductDto.getPositions());
+        product.setPositions(newPositions);
 
-        List<ProductType> validProductTypes = updateProductDto.getProductTypes().stream()
-                .filter(ProductType::contains)
-                .map(value -> ProductType.valueOf(value.toUpperCase()))
-                .toList();
-        product.setProductType(validProductTypes);
+        ArrayList<ProductType> newProductTypes = new ArrayList<>(updateProductDto.getProductTypes());
+        product.setProductType(newProductTypes);
 
         product.setProductFeatures(updateProductDto.getProductFeatures());
 
-        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImages());
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImage());
 
         product.setImageIds(imageIds);
 
         System.out.println(product);
 
         productRepository.save(product);
+
     }
 
 
