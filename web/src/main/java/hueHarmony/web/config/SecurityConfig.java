@@ -45,7 +45,9 @@ public class SecurityConfig{
 //                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook", "cart/**", "supplier/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "product/create","purchase-order/**","grn/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "/product/create","/product/delete","product/view/**","/product/**","/products","/product/update").permitAll()
 //                    .requestMatchers("/login/validate", "/signup/user", "/product/attribute/create", "/product/variation/create", "/category/create", "/product/attribute/view", "/product/attribute/get/**", "category/view").permitAll()
 //                    .requestMatchers("/login/view").hasRole("USER")
 //                    .requestMatchers("/product/create", "/product/attribute/create", "/product/variation/create").hasAnyRole("ADMIN", "MANAGER")

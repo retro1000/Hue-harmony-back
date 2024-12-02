@@ -1,31 +1,24 @@
 package hueHarmony.web.service;
 
-import hueHarmony.web.dto.*;
-import hueHarmony.web.dto.response.PosDisplayDto;
+
+import hueHarmony.web.dto.AddProductDto;
+import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.ProductImages;
-import hueHarmony.web.model.enums.data_set.Position;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.enums.data_set.ProductType;
-import hueHarmony.web.model.enums.data_set.Surface;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,59 +27,20 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FirebaseStorageService firebaseStorageService;
 
-//    public List<ProductDto> getAllProducts() {
-//        return productRepository.findAllProductListDto();
-//    }
-
-    public Product save(Product newProduct) {
-        return productRepository.save(newProduct);
-    }
-
-    public Page<ProductDisplayDto> searchProducts(String category, String key, int limit, int page) {
-        Specification<Product> specification = Specification.where(ProductSpecification.withKeyword(key))
-                .and(ProductSpecification.withCategory(category));
-
-        if(limit <= 0) limit = 10;
-        if(page < 0) page = 0;
-
-        return productRepository.filterAndSelectFieldsBySpecsAndPage(
-                specification,
-                PageRequest.of(page, limit),
-                List.of("productId", "productTitle", "productStatus", "productImage", ""),
-                ProductDisplayDto.class
-        ).map(product -> {
-                    ProductDisplayDto dto = (ProductDisplayDto) product;
-                    dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-//                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
-                    return dto;
-                }
-        );
-    }
-
     public Page<ProductDisplayDto> filterProductsForDashboardTable(FilterProductDto productFilterDto){
         Specification<Product> productSpecification = Specification
                 .where(ProductSpecification.hasName(productFilterDto.getSearch()))
                 .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
-        Pageable pageable;
-
-        if(productFilterDto.getSortCol()!=null && !productFilterDto.getSortCol().isEmpty() && productFilterDto.getSortOrder()!=null) {
-            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit())
-                    .withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol());
-        }else {
-            pageable = PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit());
-        }
-
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                pageable,
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
                 List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
                 ProductDisplayDto.class
         ).map(product -> {
                     ProductDisplayDto dto = (ProductDisplayDto) product;
                     dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-//                    dto.setPriceRange(variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId()));
                     return dto;
                 }
         );
@@ -128,8 +82,6 @@ public class ProductService {
                 ProductUserDisplayDto.class
         ).map(product -> {
             ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-//            float[] priceRange = variationService.getPriceRangeOfProductVariationsByProductId(dto.getProductId());
-//            assert priceRange != null;
             return new ProductUserDisplayDto(
                     dto.getProductId(),
                     dto.getProductTitle(),
@@ -146,53 +98,6 @@ public class ProductService {
         });
     }
 
-    public Page<PosDisplayDto> posFilterProductsForList(FilterProductDto productFilterDto){
-
-        Specification<Product> productSpecification = Specification
-                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
-                .and(ProductSpecification.hasName(productFilterDto.getSearch()))
-                .and(ProductSpecification.hasBrand(productFilterDto.getBrands()))
-                .and(ProductSpecification.hasRoomType(productFilterDto.getRoomTypes()));
-
-//        Sort.Direction direction;
-//        String column;
-//
-//        switch (productFilterDto.getSort()){
-//            case LOWEST -> {
-//                direction = Sort.Direction.ASC;
-//                column = "unitPrice";
-//            }
-//            case HIGHEST -> {
-//                direction = Sort.Direction.DESC;
-//                column = "unitPrice";
-//            }
-//            default -> {
-//                direction = Sort.Direction.DESC;
-//                column = "productPublishedTime";
-//            }
-//        }
-
-        return productRepository.filterAndSelectFieldsBySpecsAndPage(
-                productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()),
-                List.of("productId", "productName", "productStatus", "productImageUrl", "productDiscount", "productQuantity"),
-                PosDisplayDto.class
-        ).map(product -> {
-            PosDisplayDto dto = (PosDisplayDto) product;
-
-            return new PosDisplayDto (
-                    dto.getProductId(),
-                    dto.getProductTitle(),
-                    dto.getProductStatus(),
-                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
-                    dto.getPrice(),
-                    dto.getDiscount(),
-                    dto.getStockCount(),
-                    dto.getStockCount()!=0
-            );
-        });
-    }
-
 
     public void createProduct(AddProductDto addProductDto) {
         Product product = new Product();
@@ -203,12 +108,14 @@ public class ProductService {
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
-        product.setDryingTime(addProductDto.getDryingTime() + " hours");
+        product.setDryingTime(addProductDto.getDryingTime());
         product.setCoverage(addProductDto.getCoverage());
         product.setOnlineLimit(addProductDto.getOnlineLimit());
         product.setProductQuantity(addProductDto.getProductQuantity());
 
         product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+//        product.setProductStatus(addProductDto.getProductStatus());
+
         product.setBrand(addProductDto.getBrand());
         product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
@@ -219,10 +126,10 @@ public class ProductService {
                 .toList();
         product.setSurfaces(validSurfaces);
 
-        Set<Position> validPositions = addProductDto.getPositions().stream()
+        List<Position> validPositions = addProductDto.getPositions().stream()
                 .filter(Position::contains)
                 .map(value -> Position.valueOf(value.toUpperCase()))
-                .collect(Collectors.toSet());
+                .toList();
         product.setPositions(validPositions);
 
         List<ProductType> validProductTypes = addProductDto.getProductTypes().stream()
@@ -233,11 +140,9 @@ public class ProductService {
 
         product.setProductFeatures(addProductDto.getProductFeatures());
 
-        List<ProductImages> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage())
-                .stream()
-                .map(image -> ProductImages.builder().image(image).product(product).build()).toList();
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(addProductDto.getProductImage());
 
-        product.setProductImages(imageIds);
+        product.setImageIds(imageIds);
 
         System.out.println(product);
 
@@ -245,7 +150,7 @@ public class ProductService {
 
     }
 
-    public void updateProduct(Long productId, UpdateProductDto updateProductDTO) {
+    public void updateProduct(Long productId, UpdateProductDto updateProductDto) throws Exception {
         Optional<Product> optionalProduct = productRepository.findById(productId);
 
         if (optionalProduct.isEmpty()) {
@@ -255,25 +160,47 @@ public class ProductService {
         Product product = optionalProduct.get();
 
         // Update fields
-        product.setProductName(updateProductDTO.getProductName());
-        product.setProductDescription(updateProductDTO.getProductDescription());
-        product.setProductPrice(updateProductDTO.getProductPrice());
-        product.setProductDiscount(updateProductDTO.getProductDiscount());
-        product.setCoat(updateProductDTO.getCoat());
-        product.setDryingTime(updateProductDTO.getDryingTime());
-        product.setCoverage(updateProductDTO.getCoverage());
-        product.setOnlineLimit(updateProductDTO.getOnlineLimit());
-        product.setProductQuantity(updateProductDTO.getProductQuantity());
-        product.setProductStatus(updateProductDTO.getProductStatus());
-        product.setBrand(updateProductDTO.getBrand());
-        product.setRoomType(updateProductDTO.getRoomType());
-        product.setFinish(updateProductDTO.getFinish());
-        product.setProductType(updateProductDTO.getProductTypes());
-        product.setSurfaces(updateProductDTO.getSurfaces());
-        product.setPositions(updateProductDTO.getPositions());
-        product.setProductFeatures(updateProductDTO.getProductFeatures());
-//        product.setImageIds(updateProductDTO.getImages());
+        product.setProductId(updateProductDto.getProductId());
+        product.setProductName(updateProductDto.getProductName());
+        product.setProductDescription(updateProductDto.getProductDescription());
+        product.setProductPrice(updateProductDto.getProductPrice());
+        product.setProductDiscount(updateProductDto.getProductDiscount());
+        product.setCoat(updateProductDto.getCoat());
+    //    product.setDryingTime(updateProductDto.getDryingTime());
+        product.setCoverage(updateProductDto.getCoverage());
+        product.setOnlineLimit(updateProductDto.getOnlineLimit());
+        product.setProductQuantity(updateProductDto.getProductQuantity());
 
+        product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
+        product.setBrand(updateProductDto.getBrand());
+        product.setRoomType(updateProductDto.getRoomType());
+        product.setFinish(updateProductDto.getFinish());
+
+        List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
+                .filter(Surface::contains)
+                .map(value -> Surface.valueOf(value.toUpperCase()))
+                .toList();
+        product.setSurfaces(validSurfaces);
+
+        List<Position> validPositions = updateProductDto.getPositions().stream()
+                .filter(Position::contains)
+                .map(value -> Position.valueOf(value.toUpperCase()))
+                .toList();
+        product.setPositions(validPositions);
+
+        List<ProductType> validProductTypes = updateProductDto.getProductTypes().stream()
+                .filter(ProductType::contains)
+                .map(value -> ProductType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setProductType(validProductTypes);
+
+        product.setProductFeatures(updateProductDto.getProductFeatures());
+
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImages());
+
+        product.setImageIds(imageIds);
+
+        System.out.println(product);
 
         productRepository.save(product);
     }
@@ -289,8 +216,38 @@ public class ProductService {
     }
 
     public Product getProductById(Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
-        return product.orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+        Optional<Product> productOptional = productRepository.findById(productId);
+
+        if (productOptional.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        }
+
+        Product product = productOptional.get();
+
+
+        List<String> imageIds = product.getImageIds();
+
+        List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(imageIds);
+        product.setImageIds(imageUrls);
+
+        return product;
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public float[] getProductPriceAndDiscount(long productId) {
+        List<Object[]> result = productRepository.findProductPriceAndDiscountByProductId(productId);
+
+        if (result.isEmpty()) {
+            return new float[]{0.0f, 0.0f};
+        }
+
+        return new float[]{
+                (float) result.get(0)[0],
+                ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
+        };
     }
 
 }

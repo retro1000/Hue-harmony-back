@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,4 +50,8 @@ public class Supplier {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approved_user_id")
     private User approvedUser;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SupplierProduct> products;
+
 }

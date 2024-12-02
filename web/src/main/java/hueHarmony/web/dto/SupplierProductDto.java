@@ -1,5 +1,6 @@
 package hueHarmony.web.dto;
 
+import hueHarmony.web.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,10 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodsReceivedProductDto {
-
+public class SupplierProductDto {
     private int id;
-    private int grnId;
     private int productId;
-    private int quantityReceived;
+    private float price;
+
 }

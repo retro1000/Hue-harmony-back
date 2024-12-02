@@ -24,7 +24,7 @@ public class GoodsReceivedNote {
     private PurchaseOrder purchaseOrder;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "grn_id") // Foreign key reference
+//    @JoinColumn(name = "grn_id")
     private List<GoodsReceivedProduct> receivedProducts;
 
     @Temporal(TemporalType.DATE)

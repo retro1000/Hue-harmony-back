@@ -1,8 +1,8 @@
 package hueHarmony.web.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,18 +10,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product_images")
-@Builder
-public class ProductImages {
+@Table(name = "supplier_product")
+public class SupplierProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int imageId;
-
-    @Column(name = "product_image", columnDefinition = "TEXT", nullable = false)
-    private String image;
+    private int id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+    @Column(name = "price")
+    private float price;
+
 }

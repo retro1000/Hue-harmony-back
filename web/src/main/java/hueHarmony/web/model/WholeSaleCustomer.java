@@ -3,6 +3,7 @@ package hueHarmony.web.model;
 import hueHarmony.web.model.enums.WholeSaleCustomerStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "whole_sale_customer")
+@Builder
 public class WholeSaleCustomer {
 
     @Id

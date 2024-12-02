@@ -1,9 +1,9 @@
 package hueHarmony.web.repository;
 
-import hueHarmony.web.model.Variation;
+import hueHarmony.web.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VariationRepository extends JpaRepository<Variation, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }

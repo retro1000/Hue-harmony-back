@@ -1,19 +1,14 @@
-package hueHarmony.web.dto;
+package hueHarmony.web.dto.response;
 
 import hueHarmony.web.model.enums.data_set.Brands;
 import hueHarmony.web.model.enums.data_set.Finish;
-import hueHarmony.web.model.enums.data_set.Position;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.enums.data_set.ProductType;
 import hueHarmony.web.model.enums.data_set.RoomType;
-import hueHarmony.web.model.enums.data_set.Surface;
-import lombok.Data;
 
 import java.util.List;
 
-@Data
-public class UpdateProductDto {
-    private int productId;
+public class ProductResponseDto {
+    private int id;
+
     private String productName;
 
     private String productDescription;
@@ -48,6 +43,5 @@ public class UpdateProductDto {
 
     private List<String> productFeatures;
 
-    private List<String> productImages;
+    private List<String> productImageUrls;
 }
-
