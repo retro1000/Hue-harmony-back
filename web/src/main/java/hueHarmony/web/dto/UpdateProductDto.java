@@ -36,9 +36,9 @@ public class UpdateProductDto {
 
     private Brands brand;
 
-    private RoomType roomType;
-
     private Finish finish;
+
+    private List<String> roomType;
 
     private List<String> productTypes;
 
