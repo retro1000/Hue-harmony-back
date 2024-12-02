@@ -38,7 +38,7 @@ public class OrderService {
     public void createOnlineOrder(OrderDto orderDto) throws StripeException {
         Order order = createOrder(orderDto);
 
-        Customer customer = handleOrderCustomer(orderDto, true);
+        Customer customer = handleOrderRetailCustomer(orderDto);
 
         order.setCustomer(customer);
 
@@ -100,7 +100,7 @@ public class OrderService {
     public void createPosOrder(OrderDto orderDto){
         Order order = createOrder(orderDto);
 
-        Customer customer = handleOrderCustomer(orderDto, true);
+        Customer customer = handleOrderRetailCustomer(orderDto);
 
         order.setCustomer(customer);
 
@@ -189,9 +189,11 @@ public class OrderService {
     }
 
     @Transactional
-    protected Customer handleOrderCustomer(OrderDto orderDto, boolean isRetailOrder){
+    protected Customer handleOrderRetailCustomer(OrderDto orderDto){
+        Long customerId = retailCustomerService.getCustomerIdByUserId(jwtUtil.extractUserIdWithToken());
         Customer customer;
-        if(orderDto.getRetailCustomerId()==0 &&
+        if(
+                customerId==0 &&
                 !orderDto.getEmailAddress().isEmpty() &&
                 !orderDto.getFirstName().isEmpty() &&
                 !orderDto.getLastName().isEmpty() &&
@@ -204,17 +206,15 @@ public class OrderService {
                     .contactNos(orderDto.getContactNos())
                     .build();
 
-            if(isRetailOrder){
-                RetailCustomer retailCustomer = RetailCustomer.builder()
-                        .customer(customer)
-                        .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-//                        .user(entityManager.getReference(User.class, 3))
-                        .build();
+            RetailCustomer retailCustomer = RetailCustomer.builder()
+                .customer(customer)
+                .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+//              .user(entityManager.getReference(User.class, 3))
+                .build();
 
-                customer.setRetailCustomer(retailCustomer);
-            }
+            customer.setRetailCustomer(retailCustomer);
         }else{
-            customer = entityManager.getReference(Customer.class, retailCustomerService.getCustomerIdByRetailCustomerId(orderDto.getRetailCustomerId()));
+            customer = entityManager.getReference(Customer.class, customerId);
         }
 
         return customer;
