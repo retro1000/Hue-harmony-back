@@ -69,8 +69,8 @@ public class ProductService {
 
                     List<String> imageIdsList = Arrays.asList(imageIds.split(","));  // Split CSV to list of strings
 
-                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList);
-
+                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList); 
+                    
                     return new PopularProductsDto(productId, productName, productImages, productPrice, productDiscount);
                 })
                 .collect(Collectors.toList());
@@ -137,6 +137,7 @@ public class ProductService {
         // Basic fields
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
+        product.setProductSize(addProductDto.getProductSize());
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
@@ -147,8 +148,13 @@ public class ProductService {
 
         product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
         product.setBrand(addProductDto.getBrand());
-        product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = addProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = addProductDto.getSurfaces().stream()
                 .filter(Surface::contains)
@@ -203,8 +209,14 @@ public class ProductService {
 
         product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
         product.setBrand(updateProductDto.getBrand());
-        product.setRoomType(updateProductDto.getRoomType());
+
         product.setFinish(updateProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = updateProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
                 .filter(Surface::contains)
