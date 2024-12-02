@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -30,18 +32,30 @@ public class WholeSaleCustomer {
     private String nicNo;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     @Column(name = "whole_sale_customer_status", columnDefinition = "VARCHAR", nullable = false, length = 10)
-    private WholeSaleCustomerStatus wholeSaleCustomerStatus;
+    private WholeSaleCustomerStatus wholeSaleCustomerStatus = WholeSaleCustomerStatus.PENDING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_user_id", nullable = false)
-    private User createdUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "approved_user_id", nullable = false)
-    private User approvedUser;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @Column(name = "delivery_address", columnDefinition = "VARCHAR", nullable = true)
+    private String deliveryAddress;
+
+    @Column(name = "business_address", columnDefinition = "VARCHAR", nullable = true)
+    private String businessAddress;
+
+    @Column(name = "contact_person", columnDefinition = "VARCHAR", nullable = true)
+    private String contactPerson;
+
+    @Column(name = "business_name", columnDefinition = "VARCHAR", nullable = true)
+    private String businessName;
+
+    @Column(name = "contact_person_number", columnDefinition = "VARCHAR", nullable = true)
+    private Integer contactPersonNumber;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WholeSaleOrder> orders;
 }

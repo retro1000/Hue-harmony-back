@@ -53,6 +53,7 @@ public class SecurityConfig{
 //                    .requestMatchers("/product/create", "/product/attribute/create", "/product/variation/create").hasAnyRole("ADMIN", "MANAGER")
 //                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                    .requestMatchers("/api/manager/**").hasRole("MANAGER")
+                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook","/customer/**","/wholeSale/**","/wholeSale/update-order-status/**","/notes/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
