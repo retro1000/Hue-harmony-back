@@ -30,9 +30,9 @@ public class Variation {
     @JoinColumn(name = "size_id", nullable = false)
     private Size size;
 
-    @ManyToOne
-    @JoinColumn(name = "room_type_id", nullable = false)
-    private RoomType roomType;
+//    @ManyToOne
+//    @JoinColumn(name = "room_type_id", nullable = false)
+//    private RoomType roomType;
 
     @ManyToOne
     @JoinColumn(name = "finish_id", nullable = false)
