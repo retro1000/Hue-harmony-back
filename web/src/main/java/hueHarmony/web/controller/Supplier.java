@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/supplier")
 @RequiredArgsConstructor
@@ -163,5 +165,13 @@ public class Supplier {
         }catch(Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+    }
+
+    @GetMapping("/getall")
+    public ResponseEntity<?> getAllSuppliers() {
+
+
+        return ResponseEntity.status(200).body(supplierService.getAllSuppliers());
+
     }
 }

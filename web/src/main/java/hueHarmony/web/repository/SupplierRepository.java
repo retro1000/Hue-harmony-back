@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
@@ -17,4 +19,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Modifying
     @Query("UPDATE Supplier s SET s.supplierStatus = :supplierStatus WHERE s.supplierId = :supplierId")
     void updateSupplierStatusBySupplierId(@Param("supplierId") Long supplierId, @Param("supplierStatus") SupplierStatus supplierStatus);
+
 }

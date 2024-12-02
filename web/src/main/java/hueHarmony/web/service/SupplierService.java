@@ -1,6 +1,8 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.dto.PurchaseOrderDto;
 import hueHarmony.web.dto.SupplierDto;
+import hueHarmony.web.dto.SupplierProductFrontDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.Supplier;
 import hueHarmony.web.model.SupplierProduct;
@@ -11,9 +13,12 @@ import hueHarmony.web.util.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +28,7 @@ public class SupplierService {
     private final SupplierRepository supplierRepository;
 //    private final SupplierVariationRepository supplierVariationRepository;
     private final JwtUtil jwtUtil;
+    private final FirebaseStorageService firebaseStorageService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -92,5 +98,25 @@ public class SupplierService {
     public void updateSupplierStatus(SupplierDto supplierDto){
         supplierRepository.updateSupplierStatusBySupplierId((long) supplierDto.getSupplierId(), supplierDto.getSupplierStatus());
     }
+
+    public List<PurchaseOrderDto> getAllSuppliers() {
+        List<Supplier> suppliers = supplierRepository.findAll();
+
+        // Map the Supplier entities to PurchaseOrderDto
+        return suppliers.stream()
+                .map(supplier -> new PurchaseOrderDto(
+                        supplier.getSupplierId(), // Assuming the supplier ID is long
+                        supplier.getSupplierName(),
+                        supplier.getProducts().stream()
+                                .map(product -> new SupplierProductFrontDto(
+                                        product.getId(),
+                                        product.getProduct().getProductName(),
+                                        firebaseStorageService.getFileDownloadUrl(product.getProduct().getImageIds().get(0),60, TimeUnit.MINUTES)
+                                ))
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
+    }
+
 }
 
