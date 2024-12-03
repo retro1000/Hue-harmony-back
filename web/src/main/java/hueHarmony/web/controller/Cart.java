@@ -3,6 +3,7 @@ package hueHarmony.web.controller;
 import hueHarmony.web.dto.response_dto.CartItemDto;
 import hueHarmony.web.service.CartService;
 import hueHarmony.web.model.CartItem;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("cart")
 public class Cart {
 
-    @Autowired
-    private CartService cartService;
+
+    private final CartService cartService;
 
     // Get all items in the user's cart
     @GetMapping("/{userId}")

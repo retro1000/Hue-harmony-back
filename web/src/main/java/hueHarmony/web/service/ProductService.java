@@ -4,6 +4,7 @@ package hueHarmony.web.service;
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
+//import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
@@ -12,13 +13,13 @@ import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
-
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +101,7 @@ public class ProductService {
         // Basic fields
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
+        product.setProductSize(addProductDto.getProductSize());
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
@@ -108,12 +110,17 @@ public class ProductService {
         product.setOnlineLimit(addProductDto.getOnlineLimit());
         product.setProductQuantity(addProductDto.getProductQuantity());
 
-        product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
-//        product.setProductStatus(addProductDto.getProductStatus());
+//        product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+        product.setProductStatus(addProductDto.getProductStatus());
 
         product.setBrand(addProductDto.getBrand());
-        product.setRoomType(addProductDto.getRoomType());
         product.setFinish(addProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = addProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = addProductDto.getSurfaces().stream()
                 .filter(Surface::contains)
@@ -168,8 +175,14 @@ public class ProductService {
 
         product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
         product.setBrand(updateProductDto.getBrand());
-        product.setRoomType(updateProductDto.getRoomType());
+
         product.setFinish(updateProductDto.getFinish());
+
+        List<RoomType> validRoomTypes = updateProductDto.getRoomType().stream()
+                .filter(RoomType::contains)
+                .map(value -> RoomType.valueOf(value.toUpperCase()))
+                .toList();
+        product.setRoomType(validRoomTypes);
 
         List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
                 .filter(Surface::contains)

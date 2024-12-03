@@ -77,9 +77,9 @@ public class Product {
     @Column(name = "brand", nullable = false)
     private Brands brand;
 
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "room_type", nullable = false)
-    private RoomType roomType;
+    private List<RoomType> roomType = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "finish")
@@ -106,6 +106,8 @@ public class Product {
     @Column
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseOrderProduct> purchaseOrderProduct;
+
+
 
 
 

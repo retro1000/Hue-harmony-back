@@ -12,6 +12,8 @@ public class AddProductDto {
 
     private String productName;
 
+    private int productSize;
+
     private String productDescription;
 
     private float productPrice;
@@ -28,13 +30,13 @@ public class AddProductDto {
 
     private int productQuantity;
 
-    private String productStatus;
+    private ProductStatus productStatus;
 
     private Brands brand;
 
-    private RoomType roomType;
-
     private Finish finish;
+
+    private List<String> roomType;
 
     private List<String> productTypes;
 

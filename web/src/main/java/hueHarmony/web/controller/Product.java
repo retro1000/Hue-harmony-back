@@ -4,11 +4,13 @@ import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.PosDisplayDto;
+import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +38,7 @@ public class Product {
 
     @PostMapping("/create")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> createProduct(AddProductDto addProductDto) {
+    public ResponseEntity<Object> createProduct(@RequestBody AddProductDto addProductDto) {
         try{
             productService.createProduct(addProductDto);
             return ResponseEntity.status(200).body("Supplier status update successfully.");
@@ -110,11 +112,10 @@ public class Product {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/read")
-    public ResponseEntity<List<hueHarmony.web.model.Product>> getAllProducts() {
-        List<hueHarmony.web.model.Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+    @GetMapping("/read/popular")
+    public ResponseEntity<Page<PopularProductsDto>> getPopularProducts(Pageable pageable) {
+        Page<PopularProductsDto> product = productService.filterProductsForPopularProducts(pageable);
+        return ResponseEntity.ok(product);
     }
-
 
 }
