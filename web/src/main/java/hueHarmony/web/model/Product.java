@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "product_name", columnDefinition = "VARCHAR", length = 256, nullable = false)
     private String productName;
 
+    @Column(name = "product_color", columnDefinition = "VARCHAR", length = 256, nullable = false)
+    private String productColor;
+
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 

@@ -138,6 +138,7 @@ public class ProductService {
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
         product.setProductSize(addProductDto.getProductSize());
+        product.setProductColor(addProductDto.getProductColor());
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());

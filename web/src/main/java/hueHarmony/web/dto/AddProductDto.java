@@ -14,6 +14,8 @@ public class AddProductDto {
 
     private int productSize;
 
+    private String productColor;
+
     private String productDescription;
 
     private float productPrice;
