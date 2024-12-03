@@ -60,7 +60,7 @@ public class Product {
     private float onlineLimit;
 
     @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
-    private float productQuantity;
+    private int productQuantity;
 
 
     @Column(name="productPublishedTime", nullable = true)
