@@ -2,11 +2,13 @@ package hueHarmony.web.controller;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.GetProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
+import hueHarmony.web.service.FirebaseStorageService;
 import hueHarmony.web.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,13 +19,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
 public class Product {
     private final ProductService productService;
+    private final FirebaseStorageService firebaseStorageService;
 
     @GetMapping("/view/{productId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_USER', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
@@ -116,6 +122,33 @@ public class Product {
     public ResponseEntity<Page<PopularProductsDto>> getPopularProducts(Pageable pageable) {
         Page<PopularProductsDto> product = productService.filterProductsForPopularProducts(pageable);
         return ResponseEntity.ok(product);
+    }
+
+    @PostMapping("/image-urls")
+    public ResponseEntity<Map<String, String>> getImageUrls(@RequestBody List<String> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Image IDs cannot be null or empty"));
+        }
+
+        try {
+            // Get URLs for the given image IDs
+            List<String> urls = firebaseStorageService.getImageUrlsFromFirebase(imageIds);
+
+            // Map image IDs to URLs
+            Map<String, String> imageUrlMap = imageIds.stream()
+                    .collect(Collectors.toMap(id -> id, id -> urls.get(imageIds.indexOf(id))));
+
+            return ResponseEntity.ok(imageUrlMap);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+
+    @GetMapping("/read/all")
+    public ResponseEntity<List<GetProductDto>> getAllProducts() {
+        List<GetProductDto> products = productService.fetchAllProducts();
+        return ResponseEntity.ok(products);
     }
 
 }
