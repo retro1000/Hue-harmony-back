@@ -24,7 +24,9 @@ public class WholeSaleOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generating orderId
     @Column(name = "order_id", nullable = false, unique = true)
-    private Long orderId;  // Unique identifier for the order
+    private Long orderId;
+
+
 
     // Defining a Many-to-One relationship with WholeSaleCustomer
     @ManyToOne(fetch = FetchType.LAZY)

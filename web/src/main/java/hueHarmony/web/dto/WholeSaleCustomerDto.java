@@ -58,4 +58,6 @@ public class WholeSaleCustomerDto {
     private String businessName;
 
     private Integer contactPersonNumber;
+
+
 }
