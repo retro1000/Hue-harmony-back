@@ -1,6 +1,5 @@
 package hueHarmony.web.dto;
 
-import hueHarmony.web.annotation.validations.DecimalNumberValidation;
 import hueHarmony.web.model.enums.data_set.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +38,8 @@ public class FilterProductDto {
     private Set<Finish> finishes;
 
     private Set<ProductStatus> status;
+
+    private String color;
 
     private String sellingPrice = "-1,-1";
 

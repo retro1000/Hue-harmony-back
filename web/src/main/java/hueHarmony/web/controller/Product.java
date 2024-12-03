@@ -98,6 +98,21 @@ public class Product {
         }
     }
 
+    @GetMapping("/filter-color/{color}")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Object> filterByColor(@PathVariable("color") String color){
+        try{
+            List<PopularProductsDto> displayDtos = productService.filterProductsByColor(color);
+
+            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
+        }
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct(
             @RequestParam Long productId,

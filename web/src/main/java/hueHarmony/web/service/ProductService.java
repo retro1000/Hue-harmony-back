@@ -49,6 +49,18 @@ public class ProductService {
         );
     }
 
+    public List<PopularProductsDto> filterProductsByColor(String color){
+        return productRepository.findByProductColor(color).stream().map(product ->
+                    PopularProductsDto.builder()
+                            .productName(product.getProductName())
+                            .productDescription(product.getProductDescription())
+                            .productDiscount(product.getProductDiscount())
+                            .productPrice(product.getProductPrice())
+                            .imageIds(product.getImageIds().stream().map(img -> firebaseStorageService.getFileDownloadUrl(img, 60, TimeUnit.MINUTES)).toList())
+                            .build()
+                ).toList();
+    }
+
 //    public Page<PopularProductsDto> filterProductsForPopularProducts() {
 //        Page<PopularProductsDto> products = productRepository.findPopularProducts(PageRequest.of(0, 4));
 //        return products.map(product -> {

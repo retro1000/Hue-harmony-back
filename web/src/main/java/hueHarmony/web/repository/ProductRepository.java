@@ -46,5 +46,5 @@ public interface ProductRepository extends ExtendedRepository<Product, Long> {
             nativeQuery = true)
     List<Object[]> findPopularProductsRaw(Pageable pageable);
 
-
+    List<Product> findByProductColor(String color);
 }
