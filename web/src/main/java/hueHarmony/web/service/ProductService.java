@@ -3,6 +3,7 @@ package hueHarmony.web.service;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.GetProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
@@ -13,6 +14,7 @@ import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.tools.ant.taskdefs.Get;
 import org.springframework.data.domain.*;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -198,6 +200,7 @@ public class ProductService {
 
         Product product = optionalProduct.get();
 
+
         // Update fields
         product.setProductId(Math.toIntExact(productId));
         // Basic fields
@@ -285,6 +288,38 @@ public class ProductService {
                 (float) result.get(0)[0],
                 ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
         };
+    }
+
+    public List<GetProductDto> fetchAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private GetProductDto convertToDTO(Product product) {
+        return GetProductDto.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .productColor(product.getProductColor())
+                .productDescription(product.getProductDescription())
+                .productSize(product.getProductSize())
+                .productPrice(product.getProductPrice())
+                .productDiscount(product.getProductDiscount())
+                .coat(product.getCoat())
+                .dryingTime(product.getDryingTime())
+                .coverage(product.getCoverage())
+                .onlineLimit(product.getOnlineLimit())
+                .productQuantity(product.getProductQuantity())
+                .productPublishedTime(product.getProductPublishedTime())
+                .productStatus(product.getProductStatus())
+                .imageIds(firebaseStorageService.getImageUrlsFromFirebase(product.getImageIds()))
+                .brand(product.getBrand())
+                .roomType(product.getRoomType())
+                .finish(product.getFinish())
+                .productType(product.getProductType())
+                .surfaces(product.getSurfaces())
+                .positions(product.getPositions())
+                .productFeatures(product.getProductFeatures())
+                .build();
     }
 
 }
