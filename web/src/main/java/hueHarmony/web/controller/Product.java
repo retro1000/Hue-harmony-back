@@ -100,7 +100,7 @@ public class Product {
 
     @GetMapping("/filter-color/{color}")
 //    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> filterByColor(@PathVariable("color") String color){
+    public ResponseEntity<Object> filterByColor(@PathVariable String color){
         try{
             List<PopularProductsDto> displayDtos = productService.filterProductsByColor(color);
 

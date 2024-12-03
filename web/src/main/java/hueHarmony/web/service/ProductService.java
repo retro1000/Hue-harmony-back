@@ -52,6 +52,7 @@ public class ProductService {
     public List<PopularProductsDto> filterProductsByColor(String color){
         return productRepository.findByProductColor(color).stream().map(product ->
                     PopularProductsDto.builder()
+                            .productId(product.getProductId())
                             .productName(product.getProductName())
                             .productDescription(product.getProductDescription())
                             .productDiscount(product.getProductDiscount())
@@ -152,7 +153,11 @@ public class ProductService {
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
         product.setProductSize(addProductDto.getProductSize());
-        product.setProductColor(Color.getHexCode(addProductDto.getProductColor()));
+
+        String hexCode = Color.getHexCode(addProductDto.getProductColor());
+        String newColor = hexCode.substring(1);
+        product.setProductColor(newColor);
+
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
