@@ -29,4 +29,15 @@ public class ProductDisplayDto {
         this.productStatus = productStatus;
 //        this.productImage = productImage;
     }
+
+    public ProductDisplayDto(int productId, String productName, ProductStatus productStatus, Brands brand, Finish finish, float productPrice, float productQuantity){
+        this.productId = productId;
+        this.productName = productName;
+        this.productStatus = productStatus;
+        this.brand = brand;
+        this.finish = finish;
+        this.productPrice = productPrice;
+        this.productQuantity = (int) productQuantity;
+//        this.productImage = productImage;
+    }
 }

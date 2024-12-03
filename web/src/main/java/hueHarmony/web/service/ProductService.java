@@ -5,6 +5,7 @@ import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 //import hueHarmony.web.dto.response.PopularProductsDto;
+import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
@@ -37,7 +38,7 @@ public class ProductService {
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
                 PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()),
-                List.of("productId", "productName", "productStatus", "brand", "roomType", "finish", "productPrice", "productQuantity"),
+                List.of("productId", "productName", "productStatus", "brand", "finish", "productPrice", "productQuantity"),
                 ProductDisplayDto.class
         ).map(product -> (ProductDisplayDto) product);
     }
@@ -256,6 +257,28 @@ public class ProductService {
                 (float) result.get(0)[0],
                 ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
         };
+    }
+
+    public Page<PopularProductsDto> filterProductsForPopularProducts(Pageable pageable) {
+        List<Object[]> rawResults = productRepository.findPopularProductsRaw(pageable);
+
+        List<PopularProductsDto> dtos = rawResults.stream()
+                .map(result -> {
+                    int productId = (int) result[0];
+                    String productName = (String) result[1];
+                    String imageIds = (String) result[2];  // Assuming the imageIds are returned as a CSV string
+                    float productPrice = (float) result[3];
+                    float productDiscount = (float) result[4];
+
+                    List<String> imageIdsList = Arrays.asList(imageIds.split(","));  // Split CSV to list of strings
+
+                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList);
+
+                    return new PopularProductsDto(productId, productName, productImages, productPrice, productDiscount);
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, dtos.size());
     }
 
 }
