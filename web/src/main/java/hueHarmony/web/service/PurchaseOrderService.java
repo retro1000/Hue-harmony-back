@@ -1,6 +1,8 @@
 package hueHarmony.web.service;
 
 import hueHarmony.web.dto.PurchaseOrderDto;
+import hueHarmony.web.dto.PurchaseOrderProductDto;
+import hueHarmony.web.dto.SupplierDto;
 import hueHarmony.web.dto.SupplierProductFrontDto;
 import hueHarmony.web.model.*;
 import hueHarmony.web.repository.PurchaseOrderRepository;
@@ -25,19 +27,19 @@ public class PurchaseOrderService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public PurchaseOrder savePurchaseOrder(PurchaseOrder purchaseOrder) {
+    public PurchaseOrder savePurchaseOrder(PurchaseOrderDto purchaseOrderDto) {
 //        return purchaseOrderRepository.save(purchaseOrder);
 
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setDescription(purchaseOrderDto.getDescription());
         purchaseOrder.setSupplier(entityManager.getReference(Supplier.class, purchaseOrderDto.getSupplier().getSupplierId()));
 
-        List<PurchaseOrderProduct> purchaseOrderProducts = purchaseOrderDto.getPurchaseOrderProducts()
+        List<PurchaseOrderProduct> purchaseOrderProducts = purchaseOrderDto.getPurchaseOrderProduct()
                 .stream()
                 .map(productDto -> {
             PurchaseOrderProduct product = new PurchaseOrderProduct();
             product.setPurchaseOrder(purchaseOrder);
-            product.setProduct(entityManager.getReference(Product.class,productDto.getId()));
+            product.setProduct(entityManager.getReference(Product.class,productDto.getProductId()));
             product.setQuantity(productDto.getQuantity());
             return product;
         }).collect(Collectors.toList());
@@ -77,7 +79,18 @@ public class PurchaseOrderService {
         purchaseOrderRepository.delete(purchaseOrder);
     }
 
-    public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderRepository.findAll();
+    public List<PurchaseOrderDto> getAllPurchaseOrderSummaries() {
+        return purchaseOrderRepository.findAll()
+                .stream()
+                .map(order -> new PurchaseOrderDto(
+                        order.getPurchaseOrderId(),
+                        order.getPurchaseOrderProduct().stream()
+                                .map(product -> new PurchaseOrderProductDto(
+                                        product.getProduct().getProductId(),
+                                        product.getQuantity()
+                                ))
+                                .collect(Collectors.toList()),
+                        order.getDescription()))
+                .collect(Collectors.toList());
     }
 }

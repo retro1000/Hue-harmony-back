@@ -110,7 +110,7 @@ public class SupplierService {
                         supplier.getSupplierName(),
                         supplier.getProducts().stream()
                                 .map(product -> new SupplierProductFrontDto(
-                                        product.getId(),
+                                        product.getProduct().getProductId(),
                                         product.getProduct().getProductName(),
                                         firebaseStorageService.getFileDownloadUrl(product.getProduct().getImageIds().get(0),60, TimeUnit.MINUTES)
 

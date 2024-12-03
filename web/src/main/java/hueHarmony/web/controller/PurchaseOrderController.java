@@ -27,7 +27,7 @@ public class PurchaseOrderController {
 
     @PostMapping("/create")
 //  @PreAuthorize("hasAnyRole('ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<?> createPurchaseOrder(@RequestBody PurchaseOrder purchaseOrderRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> createPurchaseOrder(@RequestBody PurchaseOrderDto purchaseOrderRequest, BindingResult bindingResult) {
         try {
             if(bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult);
@@ -95,8 +95,9 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/getall")
-    public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderService.getAllPurchaseOrders();
+    public ResponseEntity<List<PurchaseOrderDto>> getAllPurchaseOrderSummaries() {
+        List<PurchaseOrderDto> purchaseOrderSummaries = purchaseOrderService.getAllPurchaseOrderSummaries();
+        return ResponseEntity.ok(purchaseOrderSummaries);
     }
 
 }

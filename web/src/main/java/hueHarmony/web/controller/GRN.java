@@ -80,11 +80,11 @@ public class GRN {
 
     }
 
-    @GetMapping("/product")
-    public ResponseEntity<Object> getProduct() {
-        try{
-
-        }
-    }
+//    @GetMapping("/product")
+//    public ResponseEntity<Object> getProduct() {
+//        try{
+//
+//        }
+//    }
 
 }
