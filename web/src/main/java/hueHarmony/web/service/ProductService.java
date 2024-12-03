@@ -18,6 +18,8 @@ import org.springframework.data.domain.*;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -29,10 +31,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FirebaseStorageService firebaseStorageService;
 
+    @Transactional
     public Page<ProductDisplayDto> filterProductsForDashboardTable(FilterProductDto productFilterDto){
         Specification<Product> productSpecification = Specification
                 .where(ProductSpecification.hasName(productFilterDto.getSearch()))
-                .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
+                .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()))
+                .and(ProductSpecification.hasBrand(productFilterDto.getBrands()))
+                .and(ProductSpecification.hasRoomType(productFilterDto.getRoomTypes()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(

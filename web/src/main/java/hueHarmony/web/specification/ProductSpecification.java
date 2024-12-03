@@ -18,7 +18,7 @@ public class ProductSpecification {
         return (root, query, cb) ->
                 (name==null || name.isEmpty() || name.isBlank()) ?
                         cb.conjunction() :
-                        cb.like(cb.lower(root.get("productName")), name.toLowerCase());
+                        cb.like(cb.lower(root.get("productName")), "%"+name.toLowerCase()+"%");
     }
 
     public static Specification<Product> hasProductStatus(Set<ProductStatus> statuses) {
