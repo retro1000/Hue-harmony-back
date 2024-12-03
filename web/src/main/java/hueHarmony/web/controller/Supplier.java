@@ -73,6 +73,7 @@ public class Supplier {
             supplierService.createSupplier(supplierDto);
             return ResponseEntity.status(201).body("Supplier created successfully");
         }catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }

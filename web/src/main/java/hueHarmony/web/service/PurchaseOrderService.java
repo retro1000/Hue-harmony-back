@@ -1,12 +1,20 @@
 package hueHarmony.web.service;
 
-import hueHarmony.web.model.PurchaseOrder;
+import hueHarmony.web.dto.PurchaseOrderDto;
+import hueHarmony.web.dto.SupplierProductFrontDto;
+import hueHarmony.web.model.*;
 import hueHarmony.web.repository.PurchaseOrderRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class PurchaseOrderService {
@@ -14,27 +22,40 @@ public class PurchaseOrderService {
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public PurchaseOrder savePurchaseOrder(PurchaseOrder purchaseOrder) {
+//        return purchaseOrderRepository.save(purchaseOrder);
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setDescription(purchaseOrderDto.getDescription());
+        purchaseOrder.setSupplier(entityManager.getReference(Supplier.class, purchaseOrderDto.getSupplier().getSupplierId()));
+
+        List<PurchaseOrderProduct> purchaseOrderProducts = purchaseOrderDto.getPurchaseOrderProducts()
+                .stream()
+                .map(productDto -> {
+            PurchaseOrderProduct product = new PurchaseOrderProduct();
+            product.setPurchaseOrder(purchaseOrder);
+            product.setProduct(entityManager.getReference(Product.class,productDto.getId()));
+            product.setQuantity(productDto.getQuantity());
+            return product;
+        }).collect(Collectors.toList());
+
+        purchaseOrder.setPurchaseOrderProduct(purchaseOrderProducts);
+//
+//        // Save the PurchaseOrder along with its related products
         return purchaseOrderRepository.save(purchaseOrder);
     }
 
     public PurchaseOrder findPurchaseOrderById(Long id) {
-//        Optional<PurchaseOrder> purchaseOrder = purchaseOrderRepository.findById(id);
         PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.findByPurchaseOrderId(id);
-//        if (purchaseOrder.isPresent()) {
-//            PurchaseOrder savedPurchaseOrder = purchaseOrder.get();
-//            Hibernate.initialize(savedPurchaseOrder.getSupplier());
-//
-//            return savedPurchaseOrder;
-//        }
+
+
         Hibernate.initialize(savedPurchaseOrder.getSupplier());
 
         return savedPurchaseOrder;
-//        try {
-//            throw new Exception("Purchase Order does not exist");
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+//
     }
 
     public PurchaseOrder updatePurchaseOrder(Long id, PurchaseOrder purchaseOrderRequest) {
@@ -54,5 +75,9 @@ public class PurchaseOrderService {
         PurchaseOrder purchaseOrder = findPurchaseOrderById(id);
 
         purchaseOrderRepository.delete(purchaseOrder);
+    }
+
+    public List<PurchaseOrder> getAllPurchaseOrders() {
+        return purchaseOrderRepository.findAll();
     }
 }

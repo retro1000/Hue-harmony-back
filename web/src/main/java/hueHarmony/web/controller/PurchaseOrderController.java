@@ -1,12 +1,16 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.PurchaseOrderDto;
 import hueHarmony.web.model.PurchaseOrder;
 import hueHarmony.web.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/purchase-order")
@@ -23,8 +27,11 @@ public class PurchaseOrderController {
 
     @PostMapping("/create")
 //  @PreAuthorize("hasAnyRole('ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE')")
-    public ResponseEntity<?> createPurchaseOrder(@RequestBody PurchaseOrder purchaseOrderRequest) {
+    public ResponseEntity<?> createPurchaseOrder(@RequestBody PurchaseOrder purchaseOrderRequest, BindingResult bindingResult) {
         try {
+            if(bindingResult.hasErrors()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult);
+            }
             PurchaseOrder savedOrder = purchaseOrderService.savePurchaseOrder(purchaseOrderRequest);
             return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -85,6 +92,11 @@ public class PurchaseOrderController {
         }
 
 
+    }
+
+    @GetMapping("/getall")
+    public List<PurchaseOrder> getAllPurchaseOrders() {
+        return purchaseOrderService.getAllPurchaseOrders();
     }
 
 }
