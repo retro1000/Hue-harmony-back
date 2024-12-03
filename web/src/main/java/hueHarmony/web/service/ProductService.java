@@ -18,7 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,68 +35,63 @@ public class ProductService {
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
-                List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()),
+                List.of("productId", "productName", "productStatus", "brand", "roomType", "finish", "productPrice", "productQuantity"),
                 ProductDisplayDto.class
-        ).map(product -> {
-                    ProductDisplayDto dto = (ProductDisplayDto) product;
-                    dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-                    return dto;
-                }
-        );
+        ).map(product -> (ProductDisplayDto) product);
     }
 
-    public Page<ProductUserDisplayDto> filterProductsForList(FilterProductDto productFilterDto){
-        Float[] unitPriceRange = ConvertUtil.convertRangeToArray(
-                productFilterDto.getSellingPrice(),
-                Float::parseFloat,
-                new Float[0]
-        );
-
-        Specification<Product> productSpecification = Specification
-                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
-                .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
-
-        Sort.Direction direction;
-        String column;
-
-        switch (productFilterDto.getSort()){
-            case LOWEST -> {
-                direction = Sort.Direction.ASC;
-                column = "unitPrice";
-            }
-            case HIGHEST -> {
-                direction = Sort.Direction.DESC;
-                column = "unitPrice";
-            }
-            default -> {
-                direction = Sort.Direction.DESC;
-                column = "productPublishedTime";
-            }
-        }
-
-        return productRepository.filterAndSelectFieldsBySpecsAndPage(
-                productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productName", "productStatus", "imageIds"),
-                ProductUserDisplayDto.class
-        ).map(product -> {
-            ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-            return new ProductUserDisplayDto(
-                    dto.getProductId(),
-                    dto.getProductTitle(),
-                    dto.getProductStatus(),
-                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
-                    dto.getPrice(),
-                    dto.isSale(),
-                    dto.isNew(),
-                    dto.getReviewRate(),
-                    dto.getTotalReviews(),
-                    dto.getDiscount()
-
-            );
-        });
-    }
+//    public Page<ProductUserDisplayDto> filterProductsForList(FilterProductDto productFilterDto){
+//        Float[] unitPriceRange = ConvertUtil.convertRangeToArray(
+//                productFilterDto.getSellingPrice(),
+//                Float::parseFloat,
+//                new Float[0]
+//        );
+//
+//        Specification<Product> productSpecification = Specification
+//                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
+//                .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
+//
+//        Sort.Direction direction;
+//        String column;
+//
+//        switch (productFilterDto.getSort()){
+//            case LOWEST -> {
+//                direction = Sort.Direction.ASC;
+//                column = "unitPrice";
+//            }
+//            case HIGHEST -> {
+//                direction = Sort.Direction.DESC;
+//                column = "unitPrice";
+//            }
+//            default -> {
+//                direction = Sort.Direction.DESC;
+//                column = "productPublishedTime";
+//            }
+//        }
+//
+//        return productRepository.filterAndSelectFieldsBySpecsAndPage(
+//                productSpecification,
+//                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
+//                List.of("productId", "productName", "productStatus", "imageIds"),
+//                ProductUserDisplayDto.class
+//        ).map(product -> {
+//            ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
+//            return new ProductUserDisplayDto(
+//                    dto.getProductId(),
+//                    dto.getProductName(),
+//                    dto.getProductStatus(),
+//                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
+//                    dto.getProductPrice(),
+//                    dto.isSale(),
+//                    dto.isNew(),
+//                    dto.getReviewRate(),
+//                    dto.getTotalReviews(),
+//                    dto.getDiscount()
+//
+//            );
+//        });
+//    }
 
 
     public void createProduct(AddProductDto addProductDto) {

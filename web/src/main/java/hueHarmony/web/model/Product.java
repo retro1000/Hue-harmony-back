@@ -35,10 +35,10 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
-    @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", nullable = false)
+    @Column(name = "product_price", columnDefinition = "REAL DEFAULT 0 CHECK(product_price >= 0)", nullable = false)
     private float productPrice;
 
-    @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    @Column(name = "product_discount", columnDefinition = "REAL DEFAULT 0 CHECK(product_discount >= 0)")
     private float productDiscount;
 
     @Column(name = "coat", columnDefinition = "SMALLINT DEFAULT 0 CHECK(coat >=0 )")
@@ -50,14 +50,14 @@ public class Product {
     @Column(name = "coverage", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)", length = 20)
     private float coverage;
 
-    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    @Column(name = "online_limit", columnDefinition = "REAL DEFAULT 0 CHECK(online_limit >= 0)")
     private float onlineLimit;
 
-    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(coverage >= 0)")
+    @Column(name = "product_quantity", columnDefinition = "REAL DEFAULT 0 CHECK(product_quantity >= 0)")
     private float productQuantity;
 
 
-    @Column(name="productPublishedTime", nullable = true)
+    @Column(name="product_published_time", nullable = true)
     private LocalDateTime productPublishedTime;
 
     @PrePersist
@@ -72,7 +72,6 @@ public class Product {
     @ElementCollection
     @Column(name = "image_ids")
     private List<String> imageIds = new ArrayList<>();
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "brand", nullable = false)
@@ -107,8 +106,6 @@ public class Product {
     @Column
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseOrderProduct> purchaseOrderProduct;
-*/
-
 
 
 
