@@ -7,12 +7,10 @@ import hueHarmony.web.dto.UpdateProductDto;
 //import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
-import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
-import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +33,7 @@ public class ProductService {
         Specification<Product> productSpecification = Specification
                 .where(ProductSpecification.hasName(productFilterDto.getSearch()))
                 .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()))
+                .and(ProductSpecification.hasFinish(productFilterDto.getFinish()))
                 .and(ProductSpecification.hasBrand(productFilterDto.getBrands()))
                 .and(ProductSpecification.hasRoomType(productFilterDto.getRoomTypes()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));

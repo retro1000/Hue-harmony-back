@@ -1,6 +1,5 @@
 package hueHarmony.web.dto;
 
-import hueHarmony.web.annotation.validations.DecimalNumberValidation;
 import hueHarmony.web.model.enums.data_set.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +35,7 @@ public class FilterProductDto {
 
     private Set<Position> positions;
 
-    private Set<Finish> finishes;
+    private Set<Finish> finish;
 
     private Set<ProductStatus> status;
 
