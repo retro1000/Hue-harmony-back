@@ -25,7 +25,7 @@ public class GetProductDto {
     private int dryingTime;
     private float coverage;
     private float onlineLimit;
-    private int productQuantity;
+    private float productQuantity;
     private LocalDateTime productPublishedTime;
     private ProductStatus productStatus;
     private List<String> imageIds;
