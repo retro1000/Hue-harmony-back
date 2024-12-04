@@ -39,6 +39,8 @@ public class FilterProductDto {
 
     private Set<ProductStatus> status;
 
+    private String color;
+
     private String sellingPrice = "-1,-1";
 
     @NotNull(groups = {FilterProductDto.whenOrganization.class, FilterProductDto.whenUser.class})
