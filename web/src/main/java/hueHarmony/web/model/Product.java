@@ -149,10 +149,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productId;
 
-    @Column(name = "product_name", columnDefinition = "VARCHAR", length = 256, nullable = false)
+    @Column(name = "product_name", columnDefinition = "VARCHAR", nullable = false)
     private String productName;
 
-    @Column(name = "product_color", columnDefinition = "VARCHAR", length = 256, nullable = false)
+    @Column(name = "product_color", columnDefinition = "VARCHAR", nullable = false)
     private String productColor;
 
     @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
@@ -195,7 +195,7 @@ public class Product {
     private ProductStatus productStatus = ProductStatus.AVAILABLE;
 
     @ElementCollection
-    @Column(name = "image_ids")
+    @Column(name = "image_ids", columnDefinition = "TEXT")
     private List<String> imageIds = new ArrayList<>();
 
 

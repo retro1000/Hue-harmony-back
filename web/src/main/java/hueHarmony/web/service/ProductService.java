@@ -3,6 +3,7 @@ package hueHarmony.web.service;
 
 import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
+import hueHarmony.web.dto.GetProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
 //import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
@@ -12,6 +13,7 @@ import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
 import lombok.RequiredArgsConstructor;
+import org.apache.tools.ant.taskdefs.Get;
 import org.springframework.data.domain.*;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -19,9 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -95,6 +99,25 @@ public class ProductService {
 //                    dto.getDiscount()
 //
 //            );
+    public List<PopularProductsDto> filterProductsByColor(String color){
+        return productRepository.findByProductColor(color).stream().map(product ->
+                    PopularProductsDto.builder()
+                            .productId(product.getProductId())
+                            .productName(product.getProductName())
+                            .productDescription(product.getProductDescription())
+                            .productDiscount(product.getProductDiscount())
+                            .productPrice(product.getProductPrice())
+                            .imageIds(product.getImageIds().stream().map(img -> firebaseStorageService.getFileDownloadUrl(img, 60, TimeUnit.MINUTES)).toList())
+                            .build()
+                ).toList();
+    }
+
+//    public Page<PopularProductsDto> filterProductsForPopularProducts() {
+//        Page<PopularProductsDto> products = productRepository.findPopularProducts(PageRequest.of(0, 4));
+//        return products.map(product -> {
+//            List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(product.getImageIds());
+//            product.setImageIds(imageUrls);
+//            return product;
 //        });
 //    }
 
@@ -106,6 +129,11 @@ public class ProductService {
         product.setProductName(addProductDto.getProductName());
         product.setProductDescription(addProductDto.getProductDescription());
         product.setProductSize(addProductDto.getProductSize());
+
+        String hexCode = Color.getHexCode(addProductDto.getProductColor());
+        String newColor = hexCode.substring(1);
+        product.setProductColor(newColor);
+
         product.setProductPrice(addProductDto.getProductPrice());
         product.setProductDiscount(addProductDto.getProductDiscount());
         product.setCoat(addProductDto.getCoat());
@@ -165,46 +193,38 @@ public class ProductService {
 
         Product product = optionalProduct.get();
 
+
         // Update fields
-        product.setProductId(updateProductDto.getProductId());
+        product.setProductId(Math.toIntExact(productId));
+        // Basic fields
         product.setProductName(updateProductDto.getProductName());
         product.setProductDescription(updateProductDto.getProductDescription());
+        product.setProductSize(updateProductDto.getProductSize());
         product.setProductPrice(updateProductDto.getProductPrice());
         product.setProductDiscount(updateProductDto.getProductDiscount());
         product.setCoat(updateProductDto.getCoat());
-    //    product.setDryingTime(updateProductDto.getDryingTime());
+        product.setDryingTime(updateProductDto.getDryingTime());
         product.setCoverage(updateProductDto.getCoverage());
         product.setOnlineLimit(updateProductDto.getOnlineLimit());
         product.setProductQuantity(updateProductDto.getProductQuantity());
 
-        product.setProductStatus(ProductStatus.valueOf(updateProductDto.getProductStatus().toUpperCase()));
-        product.setBrand(updateProductDto.getBrand());
+//        product.setProductStatus(ProductStatus.valueOf(addProductDto.getProductStatus().toUpperCase()));
+        product.setProductStatus(updateProductDto.getProductStatus());
 
+        product.setBrand(updateProductDto.getBrand());
         product.setFinish(updateProductDto.getFinish());
 
-        List<RoomType> validRoomTypes = updateProductDto.getRoomType().stream()
-                .filter(RoomType::contains)
-                .map(value -> RoomType.valueOf(value.toUpperCase()))
-                .toList();
-        product.setRoomType(validRoomTypes);
+        ArrayList<RoomType> newRoomTypes = new ArrayList<>(updateProductDto.getRoomType());
+        product.setRoomType(newRoomTypes);
 
-        List<Surface> validSurfaces = updateProductDto.getSurfaces().stream()
-                .filter(Surface::contains)
-                .map(value -> Surface.valueOf(value.toUpperCase()))
-                .toList();
-        product.setSurfaces(validSurfaces);
+        ArrayList<Surface> newSurfaces = new ArrayList<>(updateProductDto.getSurfaces());
+        product.setSurfaces(newSurfaces);
 
-        List<Position> validPositions = updateProductDto.getPositions().stream()
-                .filter(Position::contains)
-                .map(value -> Position.valueOf(value.toUpperCase()))
-                .toList();
-        product.setPositions(validPositions);
+        ArrayList<Position> newPositions = new ArrayList<>(updateProductDto.getPositions());
+        product.setPositions(newPositions);
 
-        List<ProductType> validProductTypes = updateProductDto.getProductTypes().stream()
-                .filter(ProductType::contains)
-                .map(value -> ProductType.valueOf(value.toUpperCase()))
-                .toList();
-        product.setProductType(validProductTypes);
+        ArrayList<ProductType> newProductTypes = new ArrayList<>(updateProductDto.getProductTypes());
+        product.setProductType(newProductTypes);
 
         product.setProductFeatures(updateProductDto.getProductFeatures());
 
@@ -215,6 +235,7 @@ public class ProductService {
         System.out.println(product);
 
         productRepository.save(product);
+
     }
 
 
@@ -282,6 +303,38 @@ public class ProductService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, dtos.size());
+    }
+
+    public List<GetProductDto> fetchAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private GetProductDto convertToDTO(Product product) {
+        return GetProductDto.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .productColor(product.getProductColor())
+                .productDescription(product.getProductDescription())
+                .productSize(product.getProductSize())
+                .productPrice(product.getProductPrice())
+                .productDiscount(product.getProductDiscount())
+                .coat(product.getCoat())
+                .dryingTime(product.getDryingTime())
+                .coverage(product.getCoverage())
+                .onlineLimit(product.getOnlineLimit())
+                .productQuantity(product.getProductQuantity())
+                .productPublishedTime(product.getProductPublishedTime())
+                .productStatus(product.getProductStatus())
+                .imageIds(firebaseStorageService.getImageUrlsFromFirebase(product.getImageIds()))
+                .brand(product.getBrand())
+                .roomType(product.getRoomType())
+                .finish(product.getFinish())
+                .productType(product.getProductType())
+                .surfaces(product.getSurfaces())
+                .positions(product.getPositions())
+                .productFeatures(product.getProductFeatures())
+                .build();
     }
 
 }

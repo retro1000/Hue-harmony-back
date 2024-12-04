@@ -14,11 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RepositoryRestResource
 public interface ProductRepository extends ExtendedRepository<Product, Long> {
 
 //    List<Product> findByProductName(@Param("productName") String productName);
@@ -44,5 +46,5 @@ public interface ProductRepository extends ExtendedRepository<Product, Long> {
             nativeQuery = true)
     List<Object[]> findPopularProductsRaw(Pageable pageable);
 
-
+    List<Product> findByProductColor(String color);
 }
