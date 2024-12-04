@@ -21,9 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -226,7 +228,7 @@ public class ProductService {
 
         product.setProductFeatures(updateProductDto.getProductFeatures());
 
-        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImage());
+        List<String> imageIds = firebaseStorageService.uploadImagesToFirebase(updateProductDto.getProductImages());
 
         product.setImageIds(imageIds);
 

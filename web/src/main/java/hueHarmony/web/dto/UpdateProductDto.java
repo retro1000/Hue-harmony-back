@@ -51,6 +51,6 @@ public class UpdateProductDto {
 
     private List<String> productFeatures;
 
-    private List<String> productImage;
+    private List<String> productImages;
 }
 
