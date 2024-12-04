@@ -1,8 +1,11 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.FilterSupplierDto;
+import hueHarmony.web.dto.response_dto.PurchaseOrderDisplayDto;
 import hueHarmony.web.model.PurchaseOrder;
 import hueHarmony.web.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +30,18 @@ public class PurchaseOrderController {
         try {
             PurchaseOrder savedOrder = purchaseOrderService.savePurchaseOrder(purchaseOrderRequest);
             return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/filter")
+//  @PreAuthorize("hasAnyRole('ROLE_INVENTORYMANAGER', 'ROLE_BACKOFFICE')")
+    public ResponseEntity<?> filterPurchaseOrder(@ModelAttribute FilterSupplierDto purchaseOrderRequest) {
+        try {
+            Page<PurchaseOrderDisplayDto> savedOrder = purchaseOrderService.filterPurchaseOrder(purchaseOrderRequest);
+            return new ResponseEntity<>(savedOrder, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

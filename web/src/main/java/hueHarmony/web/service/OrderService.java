@@ -123,8 +123,8 @@ public class OrderService {
         Order order = Order.builder()
                 .orderNote(orderDto.getOrderNote())
                 .orderPaymentMethod(orderDto.getPaymentMethod())
-                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-//                .createdUser(entityManager.getReference(User.class, 3))
+//                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+                .createdUser(entityManager.getReference(User.class, 2))
                 .orderDiscount(orderDto.getDiscount())
                 .build();
 
@@ -190,7 +190,9 @@ public class OrderService {
 
     @Transactional
     protected Customer handleOrderRetailCustomer(OrderDto orderDto){
-        Long customerId = retailCustomerService.getCustomerIdByUserId(jwtUtil.extractUserIdWithToken());
+//        Long customerId = retailCustomerService.getCustomerIdByUserId(jwtUtil.extractUserIdWithToken());
+        Long customerId = retailCustomerService.getCustomerIdByUserId(2);
+
         Customer customer;
         if(
                 customerId==0 &&
@@ -208,8 +210,8 @@ public class OrderService {
 
             RetailCustomer retailCustomer = RetailCustomer.builder()
                 .customer(customer)
-                .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-//              .user(entityManager.getReference(User.class, 3))
+//                .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
+              .user(entityManager.getReference(User.class, 2))
                 .build();
 
             customer.setRetailCustomer(retailCustomer);

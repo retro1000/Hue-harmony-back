@@ -1,5 +1,6 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.dto.WholeSaleOrderResponseDto;
 import hueHarmony.web.dto.WholeSaleOrderdto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.SalesOrderProduct;
@@ -12,6 +13,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +69,17 @@ public class WholeSaleOrderService {
 
         // Save the updated order back to the database
 
+    }
+
+    public List<WholeSaleOrderResponseDto> getAllOrders() {
+        return wholeSaleOrderRepository.findAll().stream()
+                .map(wholeSaleOrder -> WholeSaleOrderResponseDto.builder()
+                        .OrderId(wholeSaleOrder.getOrderId())
+                        .orderDate(wholeSaleOrder.getOrderDate())
+                        .billingAddress(wholeSaleOrder.getBillingAddress())
+                        .orderNotes(wholeSaleOrder.getOrderNotes())
+                        .customer(wholeSaleOrder.getCustomer().getWholeSaleCustomerId())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

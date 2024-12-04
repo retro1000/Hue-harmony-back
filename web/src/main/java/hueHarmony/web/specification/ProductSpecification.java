@@ -1,11 +1,9 @@
 package hueHarmony.web.specification;
 
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.enums.data_set.Brands;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.enums.data_set.RoomType;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -40,6 +38,13 @@ public class ProductSpecification {
                 (roomTypes==null || roomTypes.isEmpty()) ?
                         cb.conjunction() :
                         root.get("roomType").in(roomTypes);
+    }
+
+    public static Specification<Product> hasFinish(Set<Finish> finishes) {
+        return (root, query, cb) ->
+                (finishes==null || finishes.isEmpty()) ?
+                        cb.conjunction() :
+                        root.get("finish").in(finishes);
     }
 
     public static Specification<Product> betweenDates(LocalDate startDate, LocalDate finishDate) {

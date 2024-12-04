@@ -18,6 +18,6 @@ public class RetailCustomerService {
 
     @Transactional(readOnly = true)
     public Long getCustomerIdByUserId(int userId) {
-        return retailCustomerRepository.getCustomerIdByUserId(userId).orElseThrow(() -> new IllegalStateException("Retail customer not found."));
+        return retailCustomerRepository.getCustomerIdByUserId(userId).orElse(0L);
     }
 }

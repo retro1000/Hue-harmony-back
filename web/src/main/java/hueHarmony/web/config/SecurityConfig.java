@@ -45,7 +45,7 @@ public class SecurityConfig{
 //                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook", "cart/**", "supplier/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook", "cart/**", "supplier/**","/wholesalecustomer/**").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "product/create","purchase-order/**","grn/**").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "/product/create","/product/delete","product/view/**","/product/**","/products","/product/update").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "/product/create","/product/delete","product/view/**","/product/**","/pos/**","/loyalty/**").permitAll()
@@ -55,7 +55,7 @@ public class SecurityConfig{
 //                    .requestMatchers("/product/create", "/product/attribute/create", "/product/variation/create").hasAnyRole("ADMIN", "MANAGER")
 //                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                    .requestMatchers("/api/manager/**").hasRole("MANAGER")
-                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook","/customer/**","/wholeSale/**","/wholeSale/update-order-status/**","/notes/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/purchase-order/**", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook","/customer/**","/wholeSale/**","/wholeSale/update-order-status/**","/notes/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
