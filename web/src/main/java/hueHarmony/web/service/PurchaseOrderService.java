@@ -1,10 +1,17 @@
 package hueHarmony.web.service;
 
+import hueHarmony.web.dto.FilterSupplierDto;
+import hueHarmony.web.dto.PurchaseOrderDto;
+import hueHarmony.web.dto.response_dto.PurchaseOrderDisplayDto;
 import hueHarmony.web.model.PurchaseOrder;
 import hueHarmony.web.repository.PurchaseOrderRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,15 +25,32 @@ public class PurchaseOrderService {
         return purchaseOrderRepository.save(purchaseOrder);
     }
 
+    @Transactional
+    public Page<PurchaseOrderDisplayDto> filterPurchaseOrder(FilterSupplierDto dto) {
+        Page<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll(PageRequest.of(dto.getPage(), dto.getLimit()));
+
+        if(purchaseOrders.isEmpty()){
+            return null;
+        }
+
+        return purchaseOrders.map(purchaseOrder -> new PurchaseOrderDisplayDto(
+                purchaseOrder.getPurchaseOrderId(),
+                purchaseOrder.getDescription(),
+                purchaseOrder.getStatus(),
+                purchaseOrder.getSupplier().getSupplierName()
+        ));
+    }
+
     public PurchaseOrder findPurchaseOrderById(Long id) {
 //        Optional<PurchaseOrder> purchaseOrder = purchaseOrderRepository.findById(id);
-        PurchaseOrder savedPurchaseOrder = purchaseOrderRepository.findByPurchaseOrderId(id);
-//        if (purchaseOrder.isPresent()) {
-//            PurchaseOrder savedPurchaseOrder = purchaseOrder.get();
-//            Hibernate.initialize(savedPurchaseOrder.getSupplier());
-//
-//            return savedPurchaseOrder;
-//        }
+        Optional<PurchaseOrder> purchaseOrder = purchaseOrderRepository.findById(id);
+
+
+        if (purchaseOrder.isEmpty()) {
+            throw new IllegalStateException("PurchaseOrder");
+
+        }
+        PurchaseOrder savedPurchaseOrder = purchaseOrder.get();
         Hibernate.initialize(savedPurchaseOrder.getSupplier());
 
         return savedPurchaseOrder;
