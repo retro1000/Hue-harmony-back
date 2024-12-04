@@ -28,7 +28,7 @@ public class PosOrder {
     @Column(nullable = false)
     private Date orderDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String customerName;
 
     @Column(nullable = false)

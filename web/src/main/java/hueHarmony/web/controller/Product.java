@@ -68,23 +68,23 @@ public class Product {
     }
 
 
-    @GetMapping("/filter-products")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
-    public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
-        try{
-            Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
+//    @GetMapping("/filter-products")
+//    //    @PreAuthorize("hasRole('ROLE_USER')")
+//    public ResponseEntity<Object> filterProducts(@ModelAttribute FilterProductDto productFilterDto){
+//        try{
+//            Page<ProductUserDisplayDto> displayDtos = productService.filterProductsForList(productFilterDto);
+//
+//            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+//
+//            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
+//        }
+//    }
 
-            if(displayDtos.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-
-            return ResponseEntity.status(HttpStatus.OK).body(displayDtos);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Internal server error!!! Please try again later...");
-        }
-    }
-
-    @GetMapping("/filters")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/filter")
+    //    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BACKOFFICE', 'ROLE_SALESMANAGER', 'ROLE_CACHIER')")
     public ResponseEntity<Object> filterProductsTable(@ModelAttribute FilterProductDto productFilterDto){
         try{
             Page<ProductDisplayDto> displayDtos = productService.filterProductsForDashboardTable(productFilterDto);

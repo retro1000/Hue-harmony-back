@@ -1,11 +1,9 @@
 package hueHarmony.web.specification;
 
 import hueHarmony.web.model.Product;
-import hueHarmony.web.model.enums.data_set.Brands;
-import hueHarmony.web.model.enums.data_set.ProductStatus;
+import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.ProductStatus;
-import hueHarmony.web.model.enums.data_set.RoomType;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,8 +16,7 @@ public class ProductSpecification {
         return (root, query, cb) ->
                 (name==null || name.isEmpty() || name.isBlank()) ?
                         cb.conjunction() :
-                        cb.and(cb.function("MATCH", String.class, root.get("productTitle"))
-                                .in(cb.literal(name)));
+                        cb.like(cb.lower(root.get("productName")), "%"+name.toLowerCase()+"%");
     }
 
     public static Specification<Product> hasProductStatus(Set<ProductStatus> statuses) {
@@ -33,7 +30,7 @@ public class ProductSpecification {
         return (root, query, cb) ->
                 (brands==null || brands.isEmpty()) ?
                         cb.conjunction() :
-                        root.get("brands").in(brands);
+                        root.get("brand").in(brands);
     }
 
     public static Specification<Product> hasRoomType(Set<RoomType> roomTypes) {
@@ -41,6 +38,13 @@ public class ProductSpecification {
                 (roomTypes==null || roomTypes.isEmpty()) ?
                         cb.conjunction() :
                         root.get("roomType").in(roomTypes);
+    }
+
+    public static Specification<Product> hasFinish(Set<Finish> finishes) {
+        return (root, query, cb) ->
+                (finishes==null || finishes.isEmpty()) ?
+                        cb.conjunction() :
+                        root.get("finish").in(finishes);
     }
 
     public static Specification<Product> betweenDates(LocalDate startDate, LocalDate finishDate) {
@@ -64,10 +68,10 @@ public class ProductSpecification {
             return (startPrice==-1 && finishPrice==-1) ?
                 cb.conjunction() :
                 (startPrice==-1 ?
-                    cb.lessThanOrEqualTo(root.get("unitPrice"), finishPrice) :
+                    cb.lessThanOrEqualTo(root.get("productPrice"), finishPrice) :
                     (finishPrice==-1 ?
-                        cb.greaterThanOrEqualTo(root.get("unitPrice"), startPrice) :
-                        cb.between(root.get("unitPrice"), finishPrice, startPrice)
+                        cb.greaterThanOrEqualTo(root.get("productPrice"), startPrice) :
+                        cb.between(root.get("productPrice"), finishPrice, startPrice)
                     )
                 );
         };

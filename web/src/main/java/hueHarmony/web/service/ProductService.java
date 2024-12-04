@@ -5,22 +5,22 @@ import hueHarmony.web.dto.AddProductDto;
 import hueHarmony.web.dto.FilterProductDto;
 import hueHarmony.web.dto.GetProductDto;
 import hueHarmony.web.dto.UpdateProductDto;
+//import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
-import hueHarmony.web.dto.response.ProductUserDisplayDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
 import hueHarmony.web.specification.ProductSpecification;
-import hueHarmony.web.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.tools.ant.taskdefs.Get;
 import org.springframework.data.domain.*;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,25 +30,73 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FirebaseStorageService firebaseStorageService;
 
+    @Transactional
     public Page<ProductDisplayDto> filterProductsForDashboardTable(FilterProductDto productFilterDto){
         Specification<Product> productSpecification = Specification
                 .where(ProductSpecification.hasName(productFilterDto.getSearch()))
-                .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()));
+                .and(ProductSpecification.hasProductStatus(productFilterDto.getStatus()))
+                .and(ProductSpecification.hasFinish(productFilterDto.getFinish()))
+                .and(ProductSpecification.hasBrand(productFilterDto.getBrands()))
+                .and(ProductSpecification.hasRoomType(productFilterDto.getRoomTypes()));
 //                .and(ProductSpecification.betweenDates(productFilterDto.getStartDate(), productFilterDto.getEndDate()));
 
         return productRepository.filterAndSelectFieldsBySpecsAndPage(
                 productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(productFilterDto.getSortOrder(), productFilterDto.getSortCol()),
-                List.of("productId", "productName", "productStatus", "imageIds","productPrice"),
+                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()),
+                List.of("productId", "productName", "productStatus", "brand", "finish", "productPrice", "productQuantity"),
                 ProductDisplayDto.class
-        ).map(product -> {
-                    ProductDisplayDto dto = (ProductDisplayDto) product;
-                    dto.setProductImage(firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES));
-                    return dto;
-                }
-        );
+        ).map(product -> (ProductDisplayDto) product);
     }
 
+//    public Page<ProductUserDisplayDto> filterProductsForList(FilterProductDto productFilterDto){
+//        Float[] unitPriceRange = ConvertUtil.convertRangeToArray(
+//                productFilterDto.getSellingPrice(),
+//                Float::parseFloat,
+//                new Float[0]
+//        );
+//
+//        Specification<Product> productSpecification = Specification
+//                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
+//                .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
+//
+//        Sort.Direction direction;
+//        String column;
+//
+//        switch (productFilterDto.getSort()){
+//            case LOWEST -> {
+//                direction = Sort.Direction.ASC;
+//                column = "unitPrice";
+//            }
+//            case HIGHEST -> {
+//                direction = Sort.Direction.DESC;
+//                column = "unitPrice";
+//            }
+//            default -> {
+//                direction = Sort.Direction.DESC;
+//                column = "productPublishedTime";
+//            }
+//        }
+//
+//        return productRepository.filterAndSelectFieldsBySpecsAndPage(
+//                productSpecification,
+//                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
+//                List.of("productId", "productName", "productStatus", "imageIds"),
+//                ProductUserDisplayDto.class
+//        ).map(product -> {
+//            ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
+//            return new ProductUserDisplayDto(
+//                    dto.getProductId(),
+//                    dto.getProductName(),
+//                    dto.getProductStatus(),
+//                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
+//                    dto.getProductPrice(),
+//                    dto.isSale(),
+//                    dto.isNew(),
+//                    dto.getReviewRate(),
+//                    dto.getTotalReviews(),
+//                    dto.getDiscount()
+//
+//            );
     public List<PopularProductsDto> filterProductsByColor(String color){
         return productRepository.findByProductColor(color).stream().map(product ->
                     PopularProductsDto.builder()
@@ -70,80 +118,6 @@ public class ProductService {
 //            return product;
 //        });
 //    }
-
-    public Page<PopularProductsDto> filterProductsForPopularProducts(Pageable pageable) {
-        List<Object[]> rawResults = productRepository.findPopularProductsRaw(pageable);
-
-        List<PopularProductsDto> dtos = rawResults.stream()
-                .map(result -> {
-                    int productId = (int) result[0];
-                    String productName = (String) result[1];
-                    String imageIds = (String) result[2];  // Assuming the imageIds are returned as a CSV string
-                    float productPrice = (float) result[3];
-                    float productDiscount = (float) result[4];
-
-                    List<String> imageIdsList = Arrays.asList(imageIds.split(","));  // Split CSV to list of strings
-
-                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList); 
-                    
-                    return new PopularProductsDto(productId, productName, productImages, productPrice, productDiscount);
-                })
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(dtos, pageable, dtos.size());
-    }
-
-    public Page<ProductUserDisplayDto> filterProductsForList(FilterProductDto productFilterDto){
-        Float[] unitPriceRange = ConvertUtil.convertRangeToArray(
-                productFilterDto.getSellingPrice(),
-                Float::parseFloat,
-                new Float[0]
-        );
-
-        Specification<Product> productSpecification = Specification
-                .where(ProductSpecification.hasProductStatus(Collections.singleton(ProductStatus.AVAILABLE)))
-                .and(ProductSpecification.betweenVariationUnitPrice(unitPriceRange[0], unitPriceRange[1]));
-
-        Sort.Direction direction;
-        String column;
-
-        switch (productFilterDto.getSort()){
-            case LOWEST -> {
-                direction = Sort.Direction.ASC;
-                column = "unitPrice";
-            }
-            case HIGHEST -> {
-                direction = Sort.Direction.DESC;
-                column = "unitPrice";
-            }
-            default -> {
-                direction = Sort.Direction.DESC;
-                column = "productPublishedTime";
-            }
-        }
-
-        return productRepository.filterAndSelectFieldsBySpecsAndPage(
-                productSpecification,
-                PageRequest.of(productFilterDto.getPage(), productFilterDto.getLimit()).withSort(direction, column),
-                List.of("productId", "productName", "productStatus", "imageIds"),
-                ProductUserDisplayDto.class
-        ).map(product -> {
-            ProductUserDisplayDto dto = (ProductUserDisplayDto) product;
-            return new ProductUserDisplayDto(
-                    dto.getProductId(),
-                    dto.getProductTitle(),
-                    dto.getProductStatus(),
-                    firebaseStorageService.getFileDownloadUrl(dto.getProductImage(), 60, TimeUnit.MINUTES),
-                    dto.getPrice(),
-                    dto.isSale(),
-                    dto.isNew(),
-                    dto.getReviewRate(),
-                    dto.getTotalReviews(),
-                    dto.getDiscount()
-
-            );
-        });
-    }
 
 
     public void createProduct(AddProductDto addProductDto) {
@@ -305,6 +279,28 @@ public class ProductService {
                 (float) result.get(0)[0],
                 ((float) result.get(0)[1]) * (100-(float) result.get(0)[0]) / 100
         };
+    }
+
+    public Page<PopularProductsDto> filterProductsForPopularProducts(Pageable pageable) {
+        List<Object[]> rawResults = productRepository.findPopularProductsRaw(pageable);
+
+        List<PopularProductsDto> dtos = rawResults.stream()
+                .map(result -> {
+                    int productId = (int) result[0];
+                    String productName = (String) result[1];
+                    String imageIds = (String) result[2];  // Assuming the imageIds are returned as a CSV string
+                    float productPrice = (float) result[3];
+                    float productDiscount = (float) result[4];
+
+                    List<String> imageIdsList = Arrays.asList(imageIds.split(","));  // Split CSV to list of strings
+
+                    List<String> productImages = firebaseStorageService.getImageUrlsFromFirebase(imageIdsList);
+
+                    return new PopularProductsDto(productId, productName, productImages, productPrice, productDiscount);
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, dtos.size());
     }
 
     public List<GetProductDto> fetchAllProducts() {

@@ -23,7 +23,7 @@ public class LinkedCard {
     @Column(name = "token", columnDefinition = "TEXT", unique = true)
     private String token;
 
-    @Column(name = "gateway_customer_id", columnDefinition = "TEXT", unique = true)
+    @Column(name = "gateway_customer_id", columnDefinition = "TEXT")
     private String gatewayCustomerId;
 
     @Column(name = "card_offset", columnDefinition = "VARCHAR", length = 4, nullable = false)

@@ -35,7 +35,7 @@ public class FilterProductDto {
 
     private Set<Position> positions;
 
-    private Set<Finish> finishes;
+    private Set<Finish> finish;
 
     private Set<ProductStatus> status;
 
