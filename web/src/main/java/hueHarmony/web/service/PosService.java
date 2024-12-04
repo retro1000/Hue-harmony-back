@@ -34,9 +34,27 @@ public class PosService {
     private final ProductRepository productRepository;
     private final PosOrderRepository posOrderRepository;
     private final LoyaltyRepository loyaltyRepository;
+    private final FirebaseStorageService firebaseStorageService;
 
     public List<PosProductDto> getProducts() {
-        return productRepository.getProducts();
+        List<hueHarmony.web.model.Product> products = productRepository.findAll();
+
+        // Fetch product details and images
+        return products.stream()
+                .map(product -> {
+                    // Assuming that images are stored in Firebase Storage and we have the image URLs
+                    List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(product.getImageIds());
+
+                    // Create and return a PosProductDto using the builder
+                    return  PosProductDto.builder()
+                            .productId(product.getProductId())
+                            .productName(product.getProductName())
+                            .productPrice(product.getProductPrice())
+                            .productDiscount(product.getProductDiscount())
+                            .productImages(imageUrls)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 @Transactional

@@ -21,14 +21,14 @@ public class NotesController {
     private final NoteService noteService;
 
     // Create Debit Note
-    @PostMapping("/debit")
+    @PostMapping("/debit/create")
     public ResponseEntity<?> createDebitNote(@RequestBody NoteDto debitNoteDto) throws Exception {
         noteService.createDebitNote(debitNoteDto);
         return ResponseEntity.ok("Debit note created");
     }
 
     // Create Credit Note
-    @PostMapping("/credit")
+    @PostMapping("/credit/create")
     public ResponseEntity<?> createCreditNote(@RequestBody NoteDto creditNoteDto) throws Exception {
         noteService.createCreditNote(creditNoteDto);
         return ResponseEntity.ok("Credit note created");
