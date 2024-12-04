@@ -1,5 +1,6 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.WholeSaleOrderResponseDto;
 import hueHarmony.web.dto.WholeSaleOrderdto;
 import hueHarmony.web.model.WholeSaleOrder;
 import hueHarmony.web.model.enums.OrderStatus;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/wholeSale")
@@ -47,6 +50,16 @@ public class WholeSaleOrderController {
             e.printStackTrace();
             // Handle exception and return error response
             return new ResponseEntity<>("Error updating order status: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllWholesaleOrders() {
+        try {
+            List<WholeSaleOrderResponseDto> orders = wholeSaleOrderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
         }
     }
 
