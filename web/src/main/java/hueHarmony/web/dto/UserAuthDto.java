@@ -62,4 +62,30 @@ public class UserAuthDto implements UserDetails {
                 ", authorities=" + authorities +
                 '}';
     }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // Return true if account is not expired
+        return true; // Modify as per your logic
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Return true if account is not locked
+        return true; // Modify as per your logic
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // Return true if credentials are not expired
+        return true; // Modify as per your logic
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Return true if user is enabled
+        return true; // Modify as per your logic
+    }
+
 }
