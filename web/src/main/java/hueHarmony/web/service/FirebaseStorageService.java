@@ -54,7 +54,22 @@ public class FirebaseStorageService {
         return imageIds.stream()
                 .map(imageId -> {
                     try {
-                        return getFileDownloadUrl(imageId, 60, TimeUnit.MINUTES);
+                        // Construct the file path for the image
+                        String fileName = "images/" + imageId + ".jpg";
+
+                        // Get the bucket reference
+                        Bucket bucket = StorageClient.getInstance().bucket(bucketName);
+
+                        // Retrieve the blob (file) from the bucket
+                        Blob blob = bucket.get(fileName);
+
+                        if (blob == null) {
+                            throw new RuntimeException("Image not found for ID: " + imageId);
+                        }
+
+                        // Generate a signed URL for the image
+                        URL signedUrl = blob.signUrl(7, TimeUnit.DAYS); // URL valid for 7 days
+                        return signedUrl.toString();
                     } catch (Exception e) {
                         throw new RuntimeException("Error retrieving URL for image ID: " + imageId, e);
                     }
