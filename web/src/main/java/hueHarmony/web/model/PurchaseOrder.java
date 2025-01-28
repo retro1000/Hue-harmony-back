@@ -24,7 +24,7 @@ public class PurchaseOrder {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy = "purchaseOrder")
     private List<PurchaseOrderProduct> purchaseOrderProduct;
 
     @Enumerated(EnumType.STRING)

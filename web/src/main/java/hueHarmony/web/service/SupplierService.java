@@ -29,6 +29,7 @@ public class SupplierService {
 //    private final SupplierVariationRepository supplierVariationRepository;
     private final JwtUtil jwtUtil;
     private final FirebaseStorageService firebaseStorageService;
+    private final hueHarmony.web.controller.Product product;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -105,13 +106,14 @@ public class SupplierService {
         // Map the Supplier entities to PurchaseOrderDto
         return suppliers.stream()
                 .map(supplier -> new PurchaseOrderDto(
-                        supplier.getSupplierId(), // Assuming the supplier ID is long
+                        supplier.getSupplierId(),
                         supplier.getSupplierName(),
                         supplier.getProducts().stream()
                                 .map(product -> new SupplierProductFrontDto(
-                                        product.getId(),
+                                        product.getProduct().getProductId(),
                                         product.getProduct().getProductName(),
                                         firebaseStorageService.getFileDownloadUrl(product.getProduct().getImageIds().get(0),60, TimeUnit.MINUTES)
+
                                 ))
                                 .collect(Collectors.toList())
                 ))
