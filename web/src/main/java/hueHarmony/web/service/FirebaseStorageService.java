@@ -36,8 +36,12 @@ public class FirebaseStorageService {
                 String fileName = "images/" + imageId + ".jpg";
 
                 Bucket bucket = StorageClient.getInstance().bucket(bucketName);
-                bucket.create(fileName, decodedBytes, "image/jpeg");
-                imageIds.add(imageId);
+
+                BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, fileName))
+                        .setContentType("image/jpeg")
+                        .build();
+                bucket.create(blobInfo.getName(), decodedBytes, "image/jpeg");
+                imageIds.add(blobInfo.getBlobId().getName());
 
             } catch (Exception e) {
                 throw new RuntimeException("Error uploading image to Firebase", e);
@@ -61,9 +65,6 @@ public class FirebaseStorageService {
                 })
                 .collect(Collectors.toList());
     }
-
-
-
 
     public String uploadFile(String fileName, byte[] fileBytes, String contentType) {
         // Get the bucket instance from Firebase StorageClient

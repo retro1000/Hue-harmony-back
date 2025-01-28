@@ -64,9 +64,9 @@ public class User {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createUser(
-            @Validated(UserDto.onCreation.class) @RequestBody UserDto userDto,
+            @RequestBody UserDto userDto,
             BindingResult bindingResult
     ) {
         try{
@@ -78,6 +78,7 @@ public class User {
             return ResponseEntity.status(201).body("New user created successfully.");
 
         }catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
@@ -146,6 +147,7 @@ public class User {
 
             return ResponseEntity.status(201).body(payload);
         }catch(Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }

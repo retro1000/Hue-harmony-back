@@ -8,6 +8,7 @@ import hueHarmony.web.dto.UpdateProductDto;
 //import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
+import hueHarmony.web.dto.response_dto.ProductViewDto;
 import hueHarmony.web.model.Product;
 import hueHarmony.web.model.enums.data_set.*;
 import hueHarmony.web.repository.ProductRepository;
@@ -248,7 +249,7 @@ public class ProductService {
         productRepository.delete(product.get());
     }
 
-    public Product getProductById(Long productId) {
+    public ProductViewDto getProductById(Long productId) {
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (productOptional.isEmpty()) {
@@ -261,9 +262,28 @@ public class ProductService {
         List<String> imageIds = product.getImageIds();
 
         List<String> imageUrls = firebaseStorageService.getImageUrlsFromFirebase(imageIds);
-        product.setImageIds(imageUrls);
 
-        return product;
+        return ProductViewDto.builder()
+                .productName(product.getProductName())
+                .productDescription(product.getProductDescription())
+                .productSize(product.getProductSize())
+                .productPrice(product.getProductPrice())
+                .productDiscount(product.getProductDiscount())
+                .coat(product.getCoat())
+                .dryingTime(product.getDryingTime())
+                .coverage(product.getCoverage())
+                .onlineLimit(product.getOnlineLimit())
+                .productQuantity(product.getProductQuantity())
+                .productStatus(product.getProductStatus())
+                .brand(product.getBrand())
+                .finish(product.getFinish())
+                .roomType(product.getRoomType())
+                .surfaces(product.getSurfaces())
+                .positions(product.getPositions())
+                .productTypes(product.getProductType())
+                .productFeatures(product.getProductFeatures())
+                .imageIds(imageUrls)
+                .build();
     }
 
     public List<Product> getAllProducts() {

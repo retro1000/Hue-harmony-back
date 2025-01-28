@@ -8,6 +8,7 @@ import hueHarmony.web.dto.response.PosDisplayDto;
 import hueHarmony.web.dto.response.PopularProductsDto;
 import hueHarmony.web.dto.response.ProductDisplayDto;
 import hueHarmony.web.dto.response.ProductUserDisplayDto;
+import hueHarmony.web.dto.response_dto.ProductViewDto;
 import hueHarmony.web.service.FirebaseStorageService;
 import hueHarmony.web.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -128,8 +129,8 @@ public class Product {
     }
 
     @GetMapping("/read/{id}")
-    public ResponseEntity<hueHarmony.web.model.Product> getProductDetails(@PathVariable("id") Long productId) {
-        hueHarmony.web.model.Product product = productService.getProductById(productId);
+    public ResponseEntity<ProductViewDto> getProductDetails(@PathVariable("id") Long productId) {
+        ProductViewDto product = productService.getProductById(productId);
         return ResponseEntity.ok(product);
     }
 

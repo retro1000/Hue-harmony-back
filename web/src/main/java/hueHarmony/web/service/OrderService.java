@@ -124,7 +124,7 @@ public class OrderService {
                 .orderNote(orderDto.getOrderNote())
                 .orderPaymentMethod(orderDto.getPaymentMethod())
 //                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-                .createdUser(entityManager.getReference(User.class, 2))
+                .createdUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
                 .orderDiscount(orderDto.getDiscount())
                 .build();
 
@@ -191,7 +191,7 @@ public class OrderService {
     @Transactional
     protected Customer handleOrderRetailCustomer(OrderDto orderDto){
 //        Long customerId = retailCustomerService.getCustomerIdByUserId(jwtUtil.extractUserIdWithToken());
-        Long customerId = retailCustomerService.getCustomerIdByUserId(2);
+        Long customerId = retailCustomerService.getCustomerIdByUserId(jwtUtil.extractUserIdWithToken());
 
         Customer customer;
         if(
@@ -211,7 +211,7 @@ public class OrderService {
             RetailCustomer retailCustomer = RetailCustomer.builder()
                 .customer(customer)
 //                .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
-              .user(entityManager.getReference(User.class, 2))
+              .user(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()))
                 .build();
 
             customer.setRetailCustomer(retailCustomer);
