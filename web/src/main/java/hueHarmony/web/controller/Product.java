@@ -166,4 +166,10 @@ public class Product {
         return ResponseEntity.ok(products);
     }
 
+//    @GetMapping("/read/all")
+//    public ResponseEntity<Page<PopularProductsDto>> getAllProducts() {
+//        Page<PopularProductsDto> product = productService.filterProductsForPopularProducts(PageRe);
+//        return ResponseEntity.ok(product);
+//    }
+
 }
