@@ -51,7 +51,7 @@ public class WholeSaleOrder {
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;  // Status of payment (e.g., "paid", "pending", "overdue")
 
-    @Column(name = "total_amount", nullable = false)
+    @Column( nullable = false)
     private Double totalAmount;  // Total amount of the order
 
     @Column(name = "discount_amount")

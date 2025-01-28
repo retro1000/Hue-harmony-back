@@ -1,9 +1,13 @@
 package hueHarmony.web.controller;
 
+import hueHarmony.web.dto.WholeSaleInvoicedto;
 import hueHarmony.web.dto.WholeSaleOrderResponseDto;
 import hueHarmony.web.dto.WholeSaleOrderdto;
+import hueHarmony.web.model.WholeSaleCustomer;
 import hueHarmony.web.model.WholeSaleOrder;
 import hueHarmony.web.model.enums.OrderStatus;
+import hueHarmony.web.repository.WholeSaleCustomerRepository;
+import hueHarmony.web.repository.WholeSaleOrderRepository;
 import hueHarmony.web.service.WholeSaleOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +22,8 @@ import java.util.List;
 public class WholeSaleOrderController {
 
     private final WholeSaleOrderService wholeSaleOrderService;
+    private final WholeSaleOrderRepository wholeSaleOrderRepository;
+    private final WholeSaleCustomerRepository wholeSaleCustomerRepository;
 
     @PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestBody WholeSaleOrderdto wholeSaleOrderDto) {
@@ -34,6 +40,13 @@ public class WholeSaleOrderController {
             // Handle exception and return error response
             return new ResponseEntity<>("Error creating order: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/get-by-customer/{customerId}")
+    public List<WholeSaleInvoicedto> getOrdersByCustomerId(@PathVariable Long customerId) {
+        WholeSaleCustomer customer = wholeSaleCustomerRepository.findById(customerId).orElseThrow(()-> new RuntimeException("Customer not found"));
+        List<WholeSaleOrder> orders = wholeSaleOrderRepository.findByCustomer(customer);
+        return orders.stream().map(order->new WholeSaleInvoicedto(order.getOrderId(),order.getTotalAmount(),order.getBillingAddress())).toList();
+
     }
     @PostMapping("/update-order-status/{orderId}")
     public ResponseEntity<?> updateOrderStatus(
