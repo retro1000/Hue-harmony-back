@@ -60,7 +60,7 @@ public class SupplierService {
                         supplierDto.getSupplierStatus()
         );
 //        supplier.setCreatedUser(entityManager.getReference(User.class, jwtUtil.extractUserIdWithToken()));
-        supplier.setCreatedUser(entityManager.getReference(User.class,2 ));
+        supplier.setCreatedUser(entityManager.getReference(User.class,1 ));
 
 
         List<SupplierProduct> supplierProducts = supplierDto.getSupplierProduct().stream().map(supplierProductDto -> {

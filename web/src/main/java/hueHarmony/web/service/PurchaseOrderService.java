@@ -86,8 +86,8 @@ public class PurchaseOrderService {
             throw new IllegalStateException("PurchaseOrder");
 
         }
-        PurchaseOrder savedPurchaseOrder = purchaseOrder.get();
-        Hibernate.initialize(savedPurchaseOrder.getSupplier());
+//        PurchaseOrder savedPurchaseOrder = purchaseOrder.get();
+//        Hibernate.initialize(savedPurchaseOrder.getSupplier());
 
         return savedPurchaseOrder;
 //
