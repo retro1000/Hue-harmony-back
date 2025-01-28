@@ -45,7 +45,7 @@ public class SecurityConfig{
 //                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook", "cart/**", "supplier/**","/wholesalecustomer/**").permitAll()
+                    .requestMatchers("/login/validate", "/customize/banners", "/users/signup", "/product/create","/product/delete","product/view/**","/product/**", "/orders/**", "/webhook", "cart/**", "supplier/**","/wholesalecustomer/**","/wholeSale/*","/invoice/**","/credit-debit/**").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "product/create","purchase-order/**","grn/**").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "/product/create","/product/delete","product/view/**","/product/**","/products","/product/update").permitAll()
                     .requestMatchers("/login/validate", "/customize/banners", "/user/signup", "/product/create","/product/delete","product/view/**","/product/**","/pos/**","/loyalty/**").permitAll()
